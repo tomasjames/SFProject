@@ -1,6 +1,6 @@
 ################################################################################
 ############################## RADMC-3D Tests ##################################
-############################# Cheatsheet Setup #################################
+############################## Gas Model Setup #################################
 ################################################################################
 
 ############################# Import statements ################################
@@ -11,14 +11,13 @@ import os
 radmc3dPy.analyze.writeDefaultParfile('ppdisk')
 
 ############################## Setup the model #################################
-radmc3dPy.setup.problemSetupDust('ppdisk', mdisk='0.01*ms')
+radmc3dPy.setup.problemSetupDust('ppdisk')
 
 ############################# Run thermal MC sim ###############################
 os.system('radmc3d mctherm')
 
-######################## Generate image from MC sim ############################
-radmc3dPy.image.makeImage(npix=400, sizeau=200, wav=800., incl=45, posang=43.)
+############################ Set up the gas model ##############################
+radmc3dPy.setup.problemSetupGas('ppdisk')
 
-############################# Read image and plot ##############################
-imag = radmc3dPy.image.readImage()
-radmc3dPy.image.plotImage(imag, arcsec=True, dpc=140., log=True, maxlog=5)
+########################### Calculate channel map ##############################
+os.system('radmc3d image npix 400 sizeau 200 incl 45. phi 0. posang 43. iline 3 vkms 1.0')
