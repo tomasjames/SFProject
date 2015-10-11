@@ -1,12 +1,5 @@
-"How good is dust emission as a tracer of structure of star-forming regions in
+"How good is dust emission as a tracer of structure of star-forming regions in molecular clouds?"
 ================================================================================
-molecular clouds?"
-================================================================================
-
-Student: Tomas James
---------------------------
-Supervisor: Dr. Paul Clark
---------------------------
 
 Project Overview
 ----------------
