@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.03*ts')
+radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.003*ts')
 
 # Copy the dust opacity and data files from the datafiles directory
 os.system('cp -v ../datafiles/dustkappa_silicate.inp .')
@@ -27,7 +27,10 @@ os.system('cp -v ../datafiles/molecule_co.inp .')
 os.system('radmc3d mctherm')
 
 # Plot image
-radmc3dPy.image.makeImage(npix=400, sizeau=400, wav=800., incl=45., posang=43.)
+radmc3dPy.image.makeImage(npix=400, sizeau=400, wav=10000., incl=45., posang=43.)
+imag_1 = radmc3dPy.image.readImage()
+radmc3dPy.image.plotImage(imag_1, arcsec=True, dpc=140., log=True, maxlog=5)
 
-imag = radmc3dPy.image.readImage()
-radmc3dPy.image.plotImage(imag, arcsec=True, dpc=140., log=True, maxlog=5)
+radmc3dPy.image.makeImage(npix=400, sizeau=400, wav=10000., incl=0., posang=43.)
+imag_2 = radmc3dPy.image.readImage()
+radmc3dPy.image.plotImage(imag_2, arcsec=True, dpc=140., log=True, maxlog=5)

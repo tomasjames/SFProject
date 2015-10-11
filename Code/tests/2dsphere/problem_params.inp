@@ -8,7 +8,7 @@
 mstar                     = 1.0*ms  # # Mass of the star(s)
 pstar                     = [0., 0., 0.]  # # Position of the star(s) (cartesian coordinates)
 rstar                     = 1.0*rs  # # Radius of the star(s)
-tstar                     = 0.03*ts  # # Effective temperature of the star(s) [K]
+tstar                     = 0.003*ts  # # Effective temperature of the star(s) [K]
 # -------------------------------------------------------------------------------------------------------------------------
 # Block: Grid parameters
 # -------------------------------------------------------------------------------------------------------------------------
