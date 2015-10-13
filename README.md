@@ -16,7 +16,7 @@ Project Aims
 
 The primary aims of this project are:
 
-- to simulate a molecular cloud containing x amount of pre-stellar cores
+- to simulate a molecular cloud containing x amount of pre-stellar cores (i.e. generate synthetic data)
 - to produce a dendogram (https://dendrograms.readthedocs.org/en/latest/) of the
   resulting simulation to probe the structure of the simulated cloud
 - compare with other simulations
@@ -27,4 +27,4 @@ Project Progress
 As of last commit (11/10/15) minor tests have been performed of RADMC-3D in Python
 to ascertain its viability for the project. Those tests setup various simple
 problems and simulations, the most useful of which is the creation of a 2D (as well
-as 1D) sphere of uniform temperature. 
+as 1D) sphere of uniform temperature.
