@@ -1,7 +1,7 @@
 istar_sphere = 0
 itempdecoup = 1
 lines_mode = -1
-nphot = 2000
+nphot = 20000
 nphot_scat = 30000
 nphot_spec = 100000
 rto_style = 1
