@@ -36,8 +36,8 @@ new ideas are added. Furthermore, this is not representative of the project's pr
 
 - ~~Get RADMC-3D up and running on OS X 10.11 El Capitan~~
 - ~~Run basic tests included in cheatsheet (i.e. set up gas and dust continuum models)~~
-- ~~Generate sphere of uniform temperature:
-  - in 1D &,
-  - 2D~~
+- ~~Generate sphere of uniform temperature:~~
+  - ~~in 1D &,~~
+  - ~~2D~~
 - Adapt 2D sphere model to account for gas AND dust
 - Look into generated some form of rudimentary stucture in 2D sphere
