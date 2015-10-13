@@ -14,7 +14,7 @@ radiative transfer code (http://www.ita.uni-heidelberg.de/~dullemond/software/ra
 Project Aims
 ------------
 
-The primary aims of this project are:
+The primary (simplified) aims of this project are:
 
 - to simulate a molecular cloud containing x amount of pre-stellar cores (i.e. generate synthetic data)
 - to produce a dendogram (https://dendrograms.readthedocs.org/en/latest/) of the
@@ -39,6 +39,9 @@ new ideas are added. Furthermore, this is not representative of the project's pr
 - ~~Generate sphere of uniform temperature:~~
   - ~~in 1D &,~~
   - ~~2D~~
-- Adapt 2D sphere model to account for gas AND dust
-- Look into generated some form of rudimentary structure in 2D sphere
 - ~~Begin collecting BiBTeX library of references for report~~
+- Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
+  - Different opacity law (see notes in notebook for papers)
+  - Standard 1/r**2 density profile (i.e. decreasing with radius)
+  - Standard protostar temperature profile (i.e. increasing with radius)
+  (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
