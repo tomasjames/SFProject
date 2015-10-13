@@ -28,3 +28,16 @@ As of last commit (11/10/15) minor tests have been performed of RADMC-3D in Pyth
 to ascertain its viability for the project. Those tests setup various simple
 problems and simulations, the most useful of which is the creation of a 2D (as well
 as 1D) sphere of uniform temperature.
+
+Project 'To-Do List'
+-------------------
+This list is not exhaustive of the remaining tasks in the project, and is updated as and when
+new ideas are added. Furthermore, this is not representative of the project's progress.
+
+- ~~Get RADMC-3D up and running on OS X 10.11 El Capitan~~
+- ~~Run basic tests included in cheatsheet (i.e. set up gas and dust continuum models)~~
+- ~~Generate sphere of uniform temperature:
+  - in 1D &,
+  - 2D~~
+- Adapt 2D sphere model to account for gas AND dust
+- Look into generated some form of rudimentary stucture in 2D sphere
