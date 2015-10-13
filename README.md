@@ -41,4 +41,4 @@ new ideas are added. Furthermore, this is not representative of the project's pr
   - ~~2D~~
 - Adapt 2D sphere model to account for gas AND dust
 - Look into generated some form of rudimentary structure in 2D sphere
-- ~~Begin collecting BiBTeX library of references for report ~~
+- ~~Begin collecting BiBTeX library of references for report~~
