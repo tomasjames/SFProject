@@ -1,0 +1,64 @@
+###########################################################################################################################
+# RADMC-3D PARAMETER SETUP
+# Created by the python module of RADMC-3D
+###########################################################################################################################
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Radiation sources
+# -------------------------------------------------------------------------------------------------------------------------
+mstar                     = 1.0*ms  # # Mass of the star(s)
+pstar                     = [0., 0., 0.]  # # Position of the star(s) (cartesian coordinates)
+rstar                     = 1.0*rs  # # Radius of the star(s)
+tstar                     = 0.003*ts  # # Effective temperature of the star(s) [K]
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Grid parameters
+# -------------------------------------------------------------------------------------------------------------------------
+crd_sys                   = 'sph'  # Coordinate system used (car/cyl)
+nw                        = [20,100,30]  # Number of points in the wavelength grid
+nx                        = 100  # Number of grid points in the first dimension
+ny                        = 60  # Number of grid points in the second dimension
+nz                        = 0  # Number of grid points in the third dimension
+wbound                    = [0.1, 7., 25., 1e4]  # Boundraries for the wavelength grid
+xbound                    = [5.0*au, 100.0*au]  # Boundaries for the x grid
+xres_nlev                 = 3  # Number of refinement levels (spherical coordinates only
+xres_nspan                = 3  # Number of the original grid cells to refine (spherical coordinates only)
+xres_nstep                = 3  # Number of grid cells to create in a refinement level (spherical coordinates only)
+ybound                    = [0.0, pi/2.0]  # Boundaries for the y grid
+zbound                    = [0.0, 2.0*pi]  # Boundraries for the z grid
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Dust opacity
+# -------------------------------------------------------------------------------------------------------------------------
+dustkappa_ext             = ['silicate']  # 
+gdens                     = [3.6, 1.8]  # Bulk density of the materials in g/cm^3
+gsdist_powex              = -3.5  # Grain size distribution power exponent
+gsmax                     = 10.0  # Maximum grain size
+gsmin                     = 0.1  # Minimum grain size
+lnk_fname                 = ['/disk2/juhasz/Data/JPDOC/astrosil/astrosil_WD2001_new.lnk', '/disk2/juhasz/Data/JPDOC/carbon/A/cel600.lnk']  # 
+mixabun                   = [0.75, 0.25]  # Mass fractions of the dust componetns to be mixed
+ngs                       = 1  # Number of grain sizes
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Gas line RT
+# -------------------------------------------------------------------------------------------------------------------------
+gasspec_colpart_abun      = [1e0]  # Abundance of the molecule
+gasspec_colpart_name      = ['h2']  # Name of the gas species - the extension of the molecule_EXT.inp file
+gasspec_mol_abun          = [1e-4]  # Abundance of the molecule
+gasspec_mol_dbase_type    = ['leiden']  # leiden or linelist
+gasspec_mol_name          = ['co']  # Name of the gas species - the extension of the molecule_EXT.inp file
+gasspec_vturb             = 0.1e5  # Microturbulence
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Code parameters
+# -------------------------------------------------------------------------------------------------------------------------
+istar_sphere              = 0  # 1 - take into account the finite size of the star, 0 - take the star to be point-like
+itempdecoup               = 1  # Enable for different dust components to have different temperatures
+lines_mode                = -1  # Line raytracing mode
+nphot                     = 2.0000000e+04  # Nr of photons for the thermal Monte Carlo
+nphot_scat                = long(3e4)  # Nr of photons for the scattering Monte Carlo (for images)
+nphot_spec                = long(1e5)  # Nr of photons for the scattering Monte Carlo (for spectra)
+rto_style                 = 1  # Format of outpuf files (1-ascii, 2-unformatted f77, 3-binary
+scattering_mode_max       = 0  # 0 - no scattering, 1 - isotropic scattering, 2 - anizotropic scattering
+tgas_eq_tdust             = 1  # Take the dust temperature to identical to the gas temperature
+# -------------------------------------------------------------------------------------------------------------------------
+# Block: Model spher2d_1
+# -------------------------------------------------------------------------------------------------------------------------
+hpr                       = 0.1  # Vertical scale height
+prho                      = -2.0  # Power exponent of the radial density distribution
+rho0                      = 1e-16*10000  # Central density
