@@ -24,10 +24,12 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
-As of last commit (11/10/15) minor tests have been performed of RADMC-3D in Python
+As of 11/10/15 minor tests have been performed of RADMC-3D in Python
 to ascertain its viability for the project. Those tests setup various simple
 problems and simulations, the most useful of which is the creation of a 2D (as well
 as 1D) sphere of uniform temperature.
+
+As of 14/10/15 more complex simulations have been set up ([#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) handles this).
 
 Project 'To-Do List'
 -------------------
