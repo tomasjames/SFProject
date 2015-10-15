@@ -38,14 +38,14 @@ new ideas are added. Furthermore, this is not representative of the project's pr
 often than not, for larger implementations more detailed issues will be created in addition
 to the notes found here. Where possible, those issues will be linked next to the entry.
 
-- ~~Get RADMC-3D up and running on OS X 10.11 El Capitan~~
-- ~~Run basic tests included in cheatsheet (i.e. set up gas and dust continuum models)~~
-- ~~Generate sphere of uniform temperature:~~
-  - ~~in 1D &,~~
-  - ~~2D~~
-- ~~Begin collecting BiBTeX library of references for report~~
+- [x] Get RADMC-3D up and running on OS X 10.11 El Capitan
+- [x] Run basic tests included in cheatsheet (i.e. set up gas and dust continuum models)
+- [x] Generate sphere of uniform temperature:
+  - [x] in 1D &,
+  - [x] 2D
+- [x] Begin collecting BiBTeX library of references for report
 - Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
   - Different opacity law (see notes in notebook for papers)
-  - Standard 1/r**2 density profile (i.e. decreasing with radius)
+  - [x] Standard 1/r**2 density profile (i.e. decreasing with radius)
   - Standard protostar temperature profile (i.e. increasing with radius)
-    (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
+    (See #1 for updates)
