@@ -44,8 +44,8 @@ to the notes found here. Where possible, those issues will be linked next to the
   - [x] in 1D &,
   - [x] 2D
 - [x] Begin collecting BiBTeX library of references for report
-- Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
-  - [] Different opacity law (see notes in notebook for papers)
+- [ ] Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
+  - [ ] Different opacity law (see notes in notebook for papers)
   - [x] Standard 1/r**2 density profile (i.e. decreasing with radius)
-  - [] Standard protostar temperature profile (i.e. increasing with radius)
-    (See tomasjames/ZiggyStarDust#1 for updates)
+  - [ ] Standard protostar temperature profile (i.e. increasing with radius)
+    (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
