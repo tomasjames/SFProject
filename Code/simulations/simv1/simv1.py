@@ -19,7 +19,7 @@ radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.003*ts',
-                                  nx=100, ny=100, nz=100, nphot=20000.)
+                                  nx=100, ny=100, nz=100, nphot=200000.)
 
 # Copy the dust opacity and data files from the datafiles directory
 print '\nCopying datafiles from datafiles directory...\n'

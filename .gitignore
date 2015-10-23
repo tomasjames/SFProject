@@ -1,2 +1,8 @@
 Reading/*
+Docs/*
 radmc-3d/*
+
+*.inp
+*.out
+*.dat
+*.png
