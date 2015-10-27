@@ -4,5 +4,9 @@ radmc-3d/*
 
 *.inp
 *.out
+*.ini
+*.fits
 *.dat
 *.png
+*.backup
+*.log
