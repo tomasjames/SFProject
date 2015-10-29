@@ -12,7 +12,7 @@ tstar                     = 0.003*ts  # # Effective temperature of the star(s) [
 # -------------------------------------------------------------------------------------------------------------------------
 # Block: Grid parameters
 # -------------------------------------------------------------------------------------------------------------------------
-crd_sys                   = ‘car’  # Coordinate system used (car/cyl)
+crd_sys                   = 'sph'  # Coordinate system used (car/cyl)
 nw                        = [20,100,30]  # Number of points in the wavelength grid
 nx                        = 100  # Number of grid points in the first dimension
 ny                        = 100  # Number of grid points in the second dimension
@@ -50,7 +50,7 @@ gasspec_vturb             = 0.1e5  # Microturbulence
 istar_sphere              = 0  # 1 - take into account the finite size of the star, 0 - take the star to be point-like
 itempdecoup               = 1  # Enable for different dust components to have different temperatures
 lines_mode                = -1  # Line raytracing mode
-nphot                     = 2.0000000e+05  # Nr of photons for the thermal Monte Carlo
+nphot                     = 2.0000000e+06  # Nr of photons for the thermal Monte Carlo
 nphot_scat                = long(3e4)  # Nr of photons for the scattering Monte Carlo (for images)
 nphot_spec                = long(1e5)  # Nr of photons for the scattering Monte Carlo (for spectra)
 rto_style                 = 1  # Format of outpuf files (1-ascii, 2-unformatted f77, 3-binary
