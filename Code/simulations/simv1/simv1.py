@@ -41,7 +41,7 @@ raw_input(
 start = time.time()
 
 # Interface with operating system to run the Monte-Carlo sim
-os.system('radmc3d image')
+os.system('radmc3d movie')
 
 # End a timer
 end = time.time()

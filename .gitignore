@@ -10,3 +10,4 @@ radmc-3d/*
 *.png
 *.backup
 *.log
+*.pyc
