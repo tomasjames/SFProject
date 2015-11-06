@@ -13,13 +13,13 @@ import numpy as np
 
 ########################## Define dust opacity function ########################
 
-def dustopacity(nlam, kappa_0, w_0, B):
+def dustopacity(nlam, kappa_0, w_ref, B, opaclaw='H', w_0=0.1, w_nlam=10000):
 
     '''
     Uses the dust opacity power law defined in Hildebrand (1983) to determine
-    the dust opacity at a range of wavelengths from 0.1um to 1000um given some
-    reference wavelength w_0 and dust spectral index B.
-    Recommended that kappa_0 = 1 by default.
+    the dust opacity at a range of wavelengths from w_0 (0.1um by default) to
+    w_nlam (1000um by default) given some reference wavelength w_ref and dust
+    spectral index B. Recommended that kappa_0 = 1 by default.
 
     The function will generate the range of wavelengths from 0.1um to 1000um
     with nlam evenly spaced intervals. The function will then write the required
@@ -55,16 +55,17 @@ def dustopacity(nlam, kappa_0, w_0, B):
     '''
 
     # The start and end points of the wavelength range in microns
-    lambda_init = 0.1
-    lambda_fin = 1000
+    lambda_init = w_0
+    lambda_fin = w_nlam
 
     ################# Evaluate opacities over wavelength range #################
 
-    # Create array of frequencies from the wavelengths given and reshape
+    # Create array of wavelengths from range given and reshape
     w = np.vstack(np.linspace(lambda_init, lambda_fin, nlam))
 
-    # Evaluate opacities
-    opacity = np.vstack(kappa_0*(w/w_0)**B)
+    if opaclaw == 'H':
+        # Evaluate opacities
+        opacity = np.vstack(kappa_0*(w/w_ref)**B)
 
     # Concantenate arrays to create 2D array of all data in format ready to be
     # written to the .inp file
@@ -73,7 +74,9 @@ def dustopacity(nlam, kappa_0, w_0, B):
     ########################## Write explanatory notes #########################
 
     f.write('# This files contains all of the dust opacities for the power law\n')
-    f.write('# given in Hildebrand (1983): kappa_abs = kappa_0(v/v_0)**B\n')
+
+    if opaclaw == 'H':
+        f.write('# given in Hildebrand (1983): kappa_abs = kappa_0(v/v_0)**B\n')
 
     ########################## Write the iformat integer #######################
 

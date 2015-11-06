@@ -18,14 +18,17 @@ import time
 radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.003*ts',
-                                  nx=100, ny=100, nz=100, nphot=2000000.)
+radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False,
+                                    tstar='0.003*ts', crd_sys='sph', nx=10,
+                                    ny=10, nz=10, nphot=2000000.)
 
+'''
 # Copy the dust opacity and data files from the datafiles directory
 print '\nCopying datafiles from datafiles directory...\n'
 os.system('cp -v ../../datafiles/dustkappa_silicate.inp .')
 os.system('cp -v ../../datafiles/molecule_co.inp .')
 print '\nCopy complete'
+'''
 
 ################################# Pause script #################################
 # This pauses the script until the user presses enter. This is in place so that
@@ -41,7 +44,7 @@ raw_input(
 start = time.time()
 
 # Interface with operating system to run the Monte-Carlo sim
-os.system('radmc3d movie')
+os.system('radmc3d mctherm')
 
 # End a timer
 end = time.time()
