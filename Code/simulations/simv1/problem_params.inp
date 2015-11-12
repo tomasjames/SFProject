@@ -12,7 +12,7 @@ tstar                     = 0.003*ts  # # Effective temperature of the star(s) [
 # -------------------------------------------------------------------------------------------------------------------------
 # Block: Grid parameters
 # -------------------------------------------------------------------------------------------------------------------------
-crd_sys                   = ‘car’  # Coordinate system used (car/cyl)
+crd_sys                   = 'sph'  # Coordinate system used (car/cyl)
 nw                        = [20,100,30]  # Number of points in the wavelength grid
 nx                        = 10  # Number of grid points in the first dimension
 ny                        = 10  # Number of grid points in the second dimension

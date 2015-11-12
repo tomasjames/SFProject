@@ -34,10 +34,6 @@ dpix = input('And what width would you like each pixel to be? \n')
 # Create an array of pixels in each dimension
 x,y,z = np.linspace(0,l*dpix,l+1), np.linspace(0,l*dpix,l+1), np.linspace(0,l*dpix,l+1)
 
-###################### Write basic comments to explain file ####################
-
-f.write('# This is a custom amr_grid.inp file for use with RADMC-3D. It is 3D.\n')
-
 ################# Write integers for RADMC-3D to learn about grid ##############
 
 # Write the iformat number
