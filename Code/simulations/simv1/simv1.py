@@ -19,16 +19,8 @@ radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False,
-                                    tstar='0.003*ts', crd_sys='sph', nx=10,
-                                    ny=10, nz=10, nphot=2000000.)
-
-'''
-# Copy the dust opacity and data files from the datafiles directory
-print '\nCopying datafiles from datafiles directory...\n'
-os.system('cp -v ../../datafiles/dustkappa_silicate.inp .')
-os.system('cp -v ../../datafiles/molecule_co.inp .')
-print '\nCopy complete'
-'''
+                                    tstar='ts', nx=32, ny=32, nz=32,
+                                    nphot=2000000.)
 
 ################################# Pause script #################################
 # This pauses the script until the user presses enter. This is in place so that
@@ -40,24 +32,20 @@ raw_input(
 ' them now and press enter to continue:\n')
 
 ############################ Run Monte-Carlo simulation ########################
-# Start a timer
-start = time.time()
 
-# Interface with operating system to run the Monte-Carlo sim
-os.system('radmc3d mctherm')
-
-# End a timer
-end = time.time()
+# Interface with operating system to run the Monte-Carlo sim (and allowing the
+# code to use wavelength_micron.inp)
+os.system('radmc3d image globallam')
 
 ############################# Plot the resulting data ##########################
 # Generate a canvas to plot over
-radmc3dPy.image.makeImage(npix=1000, sizeau=200., wav=10000., incl=45.)
+radmc3dPy.image.makeImage(npix=100000, sizeau=21426., wav=100., incl=90.)
 
 # Initialise the image
 imag = radmc3dPy.image.readImage()
 
 # Plot the image in a matplotlib figure
-radmc3dPy.image.plotImage(imag, arcsec=True, dpc=150., log=True, maxlog=5)
+radmc3dPy.image.plotImage(imag, arcsec=True, dpc=150., log=True, maxlog=5.)
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
@@ -65,4 +53,3 @@ print 'start the GUI image viewer'
 print '########################################################################'
 
 ############################# Misc. print statements ###########################
-print '\nThe thermal Monte-Carlo simulation took', end-start, 's\n'

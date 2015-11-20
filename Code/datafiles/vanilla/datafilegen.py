@@ -19,6 +19,46 @@ print 'Carlo simulation or raytrace is run.'
 print '########################################################################\n'
 
 ################################################################################
+############################ Preliminary Information ###########################
+################################################################################
+
+################################ Define constants ##############################
+
+# Define solar mass (in g) and solar radius (in cm)
+m_sun = 1.988e33
+r_sun = 6.955e10
+
+# Define proton mass (in g/cm^3)
+m_p = 1.67e-24
+
+# Define mean molecular weight
+u = 2.33
+
+# cm to AU conversation factor
+au_factor = 6.685e-14
+
+######################## Ask user for intended quantities ######################
+
+# Ask for the cloud mass and convert to grams
+mass = input('What cloud mass should be used? (Answer should be in Solar Masses)\n')
+mass = mass*(m_sun)
+print 'The mass of the cloud considered is', mass, 'g.\n'
+
+# Ask for the cloud number density and convert to g/cm^3
+cloud_density = input('What number density should be assigned to the cloud?\n')
+cloud_density = cloud_density*u*m_p
+print 'The cloud density is', cloud_density, 'g/cm^3.\n'
+
+# Repeat for outside density
+outside_density = input('What number density should be assigned outside of the cloud?\n')
+outside_density = outside_density*u*m_p
+print 'The outside density is', outside_density, 'g/cm^3.\n'
+
+# Calculate radius of the cloud in cm
+r = ((3./(4*np.pi))*(mass/cloud_density))**(1./3.)
+print 'The radius of the cloud is', r, 'cm (or', r*au_factor, ' AU).\n'
+
+################################################################################
 ############################### Set up amr_grid.inp ############################
 ################################################################################
 
@@ -34,14 +74,19 @@ amr = open('amr_grid.inp', 'w')
 
 ############################ Define axes to work with ##########################
 
+# Define the image width
+width = input('What image width would you like to use? The radius of your cloud is ' +str(r*au_factor) +' AU - image width should be appropriately larger than this (This should be in AU) \n')
+
 # Define the axis length (i.e. the number of pixels in each axis)
 l = input('How many pixels should I assign to a dimension? (128 recommended) \n')
 
-# Define the width of each pixel
-dpix = input('And what width would you like each pixel to be? (This should be in AU) \n')
+# Define the width of each pixel in AU
+dpix = width/l
+print 'This corresponds to a pixel width of', dpix,'AU.'
 
 # Create an array of pixels in each dimension
-x,y,z = np.linspace(0,l*dpix,l+1), np.linspace(0,l*dpix,l+1), np.linspace(0,l*dpix,l+1)
+x,y,z = np.linspace(0,width,l+1), np.linspace(0,width,l+1), np.linspace(0,width,l+1)
+#x,y,z = np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1))
 
 ################# Write integers for RADMC-3D to learn about grid ##############
 
@@ -67,48 +112,105 @@ amr.write(str(l)+ ' ' + str(l) + ' ' +str(l) + '\n')
 
 # Loop through each pixel and write to the file the edges of each pixel
 for i in x:
-    amr.write(str(i) + str(' '))
-
     if i == x[-1]:
         amr.write(str(i) + str('\n'))
+    else:
+        amr.write(str(i) + str(' '))
 
 for j in y:
-    amr.write(str(j) + str(' '))
-
     if j == y[-1]:
         amr.write(str(j) + str('\n'))
 
-for k in z:
-    amr.write(str(k) + str(' '))
+    else:
+        amr.write(str(j) + str(' '))
 
+for k in z:
     if k == z[-1]:
         amr.write(str(k) + str('\n'))
+
+    else:
+        amr.write(str(k) + str(' '))
 
 print '\'amr_grid.inp\' has been written to the working directory\n'
 
 ################################################################################
-############################# Set up dust_density.inp ##########################
+############# Set up dust_density.inp and dust_temperature.inp #################
 ################################################################################
 
 print '\n########################################################################'
-print '                           dust_density.inp                               '
+print '                dust_density.inp and dust_temperature.dat                 '
 print '########################################################################\n'
 
+# Writes the files to the working directory
 density = open('dust_density.inp', 'w')
+temperature = open('dust_temperature.dat', 'w')
 
-# Information from the writing of amr_grid.inp is needed. Firstly, find the
-# centre of the 3D grid
+# Writes the format number
+density.write('1         # The same as most other files\n')
+temperature.write('1         # The same as most other files\n')
+
+# Write the number of cells
+density.write(str(l**3)+'         # Number of cells\n')
+temperature.write(str(l**3)+'         # Number of cells\n')
+
+# Write the number of dust species
+density.write('1         # Number of dust species\n')
+temperature.write('1         # Number of dust species\n')
+
+# Firstly, find the centre of the 3D grid
 centre = [x[l/2], y[l/2], z[l/2]]
 
-# Query for radius of the cloud
-r = input('What radius cloud should be modelled? (This should be in AU)\n')
+# Determine how many of the pixels lies within the cloud (convert the radius to
+# AU and then divide by the width of one pixel in AU)
+r_pix = (r*au_factor)/dpix
 
-# Determine how many of the pixels lies within the cloud
-r_pix = r/dpix
+# Ask for the temperature to be assigned to the cloud
+print 'Dust density in the cloud was supplied previously. It is taken to be'
+print cloud_density, 'g/cm^3.\n'
+cloud_temperature = input('What temperature should be assigned to the cloud?\n')
 
-# Determine which points lie within the cloud
+# Ask for the temperature outside
+print 'Dust density outside of the cloud was supplied previously. It is taken to be'
+print outside_density, 'g/cm^3.\n'
+outside_temperature = input('What temperature should be assigned outside of the cloud?\n')
 
+# Define empty lists to store densities
+density_cube = np.zeros([l,l,l])
 
+x_cube = np.zeros([l,l,l])
+y_cube = np.zeros([l,l,l])
+z_cube = np.zeros([l,l,l])
+
+# Determine where centre of cloud lies in model space
+for n in range(0,len(z)-1):
+    for m in range(0,len(y)-1):
+        for l in range(0,len(x)-1):
+            if np.sqrt((x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2) <= r*au_factor:
+                if n == (len(z)-1):
+                    density.write(str(cloud_density))
+                    temperature.write(str(cloud_temperature))
+                else:
+                    density.write(str(cloud_density)+'\n')
+                    temperature.write(str(cloud_temperature)+'\n')
+                '''
+                density_cube[l,m,n] = cloud_density
+                x_cube[l,m,n] = x[l]
+                y_cube[l,m,n] = y[m]
+                z_cube[l,m,n] = z[n]
+                '''
+            else:
+                if n == (len(z)-1):
+                    density.write(str(outside_density))
+                    temperature.write(str(outside_temperature))
+                else:
+                    density.write(str(outside_density)+'\n')
+                    temperature.write(str(outside_temperature)+'\n')
+                '''
+                density_cube[l,m,n] = outside_density
+                x_cube[l,m,n] = x[l]
+                y_cube[l,m,n] = y[m]
+                z_cube[l,m,n] = z[n]
+                '''
 
 ################################################################################
 ######################### Set up dustkappa_silicate.inp ########################

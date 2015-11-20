@@ -24,6 +24,8 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
+20/11/15: Custom data files for RADMC-3D are now generated with a Python script that asks for user defined quantities. It is possible to compute the radius of the molecular cloud from its mass and density (the code requests number density and converts this to g/cm^3). The resulting radius is then used to help define the image width (i.e. the user is told what the cloud radius is so as to make appropriate adjustments to the image width). At present, the image width is defined in AU. Furthermore this width is split into n user defined pixels and each pixel in each dimension looped over to assign density and temperature.
+
 As of 11/10/15 minor tests have been performed of RADMC-3D in Python
 to ascertain its viability for the project. Those tests setup various simple
 problems and simulations, the most useful of which is the creation of a 2D (as well
@@ -45,7 +47,8 @@ to the notes found here. Where possible, those issues will be linked next to the
   - [x] 2D
 - [x] Begin collecting BiBTeX library of references for report
 - [ ] Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
-  - [ ] Different opacity law (see notes in notebook for papers)
+  - [x] Different opacity law (see notes in notebook for papers) 
   - [x] Standard 1/r**2 density profile (i.e. decreasing with radius)
-  - [ ] Standard protostar temperature profile (i.e. increasing with radius)
+  - [x] Standard molecular cloud temperature profile (cooler in the cloud relative to the exterior)
     (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
+  - [ ] Investigate the `ValueError: zero-size array to reduction operation minimum which has no identity` error that RADMC-3D is throwing when trying to run the raytrace with all custom files in place.

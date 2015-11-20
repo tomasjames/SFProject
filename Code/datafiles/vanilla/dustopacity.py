@@ -26,20 +26,6 @@ import numpy as np
 # Creates the dust opacity file (dustopac.inp) and opens it in write mode
 f = open('dustkappa_silicate.inp', 'w')
 
-######################## Read 'wavelength_micron.inp' ######################
-'''
-# Read the file into an array
-w = np.loadtxt('wavelength_micron.inp')
-
-# Take the first entry (the number of wavelength points)
-nlam = w[0]
-
-# Take the second and last entries (i.e. the beginning and end points for
-# the wavelength range) to use later
-lambda_init = w[1]
-lambda_fin = w[-1]
-'''
-
 # The start and end points of the wavelength range in microns
 lambda_init = w_0
 lambda_fin = w_nlam
