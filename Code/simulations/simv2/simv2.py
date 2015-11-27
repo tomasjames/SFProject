@@ -13,13 +13,16 @@ import os
 # Import time tools
 import time
 
+from radmc3dPy.natconst import *
+
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
-radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
+radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False,
-                                    tstar='ts', nx=64, ny=64, nz=64,
+radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, tstar='1', rstar='1',
+                                    nx=128, ny=128, nz=128, xbound=[-40000*au,40000*au],
+                                    ybound=[-40000*au,40000*au], zbound=[-40000*au,40000*au],
                                     nphot=2000000.)
 
 ################################# Pause script #################################
@@ -35,17 +38,19 @@ raw_input(
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image globallam')
+os.system('radmc3d image')
 
 ############################# Plot the resulting data ##########################
 # Generate a canvas to plot over
-radmc3dPy.image.makeImage(npix=100000, sizeau=21426., wav=100., incl=90.)
+#radmc3dPy.image.makeImage(npix=1000, sizeau=45000., incl=90., pointau=[15, 15, 15], lambdarange=[5.,100.], nlam=96)
+
+radmc3dPy.image.makeImage(npix=10000, sizeau=80000., wav=290., incl=90.)
 
 # Initialise the image
 imag = radmc3dPy.image.readImage()
 
-# Plot the image in a matplotlib figure
-radmc3dPy.image.plotImage(imag, arcsec=True, dpc=150., log=True, maxlog=5.)
+# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+radmc3dPy.image.plotImage(imag, arcsec=False, au=False, dpc=150., log=False)
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'

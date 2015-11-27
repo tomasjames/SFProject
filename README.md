@@ -24,7 +24,13 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
-20/11/15: Custom data files for RADMC-3D are now generated with a Python script that asks for user defined quantities. It is possible to compute the radius of the molecular cloud from its mass and density (the code requests number density and converts this to g/cm^3). The resulting radius is then used to help define the image width (i.e. the user is told what the cloud radius is so as to make appropriate adjustments to the image width). At present, the image width is defined in AU. Furthermore this width is split into n user defined pixels and each pixel in each dimension looped over to assign density and temperature.
+20/11/15: Custom data files for RADMC-3D are now generated with a Python script that asks for user defined quantities. It is possible to compute the radius of the molecular cloud from its mass and density (the code requests number density and converts this to g/cm^3). The resulting radius is then used to help define the image width (i.e. the user is told what the cloud radius is so as to make appropriate adjustments to the image width). Furthermore this width is split into n user defined pixels and each pixel in each dimension looped over to assign density and temperature.
+
+These files are then copied over to the directory that the image raytrace is performed. By invoking `radmc3d image` the raytrace is then performed (providing all the information required is written to the `problem-params.inp` file - this is usually performed in model setup, ie `radmc3dPy.analyze.writeDefaultParfile('model_name')`). Allowing the code to run produces an image as seen below:
+
+<!--[A 1 MSun cloud (dust mass=0.01 Msun) with a Sun like star in the centre](/relative/path/to/img.jpg?raw=true "Optional Title")-->
+
+IMPORTANT: ALL UNITS MUST BE CGS (centimetre-grams-second)
 
 As of 11/10/15 minor tests have been performed of RADMC-3D in Python
 to ascertain its viability for the project. Those tests setup various simple
@@ -47,8 +53,9 @@ to the notes found here. Where possible, those issues will be linked next to the
   - [x] 2D
 - [x] Begin collecting BiBTeX library of references for report
 - [ ] Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
-  - [x] Different opacity law (see notes in notebook for papers) 
+  - [x] Different opacity law (see notes in notebook for papers)
   - [x] Standard 1/r**2 density profile (i.e. decreasing with radius)
   - [x] Standard molecular cloud temperature profile (cooler in the cloud relative to the exterior)
     (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
-  - [ ] Investigate the `ValueError: zero-size array to reduction operation minimum which has no identity` error that RADMC-3D is throwing when trying to run the raytrace with all custom files in place.
+  - [x] Investigate the `ValueError: zero-size array to reduction operation minimum which has no identity` error that RADMC-3D is throwing when trying to run the raytrace with all custom files in place.
+  - [ ] Implement IRF

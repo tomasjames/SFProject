@@ -19,8 +19,8 @@ radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False,
-                                    tstar='ts', nx=32, ny=32, nz=32,
-                                    nphot=2000000.)
+                                    tstar='0.003*ts', nx=100, ny=100, nz=100,
+                                    nphot=10000.)
 
 ################################# Pause script #################################
 # This pauses the script until the user presses enter. This is in place so that
@@ -35,17 +35,17 @@ raw_input(
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image globallam')
+os.system('radmc3d mctherm')
 
 ############################# Plot the resulting data ##########################
 # Generate a canvas to plot over
-radmc3dPy.image.makeImage(npix=100000, sizeau=21426., wav=100., incl=90.)
+radmc3dPy.image.makeImage(npix=1000, sizeau=200., wav=10000, incl=90.)
 
 # Initialise the image
 imag = radmc3dPy.image.readImage()
 
 # Plot the image in a matplotlib figure
-radmc3dPy.image.plotImage(imag, arcsec=True, dpc=150., log=True, maxlog=5.)
+radmc3dPy.image.plotImage(imag, arcsec=True, dpc=150., log=True, maxlog=5)
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'

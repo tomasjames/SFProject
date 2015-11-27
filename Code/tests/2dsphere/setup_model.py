@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 radmc3dPy.analyze.writeDefaultParfile('spher2d_1')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.003*ts', nphot=20000.)
+radmc3dPy.setup.problemSetupDust('spher2d_1', binary=False, tstar='0.003*ts',
+                                    nx=50, ny=50, nphot=20000.)
 
 # Copy the dust opacity and data files from the datafiles directory
 os.system('cp -v ../datafiles/dustkappa_silicate.inp .')

@@ -14,8 +14,8 @@ tstar                     = 0.003*ts  # # Effective temperature of the star(s) [
 # -------------------------------------------------------------------------------------------------------------------------
 crd_sys                   = 'sph'  # Coordinate system used (car/cyl)
 nw                        = [20,100,30]  # Number of points in the wavelength grid
-nx                        = 100  # Number of grid points in the first dimension
-ny                        = 60  # Number of grid points in the second dimension
+nx                        = 50  # Number of grid points in the first dimension
+ny                        = 50  # Number of grid points in the second dimension
 nz                        = 0  # Number of grid points in the third dimension
 wbound                    = [0.1, 7., 25., 1e4]  # Boundraries for the wavelength grid
 xbound                    = [5.0*au, 100.0*au]  # Boundaries for the x grid
