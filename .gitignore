@@ -7,7 +7,6 @@ radmc-3d/*
 *.ini
 *.fits
 *.dat
-*.png
 *.backup
 *.log
 *.pyc
