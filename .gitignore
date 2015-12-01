@@ -10,3 +10,5 @@ radmc-3d/*
 *.backup
 *.log
 *.pyc
+*.vtk
+*.docx

@@ -33,7 +33,7 @@ d2g = 0.01
 # Ask for the cloud mass and convert to grams
 m = input('What cloud mass should be used? (Answer should be in Solar Masses)\n')
 dust_mass = d2g**m*ms
-print 'The mass of the cloud considered is', mass, 'g.\n'
+print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', dust_mass, 'g.\n'
 
 # Ask for the cloud number density and convert to g/cm^3
 cloud = input('What number density should be assigned to the cloud?\n')
@@ -46,7 +46,7 @@ outside_density = outside*muh2*mp*d2g
 print 'The outside density is', outside_density, 'g/cm^3.\n'
 
 # Calculate radius of the cloud in cm
-r = ((3./4)*(1./np.pi)*(dust_massmass/cloud_density))**(1./3)
+r = ((3./4)*(1./np.pi)*(dust_mass/cloud_density))**(1./3)
 print 'The radius of the cloud is', r, 'cm (or', r/au, ' AU).\n'
 
 #print 'The dust mass in the cloud is ', ((4./3.)*(np.pi)*(r**3)*(cloud_density))/ms, 'MSun.'
@@ -291,12 +291,59 @@ print '\'dustkappa_silicate.inp\' written to the working directory\n'
 ################################################################################
 ######################### Set up wavelength_micron.inp #########################
 ################################################################################
-'''
+
 print '\n########################################################################'
 print '                         wavelength_micron.inp                            '
 print '########################################################################\n'
 
+# Write the file
+wavelength_micron = open('wavelength_micron.inp', 'w')
 
+nwav = input('How many wavelength points should be placed inside of wavelength_micron.inp? (This is typically 150)\n')
+
+print nwav, ' points are being written. There will be', nwav, 'points between 0.1um and 1000um.\n'
+
+# Save the number of wavelength points
+wavelength_micron.write(str(nwav)+str('\n'))
+
+# Instantiate the number of wavelength points`
+wavs = np.linspace(np.log10(1e-1), np.log10(1e3), nwav)
+
+for p in wavs:
+    if p == wavs[-1]:
+        wavelength_micron.write(str(10**(p)))
+    else:
+        wavelength_micron.write(str(10**(p)) + str('\n'))
+
+################################################################################
+####################### Set up camera_wavelength_micron.inp ####################
+################################################################################
+
+print '\n########################################################################'
+print '                     camera_wavelength_micron.inp                         '
+print '########################################################################\n'
+
+# Write the file
+camera = open('camera_wavelength_micron.inp', 'w')
+
+lower = input('What lower limit of the passband is to be used? Answer should be in um\n')
+higher = input('What higher limit of the passband is to be used? Answer should be in um\n')
+
+print 'There will be', nwav, 'points between', lower, 'um and', higher, 'um.\n'
+
+# Save the number of wavelength points
+camera.write(str(nwav)+str('\n'))
+
+# Instantiate the number of wavelength points`
+cam_wavs = np.linspace(np.log10(lower), np.log10(higher), nwav)
+
+for q in cam_wavs:
+    if q == cam_wavs[-1]:
+        camera.write(str(10**(q)))
+    else:
+        camera.write(str(10**(q)) + str('\n'))
+
+'''
 ################################################################################
 ############################### Set up stars.inp ###############################
 ################################################################################
@@ -305,16 +352,23 @@ print '\n#######################################################################
 print '                               stars.inp                                  '
 print '########################################################################\n'
 
-# Write the file
-stellar = open('stars.inp', 'w')
+# Determine whether the user would like stars
+userStar = input('Do you want to put any stars in the simulation?')
 
-# Write the format number
-stellar.write('2        # Format number: should always be 2')
+if userStar == 'Yes':
 
-# Write the number of stars (assume 1 for now)
-stellar.write('1        # Number of stars in the field')
+    # Write the file
+    stellar = open('stars.inp', 'w')
 
-# Write the radius of the star along with its mass and coordinates (assume Sun)
-stellar.write('1    1    0    0    0')
+    # Write the format number
+    stellar.write('2        # Format number: should always be 2')
 
+    # Write the number of stars (assume 1 for now)
+    stellar.write('1        # Number of stars in the field')
+
+    # Write the radius of the star along with its mass and coordinates (assume Sun)
+    stellar.write('1    1    0    0    0')
+
+else:
+    print 'No stars will be considered (and stars.inp has not been written)\n'
 '''
