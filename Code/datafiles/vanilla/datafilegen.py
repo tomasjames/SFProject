@@ -127,6 +127,8 @@ for k in z:
 
 print '\'amr_grid.inp\' has been written to the working directory\n'
 
+amr.close()
+
 ################################################################################
 ############# Set up dust_density.inp and dust_temperature.inp #################
 ################################################################################
@@ -206,6 +208,8 @@ for n in range(0,len(z)-1):
                 y_cube[l,m,n] = y[m]
                 z_cube[l,m,n] = z[n]
 
+density.close()
+temperature.close()
 
 ################################################################################
 ######################### Set up dustkappa_silicate.inp ########################
@@ -288,6 +292,8 @@ for o in range(0,len(w)):
 
 print '\'dustkappa_silicate.inp\' written to the working directory\n'
 
+silicate.close()
+
 ################################################################################
 ######################### Set up wavelength_micron.inp #########################
 ################################################################################
@@ -314,6 +320,8 @@ for p in wavs:
         wavelength_micron.write(str(10**(p)))
     else:
         wavelength_micron.write(str(10**(p)) + str('\n'))
+
+wavelength_micron.close()
 
 ################################################################################
 ####################### Set up camera_wavelength_micron.inp ####################
@@ -342,6 +350,8 @@ for q in cam_wavs:
         camera.write(str(10**(q)))
     else:
         camera.write(str(10**(q)) + str('\n'))
+
+camera.close()
 
 '''
 ################################################################################
