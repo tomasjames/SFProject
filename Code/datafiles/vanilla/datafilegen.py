@@ -13,6 +13,8 @@ import numpy as np
 
 from radmc3dPy.natconst import *
 
+import glob
+
 print '\n########################################################################'
 print 'This script will request some information before writing multiple required'
 print 'custom files to the working directory for use with RADMC-3D. These should'
@@ -299,61 +301,136 @@ silicate.close()
 ################################################################################
 
 print '\n########################################################################'
-print '                         wavelength_micron.inp                            '
+print '          wavelength_micron.inp and camera_wavelength_micron.inp          '
 print '########################################################################\n'
 
 # Write the file
 wavelength_micron = open('wavelength_micron.inp', 'w')
 
-nwav = input('How many wavelength points should be placed inside of wavelength_micron.inp? (This is typically 150)\n')
+# Scan the directory to find file containing .txt
+# This works by matching any filename that has PSW before the file extension
+files = glob.glob('./*Herschel*')
 
-print nwav, ' points are being written. There will be', nwav, 'points between 0.1um and 1000um.\n'
+# Define empty list to store file contents
+spire, spire_wav, spire_trans = [], [], []
+
+# Determine whether
+if files == ['./Herschel_SPIRE.PSW_ext.dat.txt']:
+    with open('Herschel_SPIRE.PSW_ext.dat.txt') as f:
+        spire_psw = f.readlines()
+        print 'I am reading from \'Herschel_SPIRE.PSW_ext.dat.txt\' and have assigned its output to psw_band.\n'
+
+        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        for row in spire_psw:
+            spire.append(row.split())
+
+elif files == ['./Herschel_SPIRE.PMW_ext.dat.txt']:
+    with open('Herschel_SPIRE.PMW_ext.dat.txt') as f:
+        spire_pmw = f.readlines()
+        print 'I am reading from \'Herschel_SPIRE.PMW_ext.dat.txt\' and have assigned its output to pmw_band.\n'
+
+        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        for row in spire_pmw:
+            spire.append(row.split())
+
+elif files == ['./Herschel_SPIRE.PLW_ext.dat.txt']:
+    with open('Herschel_SPIRE.PLW_ext.dat.txt') as f:
+        spire_plw = f.readlines()
+        print 'I am reading from \'Herschel_SPIRE.PLW_ext.dat.txt\' and have assigned its output to plw_band.\n'
+
+        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        for row in spire_plw:
+            spire.append(row.split())
+
+for a in range(0,len(spire)):
+    spire_wav.append(np.float64(spire[a][0]))
+    spire_trans.append(np.float64(spire[a][1]))
+
+print 'The correct format data has now been assigned to spire with the wavelength component being in spire_wav and the transmission component being in spire_trans.\n'
+
+# Determine the lower and upper bounds of the passband
+lower = np.float64(spire[0][0])
+higher = np.float64(spire[-1][0])
+
+# Determine the number of wavelength points in the passband
+nwav = len(spire)
 
 # Save the number of wavelength points
 wavelength_micron.write(str(nwav)+str('\n'))
 
 # Instantiate the number of wavelength points`
-wavs = np.linspace(np.log10(1e-1), np.log10(1e3), nwav)
+#wavs = np.linspace(np.log10(1e-1), np.log10(1e3), nwav)
+wavs = np.linspace(1e-1, 1e3, nwav)
 
+# Takes each element of the list and writes it to the wavelength_micron file
 for p in wavs:
     if p == wavs[-1]:
-        wavelength_micron.write(str(10**(p)))
+        #wavelength_micron.write(str(10**(p)))
+        wavelength_micron.write(str(p))
     else:
-        wavelength_micron.write(str(10**(p)) + str('\n'))
+        #wavelength_micron.write(str(10**(p)) + str('\n'))
+        wavelength_micron.write(str(p)+str('\n'))
 
+# Close the file
 wavelength_micron.close()
-
-################################################################################
-####################### Set up camera_wavelength_micron.inp ####################
-################################################################################
-
-print '\n########################################################################'
-print '                     camera_wavelength_micron.inp                         '
-print '########################################################################\n'
 
 # Write the file
 camera = open('camera_wavelength_micron.inp', 'w')
-
-lower = input('What lower limit of the passband is to be used? Answer should be in um\n')
-higher = input('What higher limit of the passband is to be used? Answer should be in um\n')
 
 print 'There will be', nwav, 'points between', lower, 'um and', higher, 'um.\n'
 
 # Save the number of wavelength points
 camera.write(str(nwav)+str('\n'))
 
-# Instantiate the number of wavelength points`
-cam_wavs = np.linspace(np.log10(lower), np.log10(higher), nwav)
-
-for q in cam_wavs:
-    if q == cam_wavs[-1]:
-        camera.write(str(10**(q)))
+#
+for q in range(0,len(spire)):
+    if q == len(spire):
+        camera.write(str(spire[q][0]*10**-4))
     else:
-        camera.write(str(10**(q)) + str('\n'))
+        camera.write(str(spire[q][0]*10**-4) + str('\n'))
 
 camera.close()
 
 '''
+################################################################################
+############################ Set up external_source.inp ########################
+################################################################################
+
+print '\n########################################################################'
+print '                           external_source.inp                            '
+print '########################################################################\n'
+
+# Write the file
+external = open('external_source.inp', 'w')
+
+# Write the format number
+external.write('2        # This is the format number (1=Hertz i.e. frequency)\n')
+
+# Write number of wavelength points
+external.write(str(nwav)+str('\n'))
+
+isrf = []
+
+# Loop through the wavelengths as defined earlier for wavelength_micron.inp and save to external_source.inp as well as evaluate the intensity (using the Planck function)
+for r in wavs:
+    external.write(str(10**(r)) + str('\n'))
+
+    # Split Planck function into seperate quotients to make error tracking easier
+    a = 2.0*hh*cc**2
+    #b = hh*cc/(((10**r)*10**-4)*kk*outside_temperature)
+    #isrf.append(a/((((10**r)*10**-4)**5)*(np.exp(b) - 1.0)))
+    b = hh*cc/(((10**r))*kk*outside_temperature)
+    isrf.append(a/((((10**r))**5)*(np.exp(b) - 1.0)))
+
+# Write the intensities to the end of external_source.inp
+for s in isrf:
+    if s == isrf[-1]:
+        external.write(str(s))
+    else:
+        external.write(str(s)+str('\n'))
+
+external.close()
+
 ################################################################################
 ############################### Set up stars.inp ###############################
 ################################################################################

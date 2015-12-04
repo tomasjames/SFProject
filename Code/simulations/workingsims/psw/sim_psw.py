@@ -41,7 +41,7 @@ radmc3dPy.image.makeImage(npix=100000, sizeau=20000, incl=90., lambdarange=psw_e
 imag = radmc3dPy.image.readImage()
 
 # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-radmc3dPy.image.plotImage(imag, arcsec=False, au=False, dpc=150., log=False, bunit='inu')
+radmc3dPy.image.plotImage(imag, arcsec=False, au=True, dpc=150., log=True)
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
