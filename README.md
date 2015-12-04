@@ -24,11 +24,15 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
+04/12/15: The model has since been adapted to plot the three passbands on SPIRE in order to begin generating the synthetic data required to compare with the real data from Herschel SPIRE. However, transmission has not been accounted for in these models to date - the .txt files containing the transmission curve do not have regular wavelength spacing, necessitating the use of interpolation to generate a linearly spaced wavelength-transmission parameter space.
+
+Once this is complete plots of each wavelength are multiplied by their transmission coefficient and summed (weighted) over all possible wavelengths in the passband to give the final image as seen by SPIRE. At this point, an SED can be determined by invoking `radmc3d spectra` (check that this is the correct command).
+
 20/11/15: Custom data files for RADMC-3D are now generated with a Python script that asks for user defined quantities. It is possible to compute the radius of the molecular cloud from its mass and density (the code requests number density and converts this to g/cm^3). The resulting radius is then used to help define the image width (i.e. the user is told what the cloud radius is so as to make appropriate adjustments to the image width). Furthermore this width is split into n user defined pixels and each pixel in each dimension looped over to assign density and temperature.
 
 These files are then copied over to the directory that the image raytrace is performed. By invoking `radmc3d image` the raytrace is then performed (providing all the information required is written to the `problem-params.inp` file - this is usually performed in model setup, ie `radmc3dPy.analyze.writeDefaultParfile('model_name')`). Allowing the code to run produces an image as seen below:
 
-![A 1 MSun cloud (dust mass=0.01 Msun) with a Sun like star in the centre](Code/simulations/workingsims/psw/MSun_psw.png "A 1 MSun cloud with dust mass=0.01 Msun and a Sun like star in the centre")
+![A 1 MSun cloud (dust mass=0.01 Msun) with a Sun like star in the centre](Code/simulations/workingsims/psw/MSun_psw.png "A 1 MSun cloud with dust mass=0.01 Msun - this model has no source of photons.")
 
 IMPORTANT: ALL UNITS MUST BE CGS (centimetre-grams-second)
 
