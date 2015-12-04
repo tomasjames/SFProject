@@ -28,7 +28,7 @@ Project Progress
 
 These files are then copied over to the directory that the image raytrace is performed. By invoking `radmc3d image` the raytrace is then performed (providing all the information required is written to the `problem-params.inp` file - this is usually performed in model setup, ie `radmc3dPy.analyze.writeDefaultParfile('model_name')`). Allowing the code to run produces an image as seen below:
 
-![A 1 MSun cloud (dust mass=0.01 Msun) with a Sun like star in the centre](Code/simulations/MSun_850um.png "A 1 MSun cloud with dust mass=0.01 Msun and a Sun like star in the centre")
+![A 1 MSun cloud (dust mass=0.01 Msun) with a Sun like star in the centre](Code/simulations/workingsims/psw/MSun_psw.png "A 1 MSun cloud with dust mass=0.01 Msun and a Sun like star in the centre")
 
 IMPORTANT: ALL UNITS MUST BE CGS (centimetre-grams-second)
 
