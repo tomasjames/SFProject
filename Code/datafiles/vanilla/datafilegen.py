@@ -11,9 +11,17 @@ import os
 # Import Numpy
 import numpy as np
 
+# Import constants from radmc3dPy
 from radmc3dPy.natconst import *
 
+# Import glob for dredging folders for files
 import glob
+
+# Import matplotlib to plot
+import matplotlib.pyplot as plt
+
+# Import interpolation modules
+from scipy.interpolate import interp1d
 
 print '\n########################################################################'
 print 'This script will request some information before writing multiple required'
@@ -301,7 +309,7 @@ silicate.close()
 ################################################################################
 
 print '\n########################################################################'
-print '          wavelength_micron.inp and camera_wavelength_micron.inp          '
+print '       wavelength_micron.inp and camera_wavelength_micron.inp       '
 print '########################################################################\n'
 
 # Write the file
@@ -378,16 +386,52 @@ wavelength_micron.close()
 camera = open('camera_wavelength_micron.inp', 'w')
 
 print 'There will be', nwav, 'points between', lower, 'um and', higher, 'um.\n'
+print ''
 
-# Save the number of wavelength points
-camera.write(str(nwav)+str('\n'))
+# This determines whether the spacing is linear or logarithmic
+if spire_wav[2] - spire_wav[1] != spire_wav[1] - spire_wav[0]:
+    print 'Spacing in wavelength is not constant; interpolation is required.\n'
 
-#
-for q in range(0,len(spire)):
-    if q == len(spire):
-        camera.write(str(spire[q][0]*10**-4))
-    else:
-        camera.write(str(spire[q][0]*10**-4) + str('\n'))
+    # Generate a function that best fits the data given in the download
+    interp = interp1d(spire_wav, spire_trans, kind='cubic')
+
+    # Generate a linear array of points to feed into it
+    linear_wav = np.linspace(lower,higher,nwav)
+
+    # Feed in and determine the new, linearly spaced transmission points
+    interp_trans = interp(linear_wav)
+
+    plt.plot(spire_wav, spire_trans, 'r+', label=str(files))
+    plt.plot(linear_wav, interp_trans, 'b--', label='Interpolated Points')
+    plt.xlabel('$\lambda$ ($\AA$)')
+    plt.ylabel('Transmission')
+    plt.legend(loc='best')
+    plt.savefig('interpolated.png', bbox_inches='tight')
+    plt.close()
+
+    print 'Interpolation complete. Plot of the original function and the interpolated function have been saved to the working directory for accuracy inspection.\n'
+    print 'Data will now be written to \'camera_wavelength_micron.inp\'\n'
+
+    # Save the number of wavelength points
+    camera.write(str(nwav)+str('\n'))
+
+    # Writes wavelength points
+    for q in range(0,len(linear_wav)):
+        if q == len(linear_wav):
+            camera.write(str(linear_wav[q]*10**-4))
+        else:
+            camera.write(str(linear_wav[q]*10**-4) + str('\n'))
+
+else:
+    # Save the number of wavelength points
+    camera.write(str(nwav)+str('\n'))
+
+    # Writes wavelength points
+    for q in range(0,len(spire)):
+        if q == len(spire):
+            camera.write(str(spire[q][0]*10**-4))
+        else:
+            camera.write(str(spire[q][0]*10**-4) + str('\n'))
 
 camera.close()
 
