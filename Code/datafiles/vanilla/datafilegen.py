@@ -328,37 +328,61 @@ if files == ['./Herschel_SPIRE.PSW_ext.dat.txt']:
         spire_psw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PSW_ext.dat.txt\' and have assigned its output to psw_band.\n'
 
-        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
         for row in spire_psw:
             spire.append(row.split())
+
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 1994539.66
+        higher = 2985656.87
 
 elif files == ['./Herschel_SPIRE.PMW_ext.dat.txt']:
     with open('Herschel_SPIRE.PMW_ext.dat.txt') as f:
         spire_pmw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PMW_ext.dat.txt\' and have assigned its output to pmw_band.\n'
 
-        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
         for row in spire_pmw:
             spire.append(row.split())
+
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 2816949.09
+        higher = 4247548.25
 
 elif files == ['./Herschel_SPIRE.PLW_ext.dat.txt']:
     with open('Herschel_SPIRE.PLW_ext.dat.txt') as f:
         spire_plw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PLW_ext.dat.txt\' and have assigned its output to plw_band.\n'
 
-        # Because the content is not read in using proper formatting this splits each row into columns that allow the first column to be wavelength points for the passband and the second column to be the transmission coefficint at that wavelength
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
         for row in spire_plw:
             spire.append(row.split())
 
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 3914345.93
+        higher = 6908139.18
+
+# Split the data (a 2 column ascii file) into the correct lists: 0th column is the wavelength and 1st column is the transmission
 for a in range(0,len(spire)):
     spire_wav.append(np.float64(spire[a][0]))
     spire_trans.append(np.float64(spire[a][1]))
 
-print 'The correct format data has now been assigned to spire with the wavelength component being in spire_wav and the transmission component being in spire_trans.\n'
-
-# Determine the lower and upper bounds of the passband
-lower = np.float64(spire[0][0])
-higher = np.float64(spire[-1][0])
+print 'The data has now been assigned to spire with the wavelength component being in spire_wav and the transmission component being in spire_trans.\n'
 
 # Determine the number of wavelength points in the passband
 nwav = len(spire)
@@ -385,7 +409,12 @@ wavelength_micron.close()
 # Write the file
 camera = open('camera_wavelength_micron.inp', 'w')
 
-print 'There will be', nwav, 'points between', lower, 'um and', higher, 'um.\n'
+# Write another file called transmission that will help with accounting for the optic transmissions when plotting the simulation
+trans = open('transmission.txt', 'w')
+
+points = input('How many wavelength points should be computed for camera_wavelength_micron.inp?\n')
+
+print 'There will be', points, 'points between', lower, 'um and', higher, 'um.\n'
 print ''
 
 # This determines whether the spacing is linear or logarithmic
@@ -396,7 +425,7 @@ if spire_wav[2] - spire_wav[1] != spire_wav[1] - spire_wav[0]:
     interp = interp1d(spire_wav, spire_trans, kind='cubic')
 
     # Generate a linear array of points to feed into it
-    linear_wav = np.linspace(lower,higher,nwav)
+    linear_wav = np.linspace(lower,higher,points)
 
     # Feed in and determine the new, linearly spaced transmission points
     interp_trans = interp(linear_wav)
@@ -413,18 +442,20 @@ if spire_wav[2] - spire_wav[1] != spire_wav[1] - spire_wav[0]:
     print 'Data will now be written to \'camera_wavelength_micron.inp\'\n'
 
     # Save the number of wavelength points
-    camera.write(str(nwav)+str('\n'))
+    camera.write(str(points)+str('\n'))
 
     # Writes wavelength points
     for q in range(0,len(linear_wav)):
         if q == len(linear_wav):
             camera.write(str(linear_wav[q]*10**-4))
+            trans.write(str(linear_wav[q]*10**-4)+str('    ')+str(interp_trans[q]))
         else:
             camera.write(str(linear_wav[q]*10**-4) + str('\n'))
+            trans.write(str(linear_wav[q]*10**-4)+str('    ')+str(interp_trans[q])+str('\n'))
 
 else:
     # Save the number of wavelength points
-    camera.write(str(nwav)+str('\n'))
+    camera.write(str(points)+str('\n'))
 
     # Writes wavelength points
     for q in range(0,len(spire)):
@@ -434,6 +465,7 @@ else:
             camera.write(str(spire[q][0]*10**-4) + str('\n'))
 
 camera.close()
+trans.close()
 
 '''
 ################################################################################
