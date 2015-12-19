@@ -111,7 +111,7 @@ with open('image_trans.out', 'w') as f:
 imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
 # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=True)
+radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
