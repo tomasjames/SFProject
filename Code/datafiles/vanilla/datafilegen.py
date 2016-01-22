@@ -42,7 +42,7 @@ d2g = 0.01
 
 # Ask for the cloud mass and convert to grams
 m = input('What cloud mass should be used? (Answer should be in Solar Masses)\n')
-dust_mass = d2g**m*ms
+dust_mass = d2g*m*ms
 print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', dust_mass, 'g.\n'
 
 # Ask for the cloud number density and convert to g/cm^3
@@ -248,9 +248,12 @@ lambda_fin = 10000. # 10000 um
 
 # Query for reference wavelength
 w_ref = input('Which reference wavelength should I use to evaluate the opacities?\n')
+v_ref = cc/w_ref
 
 # Ask for reference opacity
-kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
+#kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
+kappa_0 = 0.009
+print ('\nThe k_0 opacity is taken to be 0.009 cm^2/g as per Ossenkopf and Henning, 1994.\n')
 
 # Ask for the number of wavelength points
 nlam = input('How many wavelength points do you want me to use in construction?\n')
@@ -259,6 +262,7 @@ nlam = input('How many wavelength points do you want me to use in construction?\
 
 # Create array of wavelengths from range given and reshape
 w = np.linspace(lambda_init, lambda_fin, nlam)
+v = np.linspace(cc/lambda_init, cc/lambda_fin, nlam)
 
 # Ask for opacity law
 opaclaw = input('Which opacity law should I use? Answer with: \'H\' (Hildebrand) \n')
@@ -268,7 +272,7 @@ B = input('What dust spectral index should be used? (1.7 is recommended)\n')
 
 if opaclaw == 'H':
     # Evaluate opacities
-    opacity = kappa_0*(w/w_ref)**B
+    opacity = kappa_0*(v/v_ref)**B
 
 # Concantenate arrays to create 2D array of all data in format ready to be
 # written to the .inp file

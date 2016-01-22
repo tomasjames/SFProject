@@ -22,12 +22,18 @@ import numpy as np
 # Import csv
 import csv
 
+from matplotlib.pyplot import *
+
+############################## Set up initial model ############################
+# Call the data file generation generation script to write the necessary files to the working directory
+execfile('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/vanilla/datafilegen.py')
+
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
 radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, tstar='1.0*ts', rstar='1.0*rs', nx=128, ny=128, nz=128, xbound=[-10000*au,10000*au], ybound=[-10000*au,10000*au], zbound=[-10000*au,10000*au], nphot=2000000.)
+radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=1500000.)
 
 ############################ Run Monte-Carlo simulation ########################
 
@@ -38,11 +44,10 @@ os.system('radmc3d image loadlambda')
 ########################## Initailise the resulting data #######################
 
 # Define wavelength ranges of spire to plot (PSW, PMW and PLW)
-#spire = [[196.5351,298.1259],[277.3117,423.4707],[386.6218,679.3126]]
 psw_ext = [199.4540,298.5657]
 
 # Plot image for first SPIRE wavelength band (PSW)
-#radmc3dPy.image.makeImage(npix=100000, sizeau=20000, incl=90., lambdarange=psw_ext, nlam=60)
+radmc3dPy.image.makeImage(npix=100000, sizeau=15000, incl=90., lambdarange=psw_ext, nlam=60)
 
 ########################### Account for transmission ###########################
 
@@ -110,7 +115,7 @@ with open('image_trans.out', 'w') as f:
 # Initialise the image
 imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
-# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+# Plot the image in a matplotlib figure
 radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'

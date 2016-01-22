@@ -13,18 +13,41 @@ import os
 # Import time tools
 import time
 
+# Import units
 from radmc3dPy.natconst import *
 
+# Import numpy
 import numpy as np
 
+# Import csv
 import csv
+
+from matplotlib.pyplot import *
+
+###################### Check for correct default.inp files #####################
+
+print '########################################################################'
+print '########################## Default File Check ##########################'
+print '########################################################################'
+
+# Check to see whether radmc3d.inp exists. If so, leave it alone and if not write it to the working directory
+if os.path.isfile('radmc3d.inp') == True:
+    print '\nradmc3d.inp already exists; no need to write/overwrite\n'
+else:
+    # This line writes the radmc3d.inp file and then immediately closes it
+    open('radmc3d.inp', 'w').close()
+    print '\n--->radmc3d.inp did not alreadt exists; a blank file called radmc3d.inp has been written to the working directory\n'
+
+############################## Set up initial model ############################
+# Call the data file generation generation script to write the necessary files to the working directory
+execfile('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
 radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, tstar='1.0*ts', rstar='1.0*rs', nx=128, ny=128, nz=128, xbound=[-10000*au,10000*au], ybound=[-10000*au,10000*au], zbound=[-10000*au,10000*au], nphot=2000000.)
+radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
 
 ########################### Run Monte-Carlo simulation ########################
 
@@ -39,7 +62,7 @@ os.system('radmc3d image loadlambda')
 plw_ext = [391.4346,690.8139]
 
 # Plot image for first SPIRE wavelength band (PSW)
-radmc3dPy.image.makeImage(npix=100000, sizeau=20000, incl=90., lambdarange=plw_ext, nlam=60)
+#radmc3dPy.image.makeImage(npix=150000, sizeau=20000, incl=90., lambdarange=plw_ext, nlam=60)
 
 ########################### Account for transmission ###########################
 
@@ -109,6 +132,7 @@ imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
 # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
 radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
