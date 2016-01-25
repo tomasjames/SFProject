@@ -40,8 +40,18 @@ flux = spectrum[:,1]
 
 ################################# Plotting routine #############################
 
+figure(1)
 plot(wav, flux, 'b--')
 xlabel('Wavelength $(\mu m)$')
 ylabel('Flux')
 title('\nSpectral Energy Distribution for PSW Band Synthetic Data\n')
 savefig('spectrum_psw.png', dpi=300, bbox_inches='tight')
+close()
+
+figure(2)
+plot(wav, flux/max(flux), 'g--')
+xlabel('Wavelength $(\mu m)$')
+ylabel('Normalised Flux')
+title('\nSpectral Energy Distribution for PSW Band Synthetic Data\n')
+savefig('spectrum_norm_psw.png', dpi=300, bbox_inches='tight')
+close()
