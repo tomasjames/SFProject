@@ -247,13 +247,13 @@ lambda_init = 0.1 # 0.1 um
 lambda_fin = 10000. # 10000 um
 
 # Query for reference wavelength
-w_ref = input('Which reference wavelength should I use to evaluate the opacities?\n')
-v_ref = cc/w_ref
+#w_ref = input('Which reference wavelength should I use to evaluate the opacities?\n')
+w_ref = 1.30e3 # Reference wavelength in um
 
 # Ask for reference opacity
 #kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
-kappa_0 = 0.009
-print ('\nThe k_0 opacity is taken to be 0.009 cm^2/g as per Ossenkopf and Henning, 1994.\n')
+kappa_0 = 3.09e-1
+print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
 
 # Ask for the number of wavelength points
 nlam = input('How many wavelength points do you want me to use in construction?\n')
@@ -262,7 +262,7 @@ nlam = input('How many wavelength points do you want me to use in construction?\
 
 # Create array of wavelengths from range given and reshape
 w = np.linspace(lambda_init, lambda_fin, nlam)
-v = np.linspace(cc/lambda_init, cc/lambda_fin, nlam)
+v = np.linspace(cc/(lambda_init*10**-4), cc/(lambda_fin*10**-4), nlam)
 
 # Ask for opacity law
 opaclaw = input('Which opacity law should I use? Answer with: \'H\' (Hildebrand) \n')
@@ -272,7 +272,8 @@ B = input('What dust spectral index should be used? (1.7 is recommended)\n')
 
 if opaclaw == 'H':
     # Evaluate opacities
-    opacity = kappa_0*(v/v_ref)**B
+    opacity = kappa_0*(w_ref/w)**B
+    #opacity = kappa_0*(v/v_ref)**B
 
 # Concantenate arrays to create 2D array of all data in format ready to be
 # written to the .inp file

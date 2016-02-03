@@ -30,7 +30,7 @@ def chi(O,E,sigma):
     Returns simply the minimised chi squared value for a given dataset.
 
     O is the flux from the actual data.
-    Sigma is the square root of the variance of P (assume 10% of P)
+    Sigma is the square root of the variance of O (assume 10% of O)
     E is the data that is expected
     '''
     return sum((((O-E)/sigma)**2))
@@ -42,7 +42,10 @@ def mbb(N,opac,wav,T):
 
     This returns the intensity per unit solid angle, i.e. the flux observed.
     '''
-    return (N*opac*((2*(hh)*(cc)**2)/wav**5)*(1/(np.exp(hh*cc/(wav*kk*T))-1)))
+    a = (2*(6.626e-34)*(3e8)**2)/(wav**5)
+    b = ((6.6262e-34)*(3e8))/(wav*(1.38e-23)*T)
+    #return N*opac*(a*(1./(np.exp(b)-1)))
+    return opac*N*(a*(1./(np.exp(b)-1)))
 
 ############################ Read in the spectral data #########################
 
@@ -50,7 +53,7 @@ def mbb(N,opac,wav,T):
 spectrum = np.loadtxt('spectrum.out', skiprows=2)
 
 wav = spectrum[:,0]
-flux = spectrum[:,1]/max(spectrum[:,1])
+flux = spectrum[:,1]
 
 ######################### Determine (again) the opacity ########################
 
@@ -58,18 +61,28 @@ band = input('Which passband is to be considered? Answer with: \'PSW\', \'PMW\',
 
 if band == 'PSW':
     # The start and end points of the wavelength range in microns
-    lambda_init = 199.4540
-    lambda_fin = 298.5657
+    lambda_init = 199.4540e-6
+    lambda_fin = 298.5657e-6
 
     # Query for reference wavelength
-    w_ref = 249.00983
-    v_ref = cc/w_ref
+    w_ref = 1.30e9
+    v_ref = cc*10**-2/w_ref
+    print 'The reference wavelength is taken to be', w_ref, 'microns which equates to a frequency of', v_ref, 'Hz.\n'
+
+if band == 'PMW':
+    # The start and end points of the wavelength range in microns
+    lambda_init = 281.6949
+    lambda_fin = 424.7548
+
+    # Query for reference wavelength
+    w_ref = 1.30e9
+    v_ref = cc*10**-2/w_ref
     print 'The reference wavelength is taken to be', w_ref, 'microns which equates to a frequency of', v_ref, 'Hz.\n'
 
 # Ask for reference opacity
 #kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
-kappa_0 = 0.009
-print ('\nThe k_0 opacity is taken to be 0.009 cm^2/g as per Ossenkopf and Henning, 1994.\n')
+kappa_0 = 3.09e-1
+print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
 
 # Ask for the number of wavelength points
 #nlam = input('How many wavelength points do you want me to use in construction?\n')
@@ -80,7 +93,6 @@ print 'There are ', nlam, 'points in the opacity spectrum.\n'
 
 # Create array of wavelengths from range given and reshape
 w = np.linspace(lambda_init, lambda_fin, nlam)
-v = np.linspace(cc/lambda_init, cc/lambda_fin, nlam)
 
 # Ask for opacity law
 opaclaw = input('Which opacity law should I use? Answer with: \'H\' (Hildebrand) \n')
@@ -90,26 +102,30 @@ B = input('What dust spectral index should be used? (1.7 is recommended)\n')
 
 if opaclaw == 'H':
     # Evaluate opacities
-    #opacity = kappa_0*(v/v_ref)**B
     opacity = kappa_0*(w_ref/w)**B
 
 ###################### Determine the modified black body #######################
 
 # Generate list of column densities
-N = np.linspace(1e20,1e24,1e4)
+#N = np.linspace(1e21,9e22,10)
+N = [1e21]
 
 # Loop through each column density and determine modified black body curve
 mod = []
 
-for i in range(0,len(N)):
-    mod.append(mbb(N[i],opacity,wav,T=10))
-
 # Plot the figure and save for reference
 figure(1)
-plot(wav,mod)
+
+for i in range(0,len(N)):
+    blackbody = mbb(N[i],opacity,w,T=20)
+    mod.append(blackbody)
+
+    plot(np.log10(wav),np.log10(blackbody),label=str('N=')+str(N[i]))
+
 xlabel('Wavelength ($\mu m$)')
 ylabel('Flux')
-title(str('\nThe Modified Black Body Curve for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
+legend(loc='best')
+title(str('\nThe Modified Black Body Curve for N=')+str(N[0])+str('$cm^{-2}$ to ')+str(N[-1])+str('$cm^{-2}$\n'))
 savefig(str(band)+str('_modbb.png'),dpi=300)
 close()
 
@@ -120,11 +136,11 @@ chivals = []
 
 # Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
 for j in range(0,len(N)):
-    chivals.append(chi(flux,mod[i]/max(mod[i]),sigma=(0.1*mod[i]/max(mod[i]))))
+    chivals.append(chi(flux,mod[i],sigma=(0.1*mod[i])))
 
 # Plot the figure and save for reference
 figure(2)
-errorbar(N,chivals)
+plot(N,chivals)
 xlabel('N $(cm^{-1})$')
 ylabel('$\chi^2$')
 title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))

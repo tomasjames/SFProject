@@ -47,7 +47,7 @@ os.system('radmc3d image loadlambda')
 psw_ext = [199.4540,298.5657]
 
 # Plot image for first SPIRE wavelength band (PSW)
-radmc3dPy.image.makeImage(npix=100000, sizeau=15000, incl=90., lambdarange=psw_ext, nlam=60)
+#radmc3dPy.image.makeImage(npix=100000, sizeau=15000, incl=90., lambdarange=psw_ext, nlam=60)
 
 ########################### Account for transmission ###########################
 
