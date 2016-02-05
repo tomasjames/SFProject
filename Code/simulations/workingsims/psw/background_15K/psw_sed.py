@@ -38,21 +38,21 @@ spectrum = np.loadtxt('spectrum.out', skiprows=2)
 wav = spectrum[:,0]
 flux = spectrum[:,1]
 
-################################# Plotting routine #############################
+v = cc/(wav*10**-4)
 
 ################################# Plotting routine #############################
 
 figure(1)
-plot(wav, flux, 'b--')
-xlabel('Wavelength $(\mu m)$')
-ylabel('Flux')
+plot(v, flux, 'b--')
+xlabel(r'$\nu(Hz)$')
+ylabel('Flux $(erg/cm^{2}/s/Hz)$')
 title('\nSpectral Energy Distribution for PSW Band Synthetic Data\n')
 savefig('spectrum_psw.png', dpi=300, bbox_inches='tight')
 close()
 
 figure(2)
-plot(wav, flux/max(flux), 'g--')
-xlabel('Wavelength $(\mu m)$')
+plot(v, flux/max(flux), 'g--')
+xlabel('$\nu (Hz)$')
 ylabel('Normalised Flux')
 title('\nSpectral Energy Distribution for PSW Band Synthetic Data\n')
 savefig('spectrum_norm_psw.png', dpi=300, bbox_inches='tight')

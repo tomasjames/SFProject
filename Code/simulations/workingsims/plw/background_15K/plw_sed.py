@@ -38,10 +38,12 @@ spectrum = np.loadtxt('spectrum.out', skiprows=2)
 wav = spectrum[:,0]
 flux = spectrum[:,1]
 
+v = cc/(wav*10**-4)
+
 ################################# Plotting routine #############################
 
-plot(wav, flux, 'b--')
-xlabel('Wavelength $(\mu m)$')
+plot(v, flux, 'b--')
+xlabel(r'$\nu(Hz)$')
 ylabel('Flux')
 title('\nSpectral Energy Distribution for PLW Band Synthetic Data\n')
 savefig('spectrum_plw.png', dpi=300, bbox_inches='tight')
