@@ -197,38 +197,6 @@ legend(loc='best')
 savefig('SPIRE_averages.png',dpi=300)
 close()
 
-'''
-xlabel(r'$\nu(Hz)$')
-ylabel('Intensity $(erg/cm^{2}/s/Hz/ster)$')
-legend(loc='best')
-title(str('\nThe Modified Black Body Curve for N=')+str(N[0])+str('$cm^{-2}$ to ')+str(N[-1])+str('$cm^{-2}$\n'))
-#xlim(min(v),max(v))
-#ylim(min(blackbody),max(blackbody))
-savefig(str(band)+str('_modbb.png'),dpi=300)
-close()
-
-
-####################### Perform weighted average routine #######################
-
-# Multiply each intensity by the transmission at that wavelength/flux
-weighted_flux = blackbody*trans
-weighted_v = v*trans
-
-# Average the above array to determine the actual flux that Herschel 'sees'
-weighted_flux_mean = np.mean(weighted_flux)
-weighted_flux_std = np.std(weighted_flux)
-weighted_v_mean = np.mean(weighted_v)
-weighted_v_std = np.std(weighted_v)
-
-figure(2)
-errorbar(v_eff,weighted_flux_mean,yerr=weighted_flux_std,fmt='x')
-#errorbar(v,weighted_flux,'g--',yerr=np.std(weighted_flux))
-plot(v,weighted_flux,'g--')
-xlabel(r'$\nu (Hz)$')
-ylabel(r'Flux $(erg/cm^{2}/s/Hz/ster)$')
-savefig(str(band)+str('_average.png'),dpi=300)
-close()
-
 ######################### Apply Chi Squared Routine ############################
 
 # The data in mod is the expected data whilst the data read in (spectrum) is the real data
@@ -236,7 +204,7 @@ chivals = []
 
 # Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
 for j in range(0,len(N)):
-    chivals.append(chi(flux,mod[i],sigma=(0.1*mod[i])))
+    chivals.append(chi(average_data_sort[:,1],mod[i],sigma=(0.1*mod[i])))
 
 # Plot the figure and save for reference
 figure(3)
@@ -246,4 +214,3 @@ ylabel('$\chi^2$')
 title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
 savefig(str(band)+str('_chisquared_N.png'),dpi=300)
 close()
-'''

@@ -1,6 +1,8 @@
 "How good is dust emission as a tracer of structure in star-forming molecular clouds?"
 ================================================================================
 
+![Ziggy Stardust](Code/logo.JPG "Ziggy Stardust.")
+
 Project Overview
 ----------------
 
