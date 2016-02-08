@@ -24,6 +24,15 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
+08/02/16: Code has been reformatted since last major additions, and a workflow has now been devised. To properly run the code, the following commands must be executed in the following order:
+- `cd` to a simulation directory, eg `psw/background_15K`
+- run `python sim_psw.py` to run the main raytracing simulation. This will also run `datafilegen.py` and save the `.inp` files to the working directory to be read in immediately after the script has been completed and the ray trace initiated. Once ray trace has been completed, save output (an image) if required (not necessary, though makes a nice wall hanging picture)
+- run `python psw_sed.py` to compute the object's Spectral Energy Distribution. This script will not plot in any active windows but will save all required plots to the working directory. It will also write the essential SED info to a `.txt` file in the `stats` directory for later use, appending each time a `band_sed.py` script is run.
+- repeat the above process until all 3 bands (PSW, PMW, PLW) have been completed. For ease of use, code should be run in PSW, PMW and PLW order (though is not essential).
+- `cd` to `../../../stats` and run `python chiv2.py` to plot the averaged SED information and to fit theoretical SED to it.
+
+NOTE: the chi-squared routine is not yet complete, and shall we completed as the next task however the basic data generation, simulation and reduction routines have now been completed and work.
+
 04/12/15: The model has since been adapted to plot the three passbands on SPIRE in order to begin generating the synthetic data required to compare with the real data from Herschel SPIRE. However, transmission has not been accounted for in these models to date - the .txt files containing the transmission curve do not have regular wavelength spacing, necessitating the use of interpolation to generate a linearly spaced wavelength-transmission parameter space.
 
 Once this is complete plots of each wavelength are multiplied by their transmission coefficient and summed (weighted) over all possible wavelengths in the passband to give the final image as seen by SPIRE. At this point, an SED can be determined by invoking `radmc3d spectra` (check that this is the correct command).

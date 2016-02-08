@@ -1,6 +1,6 @@
 ################################################################################
 ############################ 4th Year Project Code #############################
-############################# Chi Squared Routine ##############################
+########################### Chi Squared Routine v2 #############################
 ################################################################################
 
 ############################# Import statements ################################
@@ -36,7 +36,7 @@ def chi(O,E,sigma):
     return sum((((O-E)/sigma)**2))
 
 # Modified blackbody
-def mbb(sigma,N,opac,v,T):
+def mbb(N,opac,v,T):
     '''
     Function that returns the modified black body law that best describes cold dust emission as stated in Kelly et. al. (2012).
 
@@ -46,30 +46,54 @@ def mbb(sigma,N,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return sigma*N*opac*a*(1./(np.exp(b)-1))
+    return N*opac*a*(1./(np.exp(b)-1))
 
-############################ Read in the spectral data #########################
+################### Read the average data determined earlier ###################
 
-# Read in the spectrum
-spectrum = np.loadtxt('spectrum.out', skiprows=2)
+# Reads the data
+average_data = np.loadtxt('SPIRE_average_data.txt', delimiter=" ")
 
-wav = spectrum[:,0]*10**-4
-flux = spectrum[:,1]
+# Sort the data
+average_data_sort = average_data[np.argsort(average_data[:,0])]
 
-v = cc/wav
-
-########################## Read in the transmission data #######################
-
-# Reads the transmission data
-trans_data = np.loadtxt('transmission.txt')
-
-# Assign to variables
-trans_wav = trans_data[:,0]
-trans_v = cc/(trans_wav*10**-4)
-trans = trans_data[:,1]
+# Assign to variables (data plotted later)
+plw,pmw,psw = average_data_sort[0], average_data_sort[1], average_data_sort[2]
 
 ######################### Determine (again) the opacity ########################
 
+# Query for reference wavelength
+w_ref = 1.30e-5
+v_ref = cc/w_ref
+print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
+
+# Ask for reference opacity
+kappa_0 = 3.09e-1
+print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
+
+# Define the start and end points of the spectrum
+lambda_init = 199.4540e-4
+lambda_fin = 690.8139e-4
+v_init = cc/lambda_init
+v_fin = cc/lambda_fin
+nlam = 300
+
+# Create array of wavelengths from range given and reshape
+w = np.linspace(lambda_init, lambda_fin, nlam)
+v = np.linspace(v_init, v_fin, nlam)
+
+# Solid angle of the beam
+sigma_arc = 1768 # 465 square arcseconds
+sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
+
+# Ask for spectral index
+#B = input('What dust spectral index should be used? (1.7 is recommended)\n')
+B = 2.0
+
+# Evaluate opacities
+#opacity = kappa_0*(w_ref/w)**B
+opacity = kappa_0*(v/v_ref)**B
+
+'''
 band = input('Which passband is to be considered? Answer with: \'PSW\', \'PMW\', \'PLW\'\n')
 
 if band == 'PSW':
@@ -80,11 +104,6 @@ if band == 'PSW':
     v_init = cc/lambda_init
     v_fin = cc/lambda_fin
     v_eff = cc/lambda_eff
-
-    # Query for reference wavelength
-    w_ref = 1.30e-5
-    v_ref = cc/w_ref
-    print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
 
     # Solid angle of the beam
     sigma_arc = 465 # 465 square arcseconds
@@ -99,11 +118,6 @@ if band == 'PMW':
     v_fin = cc/lambda_fin
     v_eff = cc/lambda_eff
 
-    # Query for reference wavelength
-    w_ref = 1.30e-4
-    v_ref = cc/w_ref
-    print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
-
     # Solid angle of the beam
     sigma_arc = 822 # 465 square arcseconds
     sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
@@ -117,43 +131,16 @@ if band == 'PLW':
     v_fin = cc/lambda_fin
     v_eff = cc/lambda_eff
 
-    # Query for reference wavelength
-    w_ref = 1.30e-4
-    v_ref = cc/w_ref
-    print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
-
     # Solid angle of the beam
     sigma_arc = 1768 # 465 square arcseconds
     sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
 
-# Ask for reference opacity
-kappa_0 = 3.09e-1
-print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
-
 # Ask for the number of wavelength points
-#nlam = input('How many wavelength points do you want me to use in construction?\n')
-nlam = len(spectrum)
+nlam = 100
 print 'There are ', nlam, 'points in the opacity spectrum.\n'
 
-##################### Evaluate opacities over wavelength range #################
-
-# Create array of wavelengths from range given and reshape
-w = np.linspace(lambda_init, lambda_fin, nlam)
-v = np.linspace(v_init, v_fin, nlam)
-
-# Ask for opacity law
-opaclaw = input('Which opacity law should I use? Answer with: \'H\' (Hildebrand) \n')
-
-# Ask for spectral index
-B = input('What dust spectral index should be used? (1.7 is recommended)\n')
-
-if opaclaw == 'H':
-    # Evaluate opacities
-    #opacity = kappa_0*(w_ref/w)**B
-    opacity = kappa_0*(v/v_ref)**B
-
 #################### Determine the expected column density #####################
-'''
+
 # Define dust-to-gas ratio
 d2g = 0.01
 
@@ -174,7 +161,7 @@ print 'The cloud temperature is', T, 'K.\n'
 M_j = (((5*kk*T)/(gg*muh2*mp))**(3./2))*(3./(4*np.pi*cloud_density))**(1./2)
 print 'The Jeans\' mass was determined to be', M_j, 'g.\n'
 
-# Determine the Jeans' radius
+# Determine the Jeans' length
 R = np.sqrt((15*kk*T)/(4*np.pi*cloud_density*gg*muh2*mp))
 print 'The Jeans\' length was determined to be', M_j, 'cm.\n'
 
@@ -182,8 +169,8 @@ print 'The Jeans\' length was determined to be', M_j, 'cm.\n'
 col = M_j/(np.pi*(R/2)**2)
 print 'The column density was determined to be', col, 'g/cm^2.'
 '''
-
-N = np.linspace(1e24,9e24,9)
+#N = np.linspace(1e24,9e24,9)
+N = [125]
 
 ###################### Determine the modified black body #######################
 
@@ -194,12 +181,23 @@ mod = []
 figure(1)
 
 for i in range(0,len(N)):
-    blackbody = mbb(sigma,N[i],opacity,v,T=10)
+    blackbody = mbb(N[i],opacity,v,T=10)
     mod.append(blackbody)
 
-    plot(v,blackbody,label=str('N=')+str(N[i]))
+    loglog(v,blackbody,label=str('N=')+str(N[i]))
     #loglog(v,blackbody,label=str('N=')+str(N[i]))
 
+# Plot the data
+loglog(psw[0],psw[1],'bx',label='PSW')
+loglog(pmw[0],pmw[1],'gx',label='PMW')
+loglog(plw[0],plw[1],'rx',label='PLW')
+xlabel(r'$\nu (Hz)$')
+ylabel(r'Flux $(erg/cm^{2}/s/Hz/ster)$')
+legend(loc='best')
+savefig('SPIRE_averages.png',dpi=300)
+close()
+
+'''
 xlabel(r'$\nu(Hz)$')
 ylabel('Intensity $(erg/cm^{2}/s/Hz/ster)$')
 legend(loc='best')
@@ -209,10 +207,11 @@ title(str('\nThe Modified Black Body Curve for N=')+str(N[0])+str('$cm^{-2}$ to 
 savefig(str(band)+str('_modbb.png'),dpi=300)
 close()
 
+
 ####################### Perform weighted average routine #######################
 
 # Multiply each intensity by the transmission at that wavelength/flux
-weighted_flux = blackbody[0]*trans
+weighted_flux = blackbody*trans
 weighted_v = v*trans
 
 # Average the above array to determine the actual flux that Herschel 'sees'
@@ -247,3 +246,4 @@ ylabel('$\chi^2$')
 title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
 savefig(str(band)+str('_chisquared_N.png'),dpi=300)
 close()
+'''
