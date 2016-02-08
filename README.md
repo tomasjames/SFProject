@@ -65,10 +65,18 @@ to the notes found here. Where possible, those issues will be linked next to the
   - [x] in 1D &,
   - [x] 2D
 - [x] Begin collecting BiBTeX library of references for report
-- [ ] Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
+- [x] Generate a 3D sphere and place a source (e.g. star) behind to assess radiative transfer. Use:
   - [x] Different opacity law (see notes in notebook for papers)
   - [x] Standard 1/r**2 density profile (i.e. decreasing with radius)
   - [x] Standard molecular cloud temperature profile (cooler in the cloud relative to the exterior)
     (See [#1](https://github.com/tomasjames/ZiggyStarDust/issues/1) for updates)
   - [x] Investigate the `ValueError: zero-size array to reduction operation minimum which has no identity` error that RADMC-3D is throwing when trying to run the raytrace with all custom files in place.
-  - [ ] Implement IRF
+  - ~~[x] Implement IRF~~
+- [x] Expand the code to take SPIRE waveband inputs
+  - [x] PSW, PMW and PLW bands need to be coded so that simulations can be run in each of their respective passbands
+  - [x] Extract SED from the simulations by using `radmc3d sed loadlambda`
+  - [x] Convolve these SEDs with the SPIRE transmission curves
+    - [x] Weighted average these to generate the flux 'seen' by SPIRE
+  - [x] Fit an SED to the resulting datapoints to extract the column density and B values
+    - [ ] Assess quality of the fit using chi-squared routine
+  - [ ] Plot probability contours to verify the banana shaped contour as seen in Shetty et. al.
