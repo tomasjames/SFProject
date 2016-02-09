@@ -60,8 +60,10 @@ else:
 weighted_flux = trans*flux
 
 # Determine the flux 'seen' by SPIRE
-weighted_flux_mean = np.mean(weighted_flux)
+#weighted_flux_mean = np.mean(weighted_flux)
 weighted_flux_std = np.std(weighted_flux)
+
+weighted_flux_mean = np.sum(weighted_flux)/np.sum(trans)
 
 ################################# Save the data ################################
 

@@ -170,7 +170,7 @@ col = M_j/(np.pi*(R/2)**2)
 print 'The column density was determined to be', col, 'g/cm^2.'
 '''
 #N = np.linspace(1e24,9e24,9)
-N = [125]
+N = [210]
 
 ###################### Determine the modified black body #######################
 
@@ -198,7 +198,7 @@ savefig('SPIRE_averages.png',dpi=300)
 close()
 
 ######################### Apply Chi Squared Routine ############################
-
+'''
 # The data in mod is the expected data whilst the data read in (spectrum) is the real data
 chivals = []
 
@@ -214,3 +214,4 @@ ylabel('$\chi^2$')
 title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
 savefig(str(band)+str('_chisquared_N.png'),dpi=300)
 close()
+'''
