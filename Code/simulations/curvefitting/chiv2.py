@@ -36,7 +36,7 @@ def chi(O,E,sigma):
     return sum((((O-E)/sigma)**2))
 
 # Modified blackbody
-def mbb(N,opac,v,T):
+def mbb(N,sigma,opac,v,T):
     '''
     Function that returns the modified black body law that best describes cold dust emission as stated in Kelly et. al. (2012).
 
@@ -46,7 +46,7 @@ def mbb(N,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return N*opac*a*(1./(np.exp(b)-1))
+    return N*sigma*opac*a*(1./(np.exp(b)-1))
 
 ################### Read the average data determined earlier ###################
 
@@ -82,8 +82,8 @@ w = np.linspace(lambda_init, lambda_fin, nlam)
 v = np.linspace(v_init, v_fin, nlam)
 
 # Solid angle of the beam
-sigma_arc = 1768 # 465 square arcseconds
-sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
+#sigma_arc = 1768 # 465 square arcseconds
+#sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
 
 # Ask for spectral index
 #B = input('What dust spectral index should be used? (1.7 is recommended)\n')
@@ -92,52 +92,6 @@ B = 2.0
 # Evaluate opacities
 #opacity = kappa_0*(w_ref/w)**B
 opacity = kappa_0*(v/v_ref)**B
-
-'''
-band = input('Which passband is to be considered? Answer with: \'PSW\', \'PMW\', \'PLW\'\n')
-
-if band == 'PSW':
-    # The start and end points of the wavelength range in microns
-    lambda_init = 199.4540e-4
-    lambda_fin = 298.5657e-4
-    lambda_eff = 247.12451e-4
-    v_init = cc/lambda_init
-    v_fin = cc/lambda_fin
-    v_eff = cc/lambda_eff
-
-    # Solid angle of the beam
-    sigma_arc = 465 # 465 square arcseconds
-    sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
-
-if band == 'PMW':
-    # The start and end points of the wavelength range in microns
-    lambda_init = 281.6949e-4
-    lambda_fin = 424.7548e-4
-    lambda_eff = 346.71804e-4
-    v_init = cc/lambda_init
-    v_fin = cc/lambda_fin
-    v_eff = cc/lambda_eff
-
-    # Solid angle of the beam
-    sigma_arc = 822 # 465 square arcseconds
-    sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
-
-if band == 'PLW':
-    # The start and end points of the wavelength range in microns
-    lambda_init = 391.4346e-4
-    lambda_fin = 690.8139e-4
-    lambda_eff = 496.10677e-4
-    v_init = cc/lambda_init
-    v_fin = cc/lambda_fin
-    v_eff = cc/lambda_eff
-
-    # Solid angle of the beam
-    sigma_arc = 1768 # 465 square arcseconds
-    sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
-
-# Ask for the number of wavelength points
-nlam = 100
-print 'There are ', nlam, 'points in the opacity spectrum.\n'
 
 #################### Determine the expected column density #####################
 
@@ -158,19 +112,23 @@ T = input('What temperature should be assigned to the cloud?\n')
 print 'The cloud temperature is', T, 'K.\n'
 
 # Determine the Jeans' mass
-M_j = (((5*kk*T)/(gg*muh2*mp))**(3./2))*(3./(4*np.pi*cloud_density))**(1./2)
+M_j = ((5./2)*(np.sqrt(15./8*np.pi))*(kk/gg)**(3./2))*(dust_mass**-2)*((T**3)/(cloud))**1./2
 print 'The Jeans\' mass was determined to be', M_j, 'g.\n'
 
 # Determine the Jeans' length
-R = np.sqrt((15*kk*T)/(4*np.pi*cloud_density*gg*muh2*mp))
-print 'The Jeans\' length was determined to be', M_j, 'cm.\n'
+R_j = np.sqrt((15./8*np.pi)*((kk*T)/(gg*(dust_mass**2)*cloud)))
+print 'The Jeans\' length was determined to be', R_j, 'cm.\n'
 
 # Calculate the column density
-col = M_j/(np.pi*(R/2)**2)
+col = (M_j/(np.pi*(R_j**2)))
 print 'The column density was determined to be', col, 'g/cm^2.'
-'''
+
 #N = np.linspace(1e24,9e24,9)
-N = [210]
+N = np.linspace(0,2*col,200)
+r = 7171 # Radius of the cloud in AU
+d = 1 # Distance to source in parsecs
+sigma = (np.pi*(r*1.496e+11)**2)/(d*3.086e+16)**2
+#N = np.linspace(1,400,3990)
 
 ###################### Determine the modified black body #######################
 
@@ -181,37 +139,64 @@ mod = []
 figure(1)
 
 for i in range(0,len(N)):
-    blackbody = mbb(N[i],opacity,v,T=10)
+    blackbody = mbb(N[i],sigma,opacity,v,T=10)
     mod.append(blackbody)
 
-    loglog(v,blackbody,label=str('N=')+str(N[i]))
     #loglog(v,blackbody,label=str('N=')+str(N[i]))
 
 # Plot the data
 loglog(psw[0],psw[1],'bx',label='PSW')
 loglog(pmw[0],pmw[1],'gx',label='PMW')
 loglog(plw[0],plw[1],'rx',label='PLW')
-xlabel(r'$\nu (Hz)$')
-ylabel(r'Flux $(erg/cm^{2}/s/Hz/ster)$')
-legend(loc='best')
-savefig('SPIRE_averages.png',dpi=300)
-close()
+xlabel(r'$\nu \/(Hz)$')
+ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
 
 ######################### Apply Chi Squared Routine ############################
-'''
+
+fit_storage = []
+
 # The data in mod is the expected data whilst the data read in (spectrum) is the real data
 chivals = []
 
-# Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
-for j in range(0,len(N)):
-    chivals.append(chi(average_data_sort[:,1],mod[i],sigma=(0.1*mod[i])))
+for i in range(0,len(N)):
+
+    # Find the element in the theoretical SED closest to the band points
+    # This will return (index,value)
+    to_fit_psw = min(enumerate(mod[i]), key=lambda x: abs(x[1]-psw[1]))
+    to_fit_pmw = min(enumerate(mod[i]), key=lambda y: abs(y[1]-pmw[1]))
+    to_fit_plw = min(enumerate(mod[i]), key=lambda z: abs(z[1]-plw[1]))
+
+    print to_fit_psw, to_fit_pmw, to_fit_plw
+
+    # Pull out the frequency at each of those points
+    v_psw = v[to_fit_psw[0]]
+    v_pmw = v[to_fit_pmw[0]]
+    v_plw = v[to_fit_plw[0]]
+
+    to_fit = np.array([to_fit_psw[1],to_fit_pmw[1],to_fit_plw[1]])
+    ps = np.array([psw[1],pmw[1],plw[1]])
+
+    # Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
+    chivals.append(chi(to_fit,ps,sigma=(0.1*ps)))
 
 # Plot the figure and save for reference
-figure(3)
+figure(2)
 plot(N,chivals)
+grid(True,which='both')
 xlabel('N $(cm^{-1})$')
 ylabel('$\chi^2$')
 title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
-savefig(str(band)+str('_chisquared_N.png'),dpi=300)
+savefig('chisquared_N.png',dpi=300)
 close()
-'''
+
+# Determine the best fit blackbody
+chi_min_index = chivals.index(min(chivals))
+chi_min_blackbody = mod[chi_min_index]
+
+# Plot the data overlayed to the points
+figure(1)
+loglog(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum Column Density=')+str(N[chi_min_index]))
+grid(True,which='both')
+legend(loc='best')
+savefig('SPIRE_averages.png',dpi=300)
+close()

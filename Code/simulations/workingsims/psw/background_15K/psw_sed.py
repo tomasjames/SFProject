@@ -68,14 +68,14 @@ weighted_flux_mean = np.sum(weighted_flux)/np.sum(trans)
 ################################# Save the data ################################
 
 # Check to see if file already exists
-if os.path.isfile('../../../stats/SPIRE_average_data.txt') == True:
+if os.path.isfile('../../curvefitting/SPIRE_average_data.txt') == True:
     print 'Data storage file already exists; opening now\n'
-    save_data = open('../../../stats/SPIRE_average_data.txt', 'a+')
+    save_data = open('../../curvefitting/SPIRE_average_data.txt', 'a+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 else:
     print 'Data storage file does not already exist; writing now\n'
-    save_data = open('../../../stats/SPIRE_average_data.txt', 'w+')
+    save_data = open('../../curvefitting/SPIRE_average_data.txt', 'w+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 # Append to the file the passband

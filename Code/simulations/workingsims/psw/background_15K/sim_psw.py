@@ -22,7 +22,11 @@ import numpy as np
 # Import csv
 import csv
 
+# Import matplotlib
 from matplotlib.pyplot import *
+
+# Import astropy
+from astropy.io import fits, convolution
 
 ###################### Check for correct default.inp files #####################
 
@@ -62,6 +66,20 @@ psw_ext = [199.4540,298.5657]
 
 # Plot image for first SPIRE wavelength band (PSW)
 #radmc3dPy.image.makeImage(npix=100000, sizeau=15000, incl=90., lambdarange=psw_ext, nlam=60)
+
+############################### Manipulate the PSF #############################
+
+# Determine which of the PSFs exists in the folder
+files = glob.glob('./*spire*')
+
+if files == ['./theoretical_spire_beam_model_psw_V0_2.fits']:
+    # Read in the PSF
+    hdulist = fits.open('./theoretical_spire_beam_model_psw_V0_2.fits')
+else:
+    print 'There is no PSF data file. Please download from http://dirty.as.arizona.edu/~kgordon/mips/conv_psfs/conv_psfs.html and rerun the code.\n'
+
+# Extract the image data
+img_data = hdulist[0].data
 
 ########################### Account for transmission ###########################
 
