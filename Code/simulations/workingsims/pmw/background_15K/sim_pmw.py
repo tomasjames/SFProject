@@ -107,7 +107,7 @@ with open('image_trans.out', 'w') as f:
     # This is to be achieved by looping through each pixel in the image and multiplying by each transmission coefficient at that wavelength. This is then summed along all wavelengths to give a 'composite' image
 
     # Declare a list to store the variables
-    store = []
+    store, store_all = [], []
     summation = []
 
     for i in range(0, imag.nx):
@@ -116,6 +116,7 @@ with open('image_trans.out', 'w') as f:
                 #if i == 0. and j == 0. and k == 0.:
                     #image_trans.write('  \n')
                 store.append(np.float64(imag.image[i][j][k]*trans_data[k][1]))
+                store_all.append(np.float64(imag.image[i][j][k]*trans_data[k][1]))
             summation.append(np.float64(np.sum(store)))
             #image_trans.write(str(np.sum(store))+str('\n'))
             store = []
@@ -124,6 +125,12 @@ with open('image_trans.out', 'w') as f:
 
 # Close the file for memory purposes
 #image_trans.close()
+
+# Save store_all to another .txt file to SED
+with open('image_trans_raw.txt', 'w') as g:
+    image_trans_raw = csv.writer(g, delimiter=' ')
+
+    image_trans_raw.writerows(zip(np.float64(store_all)))
 
 ########################## Plot the resulting data #######################
 

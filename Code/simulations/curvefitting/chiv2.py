@@ -9,6 +9,7 @@
 import os
 
 # Import radmc3dPy
+import radmc3dPy
 from radmc3dPy.natconst import *
 
 # Import numpy
@@ -40,13 +41,14 @@ def mbb(N,sigma,opac,v,T):
     '''
     Function that returns the modified black body law that best describes cold dust emission as stated in Kelly et. al. (2012).
 
-    This returns the intensity per unit solid angle, i.e. the flux observed.
+    This returns the intensity of the source over the beam.
     '''
     #a = (2*(hh)*(cc)**2)/(wav**5)
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return N*sigma*opac*a*(1./(np.exp(b)-1))
+    return N*opac*a*(1./(np.exp(b)-1))
+
 
 ################### Read the average data determined earlier ###################
 
@@ -58,6 +60,9 @@ average_data_sort = average_data[np.argsort(average_data[:,0])]
 
 # Assign to variables (data plotted later)
 plw,pmw,psw = average_data_sort[0], average_data_sort[1], average_data_sort[2]
+
+# Read the initial radmc3dPy output to get image dimensions and info
+imag = radmc3dPy.image.readImage('../workingsims/plw/background_15K/image.out')
 
 ######################### Determine (again) the opacity ########################
 
@@ -82,8 +87,8 @@ w = np.linspace(lambda_init, lambda_fin, nlam)
 v = np.linspace(v_init, v_fin, nlam)
 
 # Solid angle of the beam
-#sigma_arc = 1768 # 465 square arcseconds
-#sigma = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
+sigma_arc = 1768 # 465 square arcseconds
+sigma_beam = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
 
 # Ask for spectral index
 #B = input('What dust spectral index should be used? (1.7 is recommended)\n')
@@ -95,40 +100,46 @@ opacity = kappa_0*(v/v_ref)**B
 
 #################### Determine the expected column density #####################
 
-# Define dust-to-gas ratio
+print 'Entering the column density determination script\n'
+
+# Dust to gas ratio
 d2g = 0.01
 
-# Ask for the cloud mass and convert to grams
+# Determine the mass of the cloud
 m = input('What cloud mass should be used? (Answer should be in Solar Masses)\n')
-dust_mass = d2g*m*ms
-print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', dust_mass, 'g.\n'
+cloud_dust_mass = d2g*m*ms # 0.01 is the dust to gas ratio
+print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', cloud_dust_mass, 'g.\n'
 
-# Ask for the cloud number density and convert to g/cm^3
+# Determine the mass of one dust grain
+print 'Presume gas is Hydrogen, therefore dust mass is 1/100 the mass of the gas.\n'
 cloud = input('What number density should be assigned to the cloud?\n')
 cloud_density = cloud*muh2*mp*d2g
-print 'The cloud density is', cloud_density, 'g/cm^3.\n'
+dust_mass = muh2*mp*d2g
+print 'The mass of 1 dust grain is', dust_mass, 'g.\n'
 
-T = input('What temperature should be assigned to the cloud?\n')
-print 'The cloud temperature is', T, 'K.\n'
+# Calculate radius of the cloud in cm
+r = ((3./4)*(1./np.pi)*(cloud_dust_mass/cloud_density))**(1./3)
+print 'The radius of the cloud is', r, 'cm (or', r/au, ' AU).\n'
 
-# Determine the Jeans' mass
-M_j = ((5./2)*(np.sqrt(15./8*np.pi))*(kk/gg)**(3./2))*(dust_mass**-2)*((T**3)/(cloud))**1./2
-print 'The Jeans\' mass was determined to be', M_j, 'g.\n'
+# Determine the number of dust grains by taking the mass of the cloud and dividing it by the mass of 1 dust grain
+N_d = cloud_dust_mass/dust_mass
 
-# Determine the Jeans' length
-R_j = np.sqrt((15./8*np.pi)*((kk*T)/(gg*(dust_mass**2)*cloud)))
-print 'The Jeans\' length was determined to be', R_j, 'cm.\n'
+# Ask for distance to source
+d = input('At what distance is the source? This answer should be in parsecs.\n')
+D = np.float64(d)*pc # Convert to cm
 
-# Calculate the column density
-col = (M_j/(np.pi*(R_j**2)))
-print 'The column density was determined to be', col, 'g/cm^2.'
+# Determine solid angle of the source and pixel
+sigma_source = (np.pi*r**2)/D**2
+sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 
-#N = np.linspace(1e24,9e24,9)
-N = np.linspace(0,2*col,200)
-r = 7171 # Radius of the cloud in AU
-d = 1 # Distance to source in parsecs
-sigma = (np.pi*(r*1.496e+11)**2)/(d*3.086e+16)**2
-#N = np.linspace(1,400,3990)
+# From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
+col = N_d/((D**2)*(sigma_pix))
+
+print 'This produces a column density of ', col, '/cm**2.'
+
+#N = np.linspace(10**23, 10**25, 10**2)
+#N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
+N = np.linspace(1e3,2e5,1e2)
 
 ###################### Determine the modified black body #######################
 
@@ -139,17 +150,19 @@ mod = []
 figure(1)
 
 for i in range(0,len(N)):
-    blackbody = mbb(N[i],sigma,opacity,v,T=10)
+    blackbody = mbb(N[i],sigma_pix,opacity,v,T=10)
     mod.append(blackbody)
 
     #loglog(v,blackbody,label=str('N=')+str(N[i]))
 
 # Plot the data
-loglog(psw[0],psw[1],'bx',label='PSW')
-loglog(pmw[0],pmw[1],'gx',label='PMW')
-loglog(plw[0],plw[1],'rx',label='PLW')
+errorbar(psw[0],psw[1],yerr=psw[2],fmt='bo',label='PSW')
+errorbar(pmw[0],pmw[1],yerr=pmw[2],fmt='go',label='PMW')
+errorbar(plw[0],plw[1],yerr=plw[2],fmt='ro',label='PLW')
 xlabel(r'$\nu \/(Hz)$')
 ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+xscale("log", nonposx='clip')
+yscale("log", nonposx='clip')
 
 ######################### Apply Chi Squared Routine ############################
 
@@ -158,6 +171,7 @@ fit_storage = []
 # The data in mod is the expected data whilst the data read in (spectrum) is the real data
 chivals = []
 
+'''
 for i in range(0,len(N)):
 
     # Find the element in the theoretical SED closest to the band points
@@ -166,7 +180,7 @@ for i in range(0,len(N)):
     to_fit_pmw = min(enumerate(mod[i]), key=lambda y: abs(y[1]-pmw[1]))
     to_fit_plw = min(enumerate(mod[i]), key=lambda z: abs(z[1]-plw[1]))
 
-    print to_fit_psw, to_fit_pmw, to_fit_plw
+    #print 'PSW:',to_fit_psw, 'PMW:',to_fit_pmw, 'PLW:',to_fit_plw
 
     # Pull out the frequency at each of those points
     v_psw = v[to_fit_psw[0]]
@@ -177,26 +191,55 @@ for i in range(0,len(N)):
     ps = np.array([psw[1],pmw[1],plw[1]])
 
     # Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
-    chivals.append(chi(to_fit,ps,sigma=(0.1*ps)))
+    chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2]]))
+'''
+
+# Find the index of the frequency that most closely matches the frequency of the band (i.e. find the difference between the two and find the index at which this is the minimum)
+psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0]))
+pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0]))
+plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0]))
+
+# Define lists to store band fluxes
+to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list = [], [], []
+
+# Loop through each of the column densities
+for i in range(0,len(N)):
+
+    # Find the flux at the index determined earlier
+    to_fit_psw = mod[i][psw_index[0]]
+    to_fit_pmw = mod[i][pmw_index[0]]
+    to_fit_plw = mod[i][plw_index[0]]
+
+    # Append these fluxes to the lists
+    to_fit_psw_list.append(to_fit_psw)
+    to_fit_pmw_list.append(to_fit_pmw)
+    to_fit_plw_list.append(to_fit_plw)
+
+    to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw])
+    ps = np.array([psw[1],pmw[1],plw[1]])
+
+    # Loop through each value of the expected data (i.e. each value of the column density) and determine the chi squared value for each value
+    chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2]]))
 
 # Plot the figure and save for reference
 figure(2)
 plot(N,chivals)
 grid(True,which='both')
-xlabel('N $(cm^{-1})$')
+xlabel('$\Omega\,N\,(sr\,cm^{-2})$')
 ylabel('$\chi^2$')
-title(str('\nThe $\chi^2$ Distribution for N=')+str(N[0])+str('$cm^{-1}$ to ')+str(N[-1])+str('$cm^{-1}$\n'))
+title(str('\nThe $\chi^2$ Distribution for $\Omega N$=')+str(N[0])+str('$sr\,cm^{-2}$ to ')+str(N[-1])+str('$sr\,cm^{-2}$\n'))
 savefig('chisquared_N.png',dpi=300)
 close()
 
-# Determine the best fit blackbody
+# Determine the best fit blackbody by finding the index of the minimised chi-squared routine
 chi_min_index = chivals.index(min(chivals))
 chi_min_blackbody = mod[chi_min_index]
 
 # Plot the data overlayed to the points
 figure(1)
-loglog(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum Column Density=')+str(N[chi_min_index]))
+loglog(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum  $\Omega N$=')+str(N[chi_min_index])+str('$sr\,cm^{-2}$'))
 grid(True,which='both')
 legend(loc='best')
+title('The $\chi^{2}$ Minimised Best Fit SED for PSW, PMW and PLW Bands\n')
 savefig('SPIRE_averages.png',dpi=300)
 close()

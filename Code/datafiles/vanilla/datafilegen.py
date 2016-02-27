@@ -252,8 +252,9 @@ w_ref = 1.30e3 # Reference wavelength in um
 
 # Ask for reference opacity
 #kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
-kappa_0 = 3.09e-1
-print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
+#kappa_0 = 3.09e-1
+kappa_0 = 0.90
+print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994.\n'
 
 # Ask for the number of wavelength points
 nlam = input('How many wavelength points do you want me to use in construction?\n')
