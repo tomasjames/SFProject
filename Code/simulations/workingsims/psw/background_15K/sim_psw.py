@@ -26,7 +26,7 @@ import csv
 from matplotlib.pyplot import *
 
 # Import astropy
-from astropy.io import fits, convolution
+from astropy.io import fits
 
 ###################### Check for correct default.inp files #####################
 

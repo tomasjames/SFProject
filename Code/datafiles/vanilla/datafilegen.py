@@ -248,12 +248,12 @@ lambda_fin = 10000. # 10000 um
 
 # Query for reference wavelength
 #w_ref = input('Which reference wavelength should I use to evaluate the opacities?\n')
-w_ref = 1.30e3 # Reference wavelength in um
+w_ref = 250 # Reference wavelength in um
 
 # Ask for reference opacity
 #kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
 #kappa_0 = 3.09e-1
-kappa_0 = 0.90
+kappa_0 = 4.
 print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994.\n'
 
 # Ask for the number of wavelength points

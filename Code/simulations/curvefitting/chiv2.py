@@ -37,7 +37,7 @@ def chi(O,E,sigma):
     return sum((((O-E)/sigma)**2))
 
 # Modified blackbody
-def mbb(N,sigma,opac,v,T):
+def mbb(N,dust_mass,opac,v,T):
     '''
     Function that returns the modified black body law that best describes cold dust emission as stated in Kelly et. al. (2012).
 
@@ -47,7 +47,7 @@ def mbb(N,sigma,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return N*opac*a*(1./(np.exp(b)-1))
+    return N*dust_mass*opac*(a*(1./(np.exp(b)-1)))
 
 
 ################### Read the average data determined earlier ###################
@@ -67,13 +67,13 @@ imag = radmc3dPy.image.readImage('../workingsims/plw/background_15K/image.out')
 ######################### Determine (again) the opacity ########################
 
 # Query for reference wavelength
-w_ref = 1.30e-5
+w_ref = 250e-4
 v_ref = cc/w_ref
 print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
 
 # Ask for reference opacity
-kappa_0 = 3.09e-1
-print ('\nThe k_0 opacity is taken to be 3.09e-1 cm^2/g as per Ossenkopf and Henning, 1994.\n')
+kappa_0 = 4.0
+print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994. According to http://arxiv.org/pdf/1302.5699v1.pdf the value of B=2.08 fits the power law.\n'
 
 # Define the start and end points of the spectrum
 lambda_init = 199.4540e-4
@@ -114,7 +114,7 @@ print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', cloud
 print 'Presume gas is Hydrogen, therefore dust mass is 1/100 the mass of the gas.\n'
 cloud = input('What number density should be assigned to the cloud?\n')
 cloud_density = cloud*muh2*mp*d2g
-dust_mass = muh2*mp*d2g
+dust_mass = muh2*mp
 print 'The mass of 1 dust grain is', dust_mass, 'g.\n'
 
 # Calculate radius of the cloud in cm
@@ -137,21 +137,22 @@ col = N_d/((D**2)*(sigma_pix))
 
 print 'This produces a column density of ', col, '/cm**2.'
 
-#N = np.linspace(10**23, 10**25, 10**2)
+N = np.linspace(10**19, 10**21, 10**2)
+T = np.linspace(6,16,100)
 #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
-N = np.linspace(1e3,2e5,1e2)
+#A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
 ###################### Determine the modified black body #######################
 
 # Loop through each column density and determine modified black body curve
-mod = []
+mod_N, mod_T = [], []
 
 # Plot the figure and save for reference
 figure(1)
 
 for i in range(0,len(N)):
-    blackbody = mbb(N[i],sigma_pix,opacity,v,T=10)
-    mod.append(blackbody)
+    blackbody_N = mbb(N[i],dust_mass,opacity,v,T=10)
+    mod_N.append(blackbody_N)
 
     #loglog(v,blackbody,label=str('N=')+str(N[i]))
 
@@ -206,9 +207,9 @@ to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list = [], [], []
 for i in range(0,len(N)):
 
     # Find the flux at the index determined earlier
-    to_fit_psw = mod[i][psw_index[0]]
-    to_fit_pmw = mod[i][pmw_index[0]]
-    to_fit_plw = mod[i][plw_index[0]]
+    to_fit_psw = mod_N[i][psw_index[0]]
+    to_fit_pmw = mod_N[i][pmw_index[0]]
+    to_fit_plw = mod_N[i][plw_index[0]]
 
     # Append these fluxes to the lists
     to_fit_psw_list.append(to_fit_psw)
@@ -225,19 +226,19 @@ for i in range(0,len(N)):
 figure(2)
 plot(N,chivals)
 grid(True,which='both')
-xlabel('$\Omega\,N\,(sr\,cm^{-2})$')
+xlabel('$N\,(cm^{-2})$')
 ylabel('$\chi^2$')
-title(str('\nThe $\chi^2$ Distribution for $\Omega N$=')+str(N[0])+str('$sr\,cm^{-2}$ to ')+str(N[-1])+str('$sr\,cm^{-2}$\n'))
+title(str('\nThe $\chi^2$ Distribution for $N$=')+str(N[0])+str('$cm^{-2}$ to ')+str(N[-1])+str('$cm^{-2}$\n'))
 savefig('chisquared_N.png',dpi=300)
 close()
 
 # Determine the best fit blackbody by finding the index of the minimised chi-squared routine
 chi_min_index = chivals.index(min(chivals))
-chi_min_blackbody = mod[chi_min_index]
+chi_min_blackbody = mod_N[chi_min_index]
 
 # Plot the data overlayed to the points
 figure(1)
-loglog(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum  $\Omega N$=')+str(N[chi_min_index])+str('$sr\,cm^{-2}$'))
+loglog(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum  $N$=')+str(N[chi_min_index])+str('$cm^{-2}$'))
 grid(True,which='both')
 legend(loc='best')
 title('The $\chi^{2}$ Minimised Best Fit SED for PSW, PMW and PLW Bands\n')
