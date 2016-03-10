@@ -59,8 +59,9 @@ average_data = np.loadtxt('SPIRE_average_data.txt', delimiter=" ")
 average_data_sort = average_data[np.argsort(average_data[:,0])]
 
 # Assign to variables and put fluxes into an array (data plotted later)
-plw,pmw,psw = average_data_sort[0], average_data_sort[1], average_data_sort[2]
-ps = np.array([psw[1],pmw[1],plw[1]])
+plw,pmw,psw,red,green,blue = average_data_sort[0], average_data_sort[1], average_data_sort[2],average_data_sort[3],average_data_sort[4],average_data_sort[5]
+ps = np.array([psw[1],pmw[1],plw[1],blue[1],green[1],red[1]])
+#ps = np.array([psw[1],pmw[1],plw[1],blue[1]])
 
 # Read the initial radmc3dPy output to get image dimensions and info
 imag = radmc3dPy.image.readImage('../workingsims/plw/background_15K/image.out')
@@ -77,7 +78,7 @@ kappa_0 = 4.0
 print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994. According to http://arxiv.org/pdf/1302.5699v1.pdf the value of B=2.08 fits the power law.\n'
 
 # Define the start and end points of the spectrum
-lambda_init = 199.4540e-4
+lambda_init = 55.670637e-4
 lambda_fin = 690.8139e-4
 v_init = cc/lambda_init
 v_fin = cc/lambda_fin
@@ -91,6 +92,9 @@ v = np.linspace(v_init, v_fin, nlam)
 psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0]))
 pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0]))
 plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0]))
+blue_index = min(enumerate(v), key=lambda a: abs(a[1]-blue[0]))
+green_index = min(enumerate(v), key=lambda b: abs(b[1]-green[0]))
+red_index = min(enumerate(v), key=lambda c: abs(c[1]-red[0]))
 
 # Solid angle of the beam
 sigma_arc = 1768 # 465 square arcseconds
@@ -156,7 +160,7 @@ T = np.linspace(9,11,200)
 mod,chivals,N_index,T_index = [],[],[],[]
 
 # Define lists to store band fluxes
-to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list = [], [], []
+to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
 
 # Loop through both N and T to determine the blackbody
 for i in range(0,len(N)):
@@ -173,17 +177,25 @@ for k in range(0,len(mod)):
     to_fit_psw = mod[k][psw_index[0]]
     to_fit_pmw = mod[k][pmw_index[0]]
     to_fit_plw = mod[k][plw_index[0]]
+    to_fit_blue = mod[k][blue_index[0]]
+    to_fit_green = mod[k][green_index[0]]
+    to_fit_red = mod[k][red_index[0]]
 
     # Append these fluxes to the lists
     to_fit_psw_list.append(to_fit_psw)
     to_fit_pmw_list.append(to_fit_pmw)
     to_fit_plw_list.append(to_fit_plw)
+    to_fit_blue_list.append(to_fit_blue)
+    to_fit_green_list.append(to_fit_green)
+    to_fit_red_list.append(to_fit_red)
 
     # Put the fitting fluxes into an array
-    to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw])
+    to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue,to_fit_green,to_fit_red])
+    #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
 
     # Append the chi squared value
-    chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2]]))
+    chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2],green[2],red[2]]))
+    #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
 
 # Determine the chi squared minimum
 chi_min_index = chivals.index(min(chivals))
@@ -191,9 +203,12 @@ chi_min_blackbody = mod[chi_min_index]
 
 # Plot the data
 figure(1)
-errorbar(psw[0],psw[1],yerr=psw[2],fmt='bo',label='PSW')
-errorbar(pmw[0],pmw[1],yerr=pmw[2],fmt='go',label='PMW')
-errorbar(plw[0],plw[1],yerr=plw[2],fmt='ro',label='PLW')
+errorbar(psw[0],psw[1],yerr=psw[2],fmt='co',label='SPIRE: PSW')
+errorbar(pmw[0],pmw[1],yerr=pmw[2],fmt='yo',label='SPIRE: PMW')
+errorbar(plw[0],plw[1],yerr=plw[2],fmt='mo',label='SPIRE: PLW')
+errorbar(blue[0],blue[1],yerr=blue[2],fmt='bo',label='PACS: Blue')
+errorbar(green[0],green[1],yerr=green[2],fmt='go',label='PACS: Green')
+errorbar(red[0],red[1],yerr=red[2],fmt='ro',label='PACS: Red')
 plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
 xlabel(r'$\nu \/(Hz)$')
 ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
@@ -201,7 +216,7 @@ xscale("log", nonposx='clip')
 yscale("log", nonposx='clip')
 grid(True,which='both')
 legend(loc='best')
-title('The $\chi^{2}$ Minimised Best Fit SED for PSW, PMW and PLW Bands\n')
+title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n')
 savefig('SPIRE_averages_v4.png',dpi=300)
 close()
 

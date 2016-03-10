@@ -188,31 +188,39 @@ x_cube = np.zeros([l,l,l])
 y_cube = np.zeros([l,l,l])
 z_cube = np.zeros([l,l,l])
 
-# Determine where centre of cloud lies in model space
+# Determine where centre of cloud lies in model space by looping through all 3 dimensions
 for n in range(0,len(z)-1):
     for m in range(0,len(y)-1):
         for l in range(0,len(x)-1):
+            # Apply truth statement to the equation of a circle to determine whether pixel lies within the star
             if (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 <= r**2:
+                # Writes the data without a new line if the loop is on its last iteration
                 if n == (len(z)-1):
                     density.write(str(cloud_density))
                     temperature.write(str(cloud_temperature))
+                # Writes the data with a new line if the loop isn't on its last iteration
                 else:
                     density.write(str(cloud_density)+'\n')
                     temperature.write(str(cloud_temperature)+'\n')
 
+                # Put all density information into a cube (3d array)
                 density_cube[l,m,n] = cloud_density
                 x_cube[l,m,n] = x[l]
                 y_cube[l,m,n] = y[m]
                 z_cube[l,m,n] = z[n]
 
+            # If above truth statement is not met, code writes the outside conditions
             else:
+                # Writes the data without a new line if the loop is on its last iteration
                 if n == (len(z)-1):
                     density.write(str(outside_density))
                     temperature.write(str(outside_temperature))
+                # Writes the data with a new line if the loop isn't on its last iteration
                 else:
                     density.write(str(outside_density)+'\n')
                     temperature.write(str(outside_temperature)+'\n')
 
+                # Put all density information into a cube (3d array)
                 density_cube[l,m,n] = outside_density
                 x_cube[l,m,n] = x[l]
                 y_cube[l,m,n] = y[m]
@@ -326,19 +334,19 @@ wavelength_micron = open('wavelength_micron.inp', 'w')
 files = glob.glob('./*Herschel*')
 
 # Define empty list to store file contents
-spire, spire_wav, spire_trans = [], [], []
+herschel, herschel_wav, herschel_trans = [], [], []
 
 # Determine whether
 if files == ['./Herschel_SPIRE.PSW_ext.dat.txt']:
     with open('Herschel_SPIRE.PSW_ext.dat.txt') as f:
-        spire_psw = f.readlines()
+        herschel_psw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PSW_ext.dat.txt\' and have assigned its output to psw_band.\n'
 
         # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
         # points for the passband and the second column to be the transmission
         # coefficeint at that wavelength
-        for row in spire_psw:
-            spire.append(row.split())
+        for row in herschel_psw:
+            herschel.append(row.split())
 
         # Determine the lower and upper bounds of the passband
         # The data read in from the transmission has data for a +/- 50A window
@@ -349,14 +357,14 @@ if files == ['./Herschel_SPIRE.PSW_ext.dat.txt']:
 
 elif files == ['./Herschel_SPIRE.PMW_ext.dat.txt']:
     with open('Herschel_SPIRE.PMW_ext.dat.txt') as f:
-        spire_pmw = f.readlines()
+        herschel_pmw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PMW_ext.dat.txt\' and have assigned its output to pmw_band.\n'
 
         # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
         # points for the passband and the second column to be the transmission
         # coefficeint at that wavelength
-        for row in spire_pmw:
-            spire.append(row.split())
+        for row in herschel_pmw:
+            herschel.append(row.split())
 
         # Determine the lower and upper bounds of the passband
         # The data read in from the transmission has data for a +/- 50A window
@@ -367,14 +375,14 @@ elif files == ['./Herschel_SPIRE.PMW_ext.dat.txt']:
 
 elif files == ['./Herschel_SPIRE.PLW_ext.dat.txt']:
     with open('Herschel_SPIRE.PLW_ext.dat.txt') as f:
-        spire_plw = f.readlines()
+        herschel_plw = f.readlines()
         print 'I am reading from \'Herschel_SPIRE.PLW_ext.dat.txt\' and have assigned its output to plw_band.\n'
 
         # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
         # points for the passband and the second column to be the transmission
         # coefficeint at that wavelength
-        for row in spire_plw:
-            spire.append(row.split())
+        for row in herschel_plw:
+            herschel.append(row.split())
 
         # Determine the lower and upper bounds of the passband
         # The data read in from the transmission has data for a +/- 50A window
@@ -383,15 +391,69 @@ elif files == ['./Herschel_SPIRE.PLW_ext.dat.txt']:
         lower = 3914345.93
         higher = 6908139.18
 
+elif files == ['./Herschel_Pacs.blue.dat.txt']:
+    with open('Herschel_Pacs.blue.dat.txt') as f:
+        herschel_blue = f.readlines()
+        print 'I am reading from \'Herschel_Pacs.blue.dat.txt\' and have assigned its output to blue_band.\n'
+
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
+        for row in herschel_blue:
+            herschel.append(row.split())
+
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 556706.37
+        higher = 977403.23
+
+elif files == ['./Herschel_Pacs.green.dat.txt']:
+    with open('Herschel_Pacs.green.dat.txt') as f:
+        herschel_green = f.readlines()
+        print 'I am reading from \'Herschel_Pacs.green.dat.txt\' and have assigned its output to green_band.\n'
+
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
+        for row in herschel_green:
+            herschel.append(row.split())
+
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 791025.88
+        higher = 1351497.67
+
+elif files == ['./Herschel_Pacs.red.dat.txt']:
+    with open('Herschel_Pacs.red.dat.txt') as f:
+        herschel_red = f.readlines()
+        print 'I am reading from \'Herschel_Pacs.red.dat.txt\' and have assigned its output to red_band.\n'
+
+        # Because the content is not read in using proper formatting this splits # each row into columns that allow the first column to be wavelength
+        # points for the passband and the second column to be the transmission
+        # coefficeint at that wavelength
+        for row in herschel_red:
+            herschel.append(row.split())
+
+        # Determine the lower and upper bounds of the passband
+        # The data read in from the transmission has data for a +/- 50A window
+        # either side of the passband start and finish - this is the correct
+        # passband info
+        lower = 1177761.68
+        higher = 2436430.74
+
 # Split the data (a 2 column ascii file) into the correct lists: 0th column is the wavelength and 1st column is the transmission
-for a in range(0,len(spire)):
-    spire_wav.append(np.float64(spire[a][0]))
-    spire_trans.append(np.float64(spire[a][1]))
+for a in range(0,len(herschel)):
+    herschel_wav.append(np.float64(herschel[a][0]))
+    herschel_trans.append(np.float64(herschel[a][1]))
 
 print 'The data has now been assigned to spire with the wavelength component being in spire_wav and the transmission component being in spire_trans.\n'
 
 # Determine the number of wavelength points in the passband
-nwav = len(spire)
+nwav = len(herschel)
 
 # Save the number of wavelength points
 wavelength_micron.write(str(nwav)+str('\n'))
@@ -424,11 +486,11 @@ print 'There will be', points, 'points between', lower, 'um and', higher, 'um.\n
 print ''
 
 # This determines whether the spacing is linear or logarithmic
-if spire_wav[2] - spire_wav[1] != spire_wav[1] - spire_wav[0]:
+if herschel_wav[2] - herschel_wav[1] != herschel_wav[1] - herschel_wav[0]:
     print 'Spacing in wavelength is not constant; interpolation is required.\n'
 
     # Generate a function that best fits the data given in the download
-    interp = interp1d(spire_wav, spire_trans, kind='cubic')
+    interp = interp1d(herschel_wav, herschel_trans, kind='cubic')
 
     # Generate a linear array of points to feed into it
     linear_wav = np.linspace(lower,higher,points)
@@ -436,12 +498,12 @@ if spire_wav[2] - spire_wav[1] != spire_wav[1] - spire_wav[0]:
     # Feed in and determine the new, linearly spaced transmission points
     interp_trans = interp(linear_wav)
 
-    plt.plot(spire_wav, spire_trans, 'r+', label=str(files))
+    plt.plot(herschel_wav, herschel_trans, 'r+', label=str(files))
     plt.plot(linear_wav, interp_trans, 'b--', label='Interpolated Points')
     plt.xlabel('$\lambda$ ($\AA$)')
     plt.ylabel('Transmission')
     plt.legend(loc='best')
-    plt.savefig('interpolated.png', bbox_inches='tight')
+    plt.savefig('interpolated.png', bbox_inches='tight',dpi=300)
     plt.close()
 
     print 'Interpolation complete. Plot of the original function and the interpolated function have been saved to the working directory for accuracy inspection.\n'
@@ -464,8 +526,8 @@ else:
     camera.write(str(points)+str('\n'))
 
     # Writes wavelength points
-    for q in range(0,len(spire)):
-        if q == len(spire):
+    for q in range(0,len(herschel)):
+        if q == len(herschel):
             camera.write(str(spire[q][0]*10**-4))
         else:
             camera.write(str(spire[q][0]*10**-4) + str('\n'))
