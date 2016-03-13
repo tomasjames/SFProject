@@ -24,7 +24,7 @@ import csv
 
 from matplotlib.pyplot import *
 
-############################### Generate the SED ###############################
+############################### Read in image data ##############################
 
 # Read in the transmission weighted image devised earlier
 image_trans_raw = np.loadtxt('image_trans_raw.txt')
@@ -38,35 +38,6 @@ image_trans_raw = np.reshape(image_trans_raw, (len(imag.image),len(imag.image[0]
 
 print 'Data dimensions dictate that there are', imag.nx*imag.ny, 'rows before a new wavelength data entry begins.\n This means that there are', imag.nwav, 'wavelength fluxes at the central pixel.\n'
 
-# Sum integer to track the loop
-sum = 0
-
-# Instantiate lists to store values
-middle_flux, middle_flux_trans, middle_flux_trans_index  = [], [], []
-
-# Loop through the array to find the middle pixel and log its flux
-for l in range(0,imag.nwav):
-    for y in range(0,imag.ny):
-        for x in range(0,imag.nx):
-            sum += 1
-            if x == imag.nx/2 and y == imag.ny/2:
-                middle_flux_trans.append(image_trans_raw[x][y][l])
-                middle_flux.append(imag.image[x][y][l])
-                middle_flux_trans_index.append(sum)
-
-if sum == len(image_trans_raw):
-    print 'The loop has been executed over all of the elements.\n'
-
-################# Read the spectrum.out file and assign variables ##############
-
-# Determine parameters
-wav = imag.wav
-w_cen = 247.124514
-flux = middle_flux_trans
-
-v = cc/(wav*10**-4)
-v_cen = cc/(w_cen*10**-4)
-
 ########################## Read in the transmission data #######################
 
 # Reads the transmission data
@@ -77,29 +48,69 @@ trans_wav = trans_data[:,0]
 trans_v = cc/(trans_wav*10**-4)
 trans = trans_data[:,1]
 
-# Determine the flux 'seen' by SPIRE
-weighted_flux_mean = np.sum(middle_flux_trans)/np.sum(trans)
-weighted_flux_std = np.std(middle_flux_trans)
+######################### Determine frequency of the image #####################
 
-################################# Save the data ################################
+# Determine parameters
+wav = imag.wav
+w_cen = 71.330763
+#flux = middle_flux_trans
+
+v = cc/(wav*10**-4)
+v_cen = cc/(w_cen*10**-4)
+
+############################ Sample flux at each pixel #########################
 
 # Check to see if file already exists
-if os.path.isfile('../../../curvefitting/SPIRE_average_data.txt') == True:
+if os.path.isfile('../../../curvefitting/blue_average_data.txt') == True:
     print 'Data storage file already exists; opening now\n'
-    save_data = open('../../../curvefitting/psw_average_data.txt', 'a+')
+    save_data = open('../../../curvefitting/blue_average_data.txt', 'a+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 else:
     print 'Data storage file does not already exist; writing now\n'
-    save_data = open('../../../curvefitting/psw_average_data.txt', 'w+')
+    save_data = open('../../../curvefitting/blue_average_data.txt', 'w+')
     data_store = csv.writer(save_data, delimiter=' ')
 
-# Append to the file the passband
-data_store.writerow([v_cen,np.float64(weighted_flux_mean),np.float64(weighted_flux_std)])
+# Sum integer to track the loop
+sum = 0
+
+# Instantiate lists to store values
+flux, flux_trans, flux_trans_index = [], [], []
+
+# Loop through the array to find the middle pixel and log its flux
+for x in range(0,imag.nx):
+    for y in range(0,imag.ny):
+        for l in range(0,imag.nwav):
+            sum += 1
+
+            # Assign values to the pixel numbers to track position in loop
+            xpix = x
+            ypix = y
+            zpix = l
+
+            raw_flux = imag.image[x][y][l]
+            raw_flux_trans = image_trans_raw[x][y][l]
+
+            flux.append(raw_flux)
+            flux_trans.append(raw_flux_trans)
+
+        # Determine the flux 'seen' by SPIRE
+        weighted_flux_mean = np.sum(flux_trans)/np.sum(trans)
+        weighted_flux_std = np.std(flux_trans)
+
+        # Append th determined information to the file
+        data_store.writerow([sum, xpix, ypix, zpix, v_cen, weighted_flux_mean, weighted_flux_std])
+
+        # Reset the lists to 0
+        flux, flux_trans, flux_trans_index = [], [], []
+
+if sum == imag.nx*imag.ny*imag.nwav:
+    print 'The loop has been executed over all of the elements.\n'
 
 # Close the file
 save_data.close()
 
+'''
 ################################# Plotting routine #############################
 
 subplot2grid((12,12), (0,0), colspan=6,rowspan=12)
@@ -119,7 +130,6 @@ tight_layout()
 savefig('spectrum_psw_unweighted_v2.png', dpi=300, bbox_inches='tight')
 close()
 
-'''
 figure(2)
 plot(trans_v,weighted_flux,'g--')
 errorbar(v_cen,weighted_flux_mean,yerr=weighted_flux_std,fmt='x')
