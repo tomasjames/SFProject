@@ -32,7 +32,7 @@ def chi(O,E,sigma):
     Returns simply the minimised chi squared value for a given dataset.
 
     O is the flux from the actual data.
-    Sigma is the square root of the variance of O (assume 10% of O)
+    Sigma is the square root of the variance of O
     E is the data that is expected
     '''
     return sum((((O-E)/sigma)**2))
@@ -48,7 +48,6 @@ def mbb(N,dust_mass,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    #return N*dust_mass*opac*(a*(1./(np.exp(b)-1)))/100
     return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/100
 
 ################### Read the average data determined earlier ###################
@@ -106,7 +105,7 @@ lambda_init = 55.670637e-4
 lambda_fin = 690.8139e-4
 v_init = cc/lambda_init
 v_fin = cc/lambda_fin
-nlam = 300
+nlam = 600
 
 # Create array of wavelengths from range given and reshape
 w = np.linspace(lambda_init, lambda_fin, nlam)
@@ -125,115 +124,129 @@ sigma_arc = 1768 # 465 square arcseconds
 sigma_beam = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
 
 # Ask for spectral index
-#B = input('What dust spectral index should be used? (1.7 is recommended)\n')
 B = 2.0
 
 # Evaluate opacities
-#opacity = kappa_0*(w_ref/w)**B
 opacity = kappa_0*(v/v_ref)**B
 
 #################### Determine the expected column density #####################
-'''
+
 print 'Entering the column density determination script\n'
 
 # Dust to gas ratio
 d2g = 0.01
 
 # Read in the dust density information
-dust_density = np.loadtxt('.././workingsims/blue/background_15K/dust_density.inp', skiprows=2)
+dust_density = np.loadtxt('.././workingsims/blue/background_15K/dust_density.inp', skiprows=3)
 
-# Because of the format of the dust_density file, create a list of the indices that correspond to the z values
+# Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
+npix = np.round(len(dust_density)**(1./3))
+xpix, ypix, zpix = np.arange(0,npix), np.arange(0,npix), np.arange(0,npix)
 
-for i in range(0,len(dust_density)):
-    dust_density
-
-
-# Determine the mass of the cloud
-m = input('What cloud mass should be used? (Answer should be in Solar Masses)\n')
-cloud_dust_mass = d2g*m*ms # 0.01 is the dust to gas ratio
-print 'The mass of the cloud considered is', m*ms, 'g. The dust mass is ', cloud_dust_mass, 'g.\n'
-
-# Determine the mass of one dust grain
-print 'Presume gas is Hydrogen, therefore dust mass is 1/100 the mass of the gas.\n'
-cloud = input('What number density should be assigned to the cloud?\n')
-cloud_density = cloud*muh2*mp*d2g
-dust_mass = muh2*mp*d2g
-print 'The mass of 1 dust grain is', dust_mass, 'g.\n'
-
-# Calculate radius of the cloud in cm
-r = ((3./4)*(1./np.pi)*(cloud_dust_mass/cloud_density))**(1./3)
-print 'The radius of the cloud is', r, 'cm (or', r/au, ' AU).\n'
-V = (4./3)*(np.pi)*(r**3)
-
-# Determine the number of dust grains in the cloud by taking the mass of the cloud and dividing it by the mass of 1 dust grain
-N_d = (cloud_dust_mass/dust_mass)/((2*r)/(imag.sizepix_x))**2
-#N_d = N_d_cloud/(V/(imag.sizepix_x/2)**3)
+# Create list to store values of dust density summed along every x,y coordinate
+dust_density_line, col_full = [], []
 
 # Ask for distance to source
 d = input('At what distance is the source? This answer should be in parsecs.\n')
 D = np.float64(d)*pc # Convert to cm
 
-# Determine solid angle of the source and pixel
-sigma_source = (np.pi*r**2)/D**2
+# The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
+dust_mass = muh2*mp*d2g
+
+# Determine solid angle of the pixel
 sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 
-# From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
-col = N_d/((D**2)*(sigma_pix))
+# Loop over the pixels in dust_density
+for x in xpix:
+    for y in ypix:
+        # Reset the dust storage list
+        dust_cumulative = []
+        for z in zpix:
+            # Append the dust storage list with the value of the every dust density along the z axis
+            dust_cumulative.append(dust_density[x+y+z])
 
-print 'This produces a column density of ', col, '/cm**2.'
-'''
+        # Store the sum
+        dust_density_line.append(sum(dust_cumulative))
 
-N = np.linspace(10**21, 10**23, 1000)
-T = np.linspace(9,11,200)
+        # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
+        dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(npix*imag.sizepix_y))
+
+        # Determine the number of dust grains in the pixel
+        N_d = (dust_mass_pixel/dust_mass)
+
+        # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
+        col = N_d/((D**2)*(sigma_pix))
+
+        col_full.append(col)
+
+N = np.linspace(min(col_full)/100, max(col_full)*100, 1000)
+T = np.linspace(8,12,400)
 #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
 #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
 ###################### Determine the modified black body #######################
 
-# Loop through each column density and determine modified black body curve
-mod,chivals,N_index,T_index = [],[],[],[]
+chi_min_index_all, chi_min_blackbody_all = [], []
 
-# Define lists to store band fluxes
-to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
+# Save this to a file for storage
+chi_store = open('chi.txt', 'w')
 
-# Loop through both N and T to determine the blackbody
-for i in range(0,len(N)):
-    for j in range(0,len(T)):
-        blackbody = mbb(N[i],dust_mass,opacity,v,T=T[j])
-        mod.append(blackbody)
-        N_index.append(N[i])
-        T_index.append(T[j])
+for g in range(0,len(flux)):
+    for h in range(0,len(flux[g])):
 
-# Loop through all values of the modified blackbody
-for k in range(0,len(mod)):
+        # Loop through each column density and determine modified black body curve
+        mod,chivals,N_index,T_index = [],[],[],[]
 
-    # Find the flux at the index determined earlier
-    to_fit_psw = mod[k][psw_index[0]]
-    to_fit_pmw = mod[k][pmw_index[0]]
-    to_fit_plw = mod[k][plw_index[0]]
-    to_fit_blue = mod[k][blue_index[0]]
-    to_fit_green = mod[k][green_index[0]]
-    to_fit_red = mod[k][red_index[0]]
+        # Define lists to store band fluxes
+        to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
 
-    # Append these fluxes to the lists
-    to_fit_psw_list.append(to_fit_psw)
-    to_fit_pmw_list.append(to_fit_pmw)
-    to_fit_plw_list.append(to_fit_plw)
-    to_fit_blue_list.append(to_fit_blue)
-    to_fit_green_list.append(to_fit_green)
-    to_fit_red_list.append(to_fit_red)
+        # Loop through both N and T to determine the blackbody
+        for i in range(0,len(N)):
+            for j in range(0,len(T)):
+                blackbody = mbb(N[i],dust_mass,opacity,v,T=T[j])
+                mod.append(blackbody)
+                N_index.append(N[i])
+                T_index.append(T[j])
 
-    # Put the fitting fluxes into an array
-    to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue,to_fit_green,to_fit_red])
-    #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+    # Loop through all values of the modified blackbody
+    for k in range(0,len(mod)):
 
-    # Append the chi squared value
-    chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2],green[2],red[2]]))
-    #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
+        # Find the flux at the index determined earlier
+        to_fit_psw = mod[k][psw_index[0]]
+        to_fit_pmw = mod[k][pmw_index[0]]
+        to_fit_plw = mod[k][plw_index[0]]
+        to_fit_blue = mod[k][blue_index[0]]
+        to_fit_green = mod[k][green_index[0]]
+        to_fit_red = mod[k][red_index[0]]
 
-# Determine the chi squared minimum
-chi_min_index = chivals.index(min(chivals))
-chi_min_blackbody = mod[chi_min_index]
+        # Append these fluxes to the lists
+        to_fit_psw_list.append(to_fit_psw)
+        to_fit_pmw_list.append(to_fit_pmw)
+        to_fit_plw_list.append(to_fit_plw)
+        to_fit_blue_list.append(to_fit_blue)
+        to_fit_green_list.append(to_fit_green)
+        to_fit_red_list.append(to_fit_red)
+
+        # Put the fitting fluxes into an array
+        to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue,to_fit_green,to_fit_red])
+        #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+
+        # Append the chi squared value
+        chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2],green[2],red[2]]))
+        #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
+
+    # Determine the chi squared minimum
+    chi_min_index = chivals.index(min(chivals))
+    chi_min_blackbody = mod[chi_min_index]
+
+    # Append this value to a list to store the values
+    chi_min_index_all.append(chi_min_index)
+    chi_min_blackbody_all.append(chi_min_blackbody)
+
+    # Write to file
+    chi_store.writerow(chi_min_blackbody)
+
+chi_store.close()
 
 '''
 # Plot the data
