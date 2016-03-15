@@ -179,12 +179,16 @@ for x in xpix:
 
         col_full.append(col)
 
+print 'Column densities have been evaluated.\n'
+
 N = np.linspace(min(col_full)/100, max(col_full)*100, 1000)
 T = np.linspace(8,12,400)
 #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
 #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
 ###################### Determine the modified black body #######################
+
+print 'Now determining the modified blackbody curves.\n'
 
 chi_min_index_all, chi_min_blackbody_all = [], []
 
@@ -245,6 +249,7 @@ for g in range(0,len(flux)):
 
     # Write to file
     chi_store.writerow(chi_min_blackbody)
+    print 'Writing row to datafile...\n'
 
 chi_store.close()
 
