@@ -138,14 +138,13 @@ d2g = 0.01
 
 # Read in the dust density information
 dust_density = np.loadtxt('.././workingsims/blue/background_15K/dust_density.inp', skiprows=3)
-dust_temperature = np.loadtxt('.././workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
 
 # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
 npix = np.round(len(dust_density)**(1./3))
 xpix, ypix, zpix = np.arange(0,npix), np.arange(0,npix), np.arange(0,npix)
 
 # Create list to store values of dust density summed along every x,y coordinate
-dust_density_line, col_full, T_full = [], [], []
+dust_density_line, col_full = [], []
 
 # Ask for distance to source
 d = input('At what distance is the source? This answer should be in parsecs.\n')
@@ -161,10 +160,10 @@ sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 for x in xpix:
     for y in ypix:
         # Reset the dust storage list
-        dust_cumulative, T_weighted = [], []
-        for z in zpix:
-            # Append the dust storage list with the value of the every dust density along the z axis
-            dust_cumulative.append(dust_density[x+y+z])
+        dust_cumulative = []
+
+        # Append the dust storage list with the value of the every dust density along the z axis
+        locale = dust_density[x:x*npix]
 
         # Store the sum
         dust_density_line.append(sum(dust_cumulative))
@@ -180,8 +179,8 @@ for x in xpix:
 
         col_full.append(col)
 
-N = np.logspace(min(col_full)/10, max(col_full)*10, 100)
-T = np.linspace(8,20,40)
+N = np.linspace(min(col_full)/100, max(col_full)*100, 1000)
+T = np.linspace(8,12,400)
 #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
 #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
@@ -245,7 +244,7 @@ for g in range(0,len(flux)):
     chi_min_blackbody_all.append(chi_min_blackbody)
 
     # Write to file
-    chi_store.writerow(N_index[chi_min_index], T_index[chi_min_index], min(chivals))
+    chi_store.writerow(chi_min_blackbody)
 
 chi_store.close()
 

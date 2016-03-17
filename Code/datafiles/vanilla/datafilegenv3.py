@@ -239,18 +239,20 @@ for n in range(0,len(z)-1):
                     # Writes the data without a new line if the loop is on its last iteration
                     if n == (len(z)-1):
                         density.write(str(cloud_density+filament_density+proto_density))
-                        temperature.write(str(cloud_temperature+filament_temperature+proto_temperature))
+                        temperature.write(str(proto_temperature))
                     # Writes the data with a new line if the loop isn't on its last iteration
                     else:
                         density.write(str(cloud_density+filament_density+proto_density)+'\n')
-                        temperature.write(str(cloud_temperature+filament_temperature+proto_temperature)+'\n')
+                        temperature.write(str(filament_temperature)+'\n')
 
+                    '''
                     # Put all density information into a cube (3d array)
                     density_cube[l,m,n] = cloud_density+filament_density+proto_density
                     temperature_cube[l,m,n] = cloud_temperature+filament_temperature+proto_temperature
                     x_cube[l,m,n] = x[l]
                     y_cube[l,m,n] = y[m]
                     z_cube[l,m,n] = z[n]
+                    '''
 
                 elif (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 >= r_proto**2 and (x[l]-centre[0])**2 <= r**2 and (y[m]-centre[1])**2 <= r_fil**2 and (z[n]-centre[2])**2 <= r_fil**2:
 
@@ -269,18 +271,20 @@ for n in range(0,len(z)-1):
                     # Writes the data without a new line if the loop is on its last iteration
                     if n == (len(z)-1):
                         density.write(str(cloud_density+filament_density))
-                        temperature.write(str(cloud_temperature+filament_temperature))
+                        temperature.write(str(filament_temperature))
                     # Writes the data with a new line if the loop isn't on its last iteration
                     else:
                         density.write(str(cloud_density+filament_density)+'\n')
-                        temperature.write(str(cloud_temperature+filament_temperature)+'\n')
+                        temperature.write(str(cloud_temperature)+'\n')
 
+                    '''
                     # Put all density information into a cube (3d array)
                     density_cube[l,m,n] = cloud_density+filament_density
                     temperature_cube[l,m,n] = cloud_temperature+filament_temperature
                     x_cube[l,m,n] = x[l]
                     y_cube[l,m,n] = y[m]
                     z_cube[l,m,n] = z[n]
+                    '''
 
             # If points are not in filament but are in the cloud then write as per normal spherical molecular cloud
             elif (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 <= r**2 and (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 >= r_fil**2:
@@ -293,12 +297,14 @@ for n in range(0,len(z)-1):
                     density.write(str(cloud_density)+'\n')
                     temperature.write(str(cloud_temperature)+'\n')
 
+                '''
                 # Put all density information into a cube (3d array)
                 density_cube[l,m,n] = cloud_density
                 temperature_cube[l,m,n] = cloud_temperature
                 x_cube[l,m,n] = x[l]
                 y_cube[l,m,n] = y[m]
                 z_cube[l,m,n] = z[n]
+                '''
 
             # If above truth statements are not met, code writes the outside conditions
             else:
@@ -311,13 +317,15 @@ for n in range(0,len(z)-1):
                     density.write(str(outside_density)+'\n')
                     temperature.write(str(outside_temperature)+'\n')
 
+                '''
                 # Put all density information into a cube (3d array)
                 density_cube[l,m,n] = outside_density
                 temperature_cube[l,m,n] = outside_temperature
                 x_cube[l,m,n] = x[l]
                 y_cube[l,m,n] = y[m]
                 z_cube[l,m,n] = z[n]
-
+                '''
+                
 density.close()
 temperature.close()
 
