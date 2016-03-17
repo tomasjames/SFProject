@@ -40,7 +40,7 @@ else:
 
 ############################## Set up initial model ############################
 # Call the data file generation generation script to write the necessary files to the working directory
-execfile('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/vanilla/datafilegen.py')
+execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
