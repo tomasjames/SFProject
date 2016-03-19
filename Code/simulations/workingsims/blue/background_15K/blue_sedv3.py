@@ -72,7 +72,7 @@ else:
     data_store = csv.writer(save_data, delimiter=' ')
 
 # Sum integer to track the loop
-sum = 0
+count = 0
 
 # Instantiate lists to store values
 flux, flux_trans, flux_trans_index = [], [], []
@@ -81,7 +81,6 @@ flux, flux_trans, flux_trans_index = [], [], []
 for x in range(0,imag.nx):
     for y in range(0,imag.ny):
         for l in range(0,imag.nwav):
-            sum += 1
 
             # Assign values to the pixel numbers to track position in loop
             xpix = x
@@ -98,8 +97,11 @@ for x in range(0,imag.nx):
         weighted_flux_mean = np.sum(flux_trans)/np.sum(trans)
         weighted_flux_std = np.std(flux_trans)
 
+        # Invoke a counter
+        count += 1
+
         # Append th determined information to the file
-        data_store.writerow([sum, xpix, ypix, zpix, v_cen, weighted_flux_mean, weighted_flux_std])
+        data_store.writerow([count, xpix, ypix, zpix, v_cen, weighted_flux_mean, weighted_flux_std])
 
         # Reset the lists to 0
         flux, flux_trans, flux_trans_index = [], [], []

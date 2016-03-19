@@ -138,16 +138,22 @@ d2g = 0.01
 
 # Read in the dust density information
 dust_density = np.loadtxt('.././workingsims/blue/background_15K/dust_density.inp', skiprows=3)
+dust_temperature = np.loadtxt('.././workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
+
+# Create file to store the values
+datafeed_store = open('datafeed.txt', 'w')
+df = csv.writer(datafeed_store, delimiter=' ')
 
 # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
 npix = np.round(len(dust_density)**(1./3))
 xpix, ypix, zpix = np.arange(0,npix), np.arange(0,npix), np.arange(0,npix)
 
 # Create list to store values of dust density summed along every x,y coordinate
-dust_density_line, col_full = [], []
+dust_density_line, T_line, col_full, T_full = [], [], [], []
 
 # Ask for distance to source
-d = input('At what distance is the source? This answer should be in parsecs.\n')
+#d = input('At what distance is the source? This answer should be in parsecs.\n')
+d = 150
 D = np.float64(d)*pc # Convert to cm
 
 # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
@@ -160,13 +166,15 @@ sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 for x in xpix:
     for y in ypix:
         # Reset the dust storage list
-        dust_cumulative = []
-
-        # Append the dust storage list with the value of the every dust density along the z axis
-        locale = dust_density[x:x*npix]
+        dust_cumulative, T_cumulative = [], []
+        for z in zpix:
+            # Append the dust storage list with the value of the every dust density along the z axis
+            dust_cumulative.append(dust_density[x+y+z])
+            T_cumulative.append(dust_temperature[x+y+z])
 
         # Store the sum
         dust_density_line.append(sum(dust_cumulative))
+        T_line.append(np.mean(T_cumulative))
 
         # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
         dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(npix*imag.sizepix_y))
@@ -177,19 +185,34 @@ for x in xpix:
         # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
         col = N_d/((D**2)*(sigma_pix))
 
-        col_full.append(col)
+        # Assign all of the writable items to a variable for easier write
+        df_towrite = [x, y, col, np.mean(T_cumulative)]
 
-N = np.linspace(min(col_full)/100, max(col_full)*100, 1000)
-T = np.linspace(8,12,400)
+        # Save to a file
+        df.writerow(df_towrite)
+
+        col_full.append(col)
+        T_full.append(T_line)
+
+N = np.linspace(np.log10(min(col_full)/10), np.log10(max(col_full)*10), 40)
+T = np.linspace(8,20,40)
+
+datafeed_store.close()
+
+print 'Column densities have been evaluated and have been saved to the file datafeed_store.txt,\n'
+
 #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
 #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
 ###################### Determine the modified black body #######################
 
+print 'Now determining the modified blackbody curves.\n'
+
 chi_min_index_all, chi_min_blackbody_all = [], []
 
 # Save this to a file for storage
 chi_store = open('chi.txt', 'w')
+cs = csv.writer(chi_store, delimiter=' ')
 
 for g in range(0,len(flux)):
     for h in range(0,len(flux[g])):
@@ -197,54 +220,58 @@ for g in range(0,len(flux)):
         # Loop through each column density and determine modified black body curve
         mod,chivals,N_index,T_index = [],[],[],[]
 
-        # Define lists to store band fluxes
-        to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
-
         # Loop through both N and T to determine the blackbody
         for i in range(0,len(N)):
             for j in range(0,len(T)):
-                blackbody = mbb(N[i],dust_mass,opacity,v,T=T[j])
+                blackbody = mbb(10**N[i],dust_mass,opacity,v,T=T[j])
+
+                # Append the value of the given blackbody to a list for storage
                 mod.append(blackbody)
-                N_index.append(N[i])
+
+                # Append the given values of N and T
+                N_index.append(10**N[i])
                 T_index.append(T[j])
 
-    # Loop through all values of the modified blackbody
-    for k in range(0,len(mod)):
+                #print 'N=',10**N[i],'and T=',T[i]
 
-        # Find the flux at the index determined earlier
-        to_fit_psw = mod[k][psw_index[0]]
-        to_fit_pmw = mod[k][pmw_index[0]]
-        to_fit_plw = mod[k][plw_index[0]]
-        to_fit_blue = mod[k][blue_index[0]]
-        to_fit_green = mod[k][green_index[0]]
-        to_fit_red = mod[k][red_index[0]]
+                # Define lists to store band fluxes
+                to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
 
-        # Append these fluxes to the lists
-        to_fit_psw_list.append(to_fit_psw)
-        to_fit_pmw_list.append(to_fit_pmw)
-        to_fit_plw_list.append(to_fit_plw)
-        to_fit_blue_list.append(to_fit_blue)
-        to_fit_green_list.append(to_fit_green)
-        to_fit_red_list.append(to_fit_red)
+                # Find the flux at the index determined earlier
+                to_fit_psw = blackbody[psw_index[0]]
+                to_fit_pmw = blackbody[pmw_index[0]]
+                to_fit_plw = blackbody[plw_index[0]]
+                to_fit_blue = blackbody[blue_index[0]]
+                to_fit_green = blackbody[green_index[0]]
+                to_fit_red = blackbody[red_index[0]]
 
-        # Put the fitting fluxes into an array
-        to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue,to_fit_green,to_fit_red])
-        #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+                # Put the fitting fluxes into an array
+                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+                #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
 
-        # Append the chi squared value
-        chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2],green[2],red[2]]))
-        #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
+                # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
+                points = np.array([flux[0][h],flux[1][h],flux[2][h],flux[3][h],flux[4][h],flux[5][h]])
+                points_error = np.array([flux_error[0][h],flux_error[1][h],flux_error[2][h],flux_error[3][h],flux_error[4][h],flux_error[5][h]])
 
-    # Determine the chi squared minimum
-    chi_min_index = chivals.index(min(chivals))
-    chi_min_blackbody = mod[chi_min_index]
+                # Append the chi squared value
+                chivals.append(chi(to_fit,points,sigma=points_error))
+                #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
 
-    # Append this value to a list to store the values
-    chi_min_index_all.append(chi_min_index)
-    chi_min_blackbody_all.append(chi_min_blackbody)
+                #print str('Found the chi-squared landscape. Moving to the next values...\n')
 
-    # Write to file
-    chi_store.writerow(chi_min_blackbody)
+        # Determine the chi squared minimum
+        chi_min_index = chivals.index(min(chivals))
+        chi_min_blackbody = mod[chi_min_index]
+
+        # Append this value to a list to store the values
+        chi_min_index_all.append(chi_min_index)
+        chi_min_blackbody_all.append(chi_min_blackbody)
+
+        cs_towrite = [g, h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+
+        # Write to file
+        cs.writerow(cs_towrite)
+        #print 'Writing row to datafile...\n'
 
 chi_store.close()
 
