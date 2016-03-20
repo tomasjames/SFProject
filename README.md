@@ -21,12 +21,22 @@ Project Aims
 The primary (simplified) aims of this project are:
 
 - to simulate a molecular cloud containing x amount of pre-stellar cores (i.e. generate synthetic data)
+- recover the values of column density, N and temperature, T for each pixel in the resulting data
+- apply this machinery to 'real' data
 - to produce a dendogram (https://dendrograms.readthedocs.org/en/latest/) of the
   resulting simulation to probe the structure of the simulated cloud
-- compare with other simulations
+    - also apply the denrogram to 'real' data
+- compare with other simulations (should time allow)
 
 Project Progress
 ----------------
+
+20/03/16: The machinery to analyse data is now *all* in place and functioning. All SEDs produced are the correct form, and the chi-squared routine, that now successfully loops over each pixel, works correctly. The next step in producing further results is to:
+- write a brief script to plot maps of the recovered column density and temperature
+  - plot contour plots should time allow
+- apply this machinery to SPH simulation data and recover values of N and T
+- push forwards to analyse data dendrogramically
+- write up!
 
 08/02/16: Code has been reformatted since last major additions, and a workflow has now been devised. To properly run the code, the following commands must be executed in the following order:
 - `cd` to a simulation directory, eg `psw/background_15K`

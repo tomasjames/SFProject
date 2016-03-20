@@ -214,64 +214,71 @@ chi_min_index_all, chi_min_blackbody_all = [], []
 chi_store = open('chi.txt', 'w')
 cs = csv.writer(chi_store, delimiter=' ')
 
-for g in range(0,len(flux)):
-    for h in range(0,len(flux[g])):
+# Save a line to allow better understanding of the columns
+cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
 
-        # Loop through each column density and determine modified black body curve
-        mod,chivals,N_index,T_index = [],[],[],[]
+for h in range(0,imag.nx*imag.ny):
 
-        # Loop through both N and T to determine the blackbody
-        for i in range(0,len(N)):
-            for j in range(0,len(T)):
-                blackbody = mbb(10**N[i],dust_mass,opacity,v,T=T[j])
+    # Loop through each column density and determine modified black body curve
+    mod,chivals,N_index,T_index = [],[],[],[]
 
-                # Append the value of the given blackbody to a list for storage
-                mod.append(blackbody)
+    # Loop through both N and T to determine the blackbody
+    for i in range(0,len(N)):
+        for j in range(0,len(T)):
+            blackbody = mbb(10**N[i],dust_mass,opacity,v,T=T[j])
 
-                # Append the given values of N and T
-                N_index.append(10**N[i])
-                T_index.append(T[j])
+            # Append the value of the given blackbody to a list for storage
+            mod.append(blackbody)
 
-                #print 'N=',10**N[i],'and T=',T[i]
+            # Append the given values of N and T
+            N_index.append(10**N[i])
+            T_index.append(T[j])
 
-                # Define lists to store band fluxes
-                to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
+            #print 'N=',10**N[i],'and T=',T[i]
 
-                # Find the flux at the index determined earlier
-                to_fit_psw = blackbody[psw_index[0]]
-                to_fit_pmw = blackbody[pmw_index[0]]
-                to_fit_plw = blackbody[plw_index[0]]
-                to_fit_blue = blackbody[blue_index[0]]
-                to_fit_green = blackbody[green_index[0]]
-                to_fit_red = blackbody[red_index[0]]
+            # Define lists to store band fluxes
+            to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
 
-                # Put the fitting fluxes into an array
-                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
-                #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+            # Find the flux at the index determined earlier
+            to_fit_psw = blackbody[psw_index[0]]
+            to_fit_pmw = blackbody[pmw_index[0]]
+            to_fit_plw = blackbody[plw_index[0]]
+            to_fit_blue = blackbody[blue_index[0]]
+            to_fit_green = blackbody[green_index[0]]
+            to_fit_red = blackbody[red_index[0]]
 
-                # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-                points = np.array([flux[0][h],flux[1][h],flux[2][h],flux[3][h],flux[4][h],flux[5][h]])
-                points_error = np.array([flux_error[0][h],flux_error[1][h],flux_error[2][h],flux_error[3][h],flux_error[4][h],flux_error[5][h]])
+            # Put the fitting fluxes into an array
+            to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+            #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
 
-                # Append the chi squared value
-                chivals.append(chi(to_fit,points,sigma=points_error))
-                #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
+            # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
+            points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+            points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
-                #print str('Found the chi-squared landscape. Moving to the next values...\n')
+            # Append the chi squared value
+            chisquared = chi(to_fit,points,sigma=points_error)
 
-        # Determine the chi squared minimum
-        chi_min_index = chivals.index(min(chivals))
-        chi_min_blackbody = mod[chi_min_index]
+            if chisquared == np.inf:
+                chivals.append(np.nan)
+            else:
+                chivals.append(chisquared)
+            #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
 
-        # Append this value to a list to store the values
-        chi_min_index_all.append(chi_min_index)
-        chi_min_blackbody_all.append(chi_min_blackbody)
+            #print str('Found the chi-squared landscape. Moving to the next values...\n')
 
-        cs_towrite = [g, h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+    # Determine the chi squared minimum
+    chi_min_index = chivals.index(min(chivals))
+    chi_min_blackbody = mod[chi_min_index]
 
-        # Write to file
-        cs.writerow(cs_towrite)
-        #print 'Writing row to datafile...\n'
+    # Append this value to a list to store the values
+    chi_min_index_all.append(chi_min_index)
+    chi_min_blackbody_all.append(chi_min_blackbody)
+
+    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+
+    # Write to file
+    cs.writerow(cs_towrite)
+    #print 'Writing row to datafile...\n'
 
 chi_store.close()
 
