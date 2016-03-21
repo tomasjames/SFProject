@@ -325,7 +325,7 @@ for n in range(0,len(z)-1):
                 y_cube[l,m,n] = y[m]
                 z_cube[l,m,n] = z[n]
                 '''
-                
+
 density.close()
 temperature.close()
 
@@ -409,7 +409,7 @@ silicate.write(str(nlam) + '               # Nr of wavelength points in the file
 ################################ Write data ################################
 
 for o in range(0,len(w)):
-    if i == len(w):
+    if o == len(w):
         silicate.write(str(w[o])+str('    ')+str(opacity[o]))
     else:
         silicate.write(str(w[o])+str('    ')+str(opacity[o])+str('\n'))

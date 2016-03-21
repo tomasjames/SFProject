@@ -1,0 +1,153 @@
+%%-----------------------------------------------------------------
+% Tomas James
+% 4th Year Project: How good is dust emission as a tracer of star forming regions in molecular clouds?
+% Cardiff University
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+% Start Document Preamble
+%-----------------------------------------------------------------
+
+\documentclass{report}
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+%\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=32mm,left=10mm,right=10mm,columnsep=15pt]{geometry} % Document margins
+\usepackage[hang,small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compact item environment which makes bullet points with less space between them
+
+\usepackage{graphicx} % Used for insertion of graphics
+
+\usepackage[english]{babel}% Recommended
+\usepackage{csquotes}% Recommended
+
+\usepackage[style=authoryear, firstinits=true, backend=biber]{biblatex}
+\renewcommand*{\revsdnamepunct}{}
+\renewbibmacro{in:}{} % Remove 'in' from bibliography
+\DeclareNameAlias{sortname}{last-first} % Change ordering of name
+\addbibresource{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib}% Syntax for version >= 1.2
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{listings} % Allow code to be input into appendix
+\usepackage{courier}
+
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{mhchem}
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+%\rhead{Student ID: 1158976}
+
+\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{How good is dust emission as a tracer of star forming regions in molecular clouds?}} % Article title
+
+% Define title and author
+\author{
+\large
+\textsc{\parbox{\linewidth}{\centering%
+Tomas James\endgraf\skip
+Student ID: 1158976\endgraf\bigskip}} % author name
+\vspace{-5mm}
+}
+
+\date{\large\parbox{\linewidth}{\centering%
+  Supervisor: Dr. P. C. Clark \endgraf\bigskip\today}}
+
+%-----------------------------------------------------------------
+% Begin Document
+%-----------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%-----------------------------------------------------------------
+% Begin Abstract
+%-----------------------------------------------------------------
+
+\begin{abstract}
+A molecular cloud was simulated using RADMC-3D \parencite{RADMC-3D} using bespoke input files generated in Python. This simulation was performed across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$. This data was then `degraded` by accounting for SPIRE's transmission curve to better simulate a molecular cloud observed by Herschel. This data was then analysed by performing weighted averages in each of the wavebands, subsequently plotting Spectral Energy Distributions (SEDs) on a pixel by pixel basis to recover the column density $N$ and temperature $T$ at each pixel.
+\end{abstract}
+
+%-----------------------------------------------------------------
+% Begin Contents
+%-----------------------------------------------------------------
+
+\tableofcontents % Insert table of contents
+\pagebreak % Adds page break after contents
+
+%-----------------------------------------------------------------
+% Introduction
+%-----------------------------------------------------------------
+
+\section{Introduction}
+A star is defined as a spherical object of ionised plasma bound by its own gravity. A star is not itself a static object as nuclear fusion actively changes the composition of the star throughout its lifetime.
+
+\subsection{Star Formation}
+The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
+
+Stars are essentially chemical foundaries, acting as the primary source of elements heavier than \ce{^{2}He} in the Universe. The production of \ce{^{1}H} is thought to have occured , approximately 380,0000 years after the Big Bang \parencite{peebles}, when the primordial quark-gluon plasma had cooled sufficiently to allow protons and neutrons (hereafter $p$ and $n$) to bind together to form atoms. \ce{^{2}He}, according to \textcite{bbc},  Whilst further production of \ce{^{2}He} can occur via the first fusion process, the proton-proton (pp) reaction described by Equation \ref{ppchain} \parencite{synthesis}, \ce{^{1}H} cannot be produced via a fusion process.
+
+\begin{equation} \label{ppchain}
+  \ce{^{1}{H} + ^{1}{H} -> ^{2}{He} + e^{+} + v_{e} + 0.42 MeV}
+\end{equation}
+
+That being said, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. As a result of the \ce{^{1}H} synthesis during recombination, its abundance can be used as an indicator of an object's age.
+
+The relative prevalence of \ce{^{1}H} means that it is incredibly easy to obserse thanks to its $21cm$ line parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the
+
+\ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy.
+
+\subsection{Molecular clouds}
+Molecular clouds themselves are dense regions of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Much like the ISM, they are composed of gas and cosmic dust, however a molecular cloud differs from the ISM in that significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is around $10^{5}\,g\,cm^{-3}$, whilst the dust density in the surrounding ISM is around $10^{2}\,g\,cm^{-3}$. The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. This results in a temperature gradient that increases with radius. The ISM essentially bathes the molecular cloud, heating it from the outside.
+
+Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars.
+
+Dust radiates as a modified black body approximated by Equation \ref{mbb}.
+
+\begin{equation} \label{mbb}
+  S_{\nu} = N \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
+\end{equation}
+
+In Equation \ref{mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index and $B_{\nu}(T)$ is the frequency dependent Planck function.
+
+Dust properties such as the spectral index $\beta$ and temperature $T$ have an effect on dust emission and therefore the ability to detect radiation from within a molecular cloud due to, for example, a prestellar core and therefore understand the processes governing its formation and evolution.
+
+%-----------------------------------------------------------------
+% Bibliography
+%-----------------------------------------------------------------
+
+\printbibliography
+
+%\nocite{*}
+%\printbibliography
+
+%-----------------------------------------------------------------
+% Appendix
+%-----------------------------------------------------------------
+
+\end{document}

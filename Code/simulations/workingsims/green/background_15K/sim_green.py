@@ -59,7 +59,7 @@ os.system('radmc3d image loadlambda')
 
 # Define wavelength ranges of spire to plot (PSW, PMW and PLW)
 #spire = [[196.5351,298.1259],[277.3117,423.4707],[386.6218,679.3126]]
-plw_ext = [391.4346,690.8139]
+green = [791.02588,1351.49767]
 
 # Plot image for first SPIRE wavelength band (PSW)
 #radmc3dPy.image.makeImage(npix=150000, sizeau=20000, incl=90., lambdarange=plw_ext, nlam=60)

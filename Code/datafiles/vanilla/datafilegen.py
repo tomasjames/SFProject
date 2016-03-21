@@ -69,75 +69,78 @@ print '########################################################################'
 print '                             amr_grid.inp                                 '
 print '########################################################################\n'
 
-######################## Write file to working directory #######################
+ask_amr = input('Do you need to generate an amr_grid.inp file?\n')
 
-# Writes a file called amr_grid.inp to the working directory and allows it to be
-# written to
-amr = open('amr_grid.inp', 'w')
+if ask_amr == 'yes':
+    ######################## Write file to working directory #######################
 
-############################ Define axes to work with ##########################
+    # Writes a file called amr_grid.inp to the working directory and allows it to be
+    # written to
+    amr = open('amr_grid.inp', 'w')
 
-# Define the image width
-width = input('What image width would you like to use? The radius of your cloud is ' +str(r/au) +' AU - image width should be appropriately larger than this (This should be in AU) \n')
-print 'This is a width of ', width*au, 'cm.\n'
+    ############################ Define axes to work with ##########################
 
-# Define the axis length (i.e. the number of pixels in each axis)
-l = input('How many pixels should I assign to a dimension? (128 recommended) \n')
+    # Define the image width
+    width = input('What image width would you like to use? The radius of your cloud is ' +str(r/au) +' AU - image width should be appropriately larger than this (This should be in AU) \n')
+    print 'This is a width of ', width*au, 'cm.\n'
 
-# Define the width of each pixel in AU
-dpix = (width*au)/l
-print 'This corresponds to a pixel width of', dpix,'cm.'
+    # Define the axis length (i.e. the number of pixels in each axis)
+    l = input('How many pixels should I assign to a dimension? (128 recommended) \n')
 
-# Create an array of pixels in each dimension
-x,y,z = np.linspace(-(width*au)/2,(width*au)/2,l+1), np.linspace(-(width*au)/2,(width*au)/2,l+1), np.linspace(-(width*au)/2,(width*au)/2,l+1)
-#x,y,z = np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1))
+    # Define the width of each pixel in AU
+    dpix = (width*au)/l
+    print 'This corresponds to a pixel width of', dpix,'cm.'
 
-################# Write integers for RADMC-3D to learn about grid ##############
+    # Create an array of pixels in each dimension
+    x,y,z = np.linspace(-(width*au)/2,(width*au)/2,l+1), np.linspace(-(width*au)/2,(width*au)/2,l+1), np.linspace(-(width*au)/2,(width*au)/2,l+1)
+    #x,y,z = np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1)), np.arange(0,(l*dpix+1))
 
-# Write the iformat number
-amr.write('1         # The same as most other files\n')
+    ################# Write integers for RADMC-3D to learn about grid ##############
 
-# Write the grid style
-amr.write('0         # 0 = regular\n')
+    # Write the iformat number
+    amr.write('1         # The same as most other files\n')
 
-# Write coordinate system
-amr.write('1         # < 100 = Cartesian\n')
+    # Write the grid style
+    amr.write('0         # 0 = regular\n')
 
-# Write gridinfo integer
-amr.write('0         # If 1, abundant information is written regarding the grid\n')
+    # Write coordinate system
+    amr.write('1         # < 100 = Cartesian\n')
 
-# Write integers to activate dimensions
-amr.write('1 1 1 \n')
+    # Write gridinfo integer
+    amr.write('0         # If 1, abundant information is written regarding the grid\n')
 
-################# Loop through all grid values and write to file ###############
+    # Write integers to activate dimensions
+    amr.write('1 1 1 \n')
 
-# Write the number of base cells in each dimension
-amr.write(str(l)+ ' ' + str(l) + ' ' +str(l) + '\n')
+    ################# Loop through all grid values and write to file ###############
 
-# Loop through each pixel and write to the file the edges of each pixel
-for i in x:
-    if i == x[-1]:
-        amr.write(str(np.float64(i)) + str('\n'))
-    else:
-        amr.write(str(np.float64(i)) + str(' '))
+    # Write the number of base cells in each dimension
+    amr.write(str(l)+ ' ' + str(l) + ' ' +str(l) + '\n')
 
-for j in y:
-    if j == y[-1]:
-        amr.write(str(np.float64(j)) + str('\n'))
+    # Loop through each pixel and write to the file the edges of each pixel
+    for i in x:
+        if i == x[-1]:
+            amr.write(str(np.float64(i)) + str('\n'))
+        else:
+            amr.write(str(np.float64(i)) + str(' '))
 
-    else:
-        amr.write(str(np.float64(j)) + str(' '))
+    for j in y:
+        if j == y[-1]:
+            amr.write(str(np.float64(j)) + str('\n'))
 
-for k in z:
-    if k == z[-1]:
-        amr.write(str(np.float64(k)) + str('\n'))
+        else:
+            amr.write(str(np.float64(j)) + str(' '))
 
-    else:
-        amr.write(str(np.float64(k)) + str(' '))
+    for k in z:
+        if k == z[-1]:
+            amr.write(str(np.float64(k)) + str('\n'))
 
-print '\'amr_grid.inp\' has been written to the working directory\n'
+        else:
+            amr.write(str(np.float64(k)) + str(' '))
 
-amr.close()
+    print '\'amr_grid.inp\' has been written to the working directory\n'
+
+    amr.close()
 
 ################################################################################
 ############# Set up dust_density.inp and dust_temperature.inp #################
@@ -147,87 +150,90 @@ print '\n#######################################################################
 print '                dust_density.inp and dust_temperature.dat                 '
 print '########################################################################\n'
 
-# Writes the files to the working directory
-density = open('dust_density.inp', 'w')
-temperature = open('dust_temperature.dat', 'w')
+ask_dust = input('Do you need to generate dust_density.inp and dust_temperature.dat files?\n')
 
-# Writes the format number
-density.write('1         # The same as most other files\n')
-temperature.write('1         # The same as most other files\n')
+if ask_dust == 'yes':
+    # Writes the files to the working directory
+    density = open('dust_density.inp', 'w')
+    temperature = open('dust_temperature.dat', 'w')
 
-# Write the number of cells
-density.write(str(l**3)+'         # Number of cells\n')
-temperature.write(str(l**3)+'         # Number of cells\n')
+    # Writes the format number
+    density.write('1         # The same as most other files\n')
+    temperature.write('1         # The same as most other files\n')
 
-# Write the number of dust species
-density.write('1         # Number of dust species\n')
-temperature.write('1         # Number of dust species\n')
+    # Write the number of cells
+    density.write(str(l**3)+'         # Number of cells\n')
+    temperature.write(str(l**3)+'         # Number of cells\n')
 
-# Firstly, find the centre of the 3D grid
-#centre = [x[l/2], y[l/2], z[l/2]]
-centre = [0,0,0]
+    # Write the number of dust species
+    density.write('1         # Number of dust species\n')
+    temperature.write('1         # Number of dust species\n')
 
-# Determine how many of the pixels lies within the cloud (convert the radius to
-# cm and then divide by the width of one pixel in cm)
-r_pix = (r*au)/dpix
+    # Firstly, find the centre of the 3D grid
+    #centre = [x[l/2], y[l/2], z[l/2]]
+    centre = [0,0,0]
 
-# Ask for the temperature to be assigned to the cloud
-print 'Dust density in the cloud was supplied previously. It is taken to be'
-print cloud_density, 'g/cm^3.\n'
-cloud_temperature = np.float64(input('What temperature should be assigned to the cloud?\n'))
+    # Determine how many of the pixels lies within the cloud (convert the radius to
+    # cm and then divide by the width of one pixel in cm)
+    r_pix = (r*au)/dpix
 
-# Ask for the temperature outside
-print 'Dust density outside of the cloud was supplied previously. It is taken to be'
-print outside_density, 'g/cm^3.\n'
-outside_temperature = np.float64(input('What temperature should be assigned outside of the cloud?\n'))
+    # Ask for the temperature to be assigned to the cloud
+    print 'Dust density in the cloud was supplied previously. It is taken to be'
+    print cloud_density, 'g/cm^3.\n'
+    cloud_temperature = np.float64(input('What temperature should be assigned to the cloud?\n'))
 
-# Define empty lists to store densities
-density_cube = np.zeros([l,l,l])
+    # Ask for the temperature outside
+    print 'Dust density outside of the cloud was supplied previously. It is taken to be'
+    print outside_density, 'g/cm^3.\n'
+    outside_temperature = np.float64(input('What temperature should be assigned outside of the cloud?\n'))
 
-x_cube = np.zeros([l,l,l])
-y_cube = np.zeros([l,l,l])
-z_cube = np.zeros([l,l,l])
+    # Define empty lists to store densities
+    density_cube = np.zeros([l,l,l])
 
-# Determine where centre of cloud lies in model space by looping through all 3 dimensions
-for n in range(0,len(z)-1):
-    for m in range(0,len(y)-1):
-        for l in range(0,len(x)-1):
-            # Apply truth statement to the equation of a circle to determine whether pixel lies within the star
-            if (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 <= r**2:
-                # Writes the data without a new line if the loop is on its last iteration
-                if n == (len(z)-1):
-                    density.write(str(cloud_density))
-                    temperature.write(str(cloud_temperature))
-                # Writes the data with a new line if the loop isn't on its last iteration
+    x_cube = np.zeros([l,l,l])
+    y_cube = np.zeros([l,l,l])
+    z_cube = np.zeros([l,l,l])
+
+    # Determine where centre of cloud lies in model space by looping through all 3 dimensions
+    for n in range(0,len(z)-1):
+        for m in range(0,len(y)-1):
+            for l in range(0,len(x)-1):
+                # Apply truth statement to the equation of a circle to determine whether pixel lies within the star
+                if (x[l]-centre[0])**2 + (y[m]-centre[1])**2 + (z[n]-centre[2])**2 <= r**2:
+                    # Writes the data without a new line if the loop is on its last iteration
+                    if n == (len(z)-1):
+                        density.write(str(cloud_density))
+                        temperature.write(str(cloud_temperature))
+                    # Writes the data with a new line if the loop isn't on its last iteration
+                    else:
+                        density.write(str(cloud_density)+'\n')
+                        temperature.write(str(cloud_temperature)+'\n')
+
+                    # Put all density information into a cube (3d array)
+                    density_cube[l,m,n] = cloud_density
+                    x_cube[l,m,n] = x[l]
+                    y_cube[l,m,n] = y[m]
+                    z_cube[l,m,n] = z[n]
+
+                # If above truth statement is not met, code writes the outside conditions
                 else:
-                    density.write(str(cloud_density)+'\n')
-                    temperature.write(str(cloud_temperature)+'\n')
+                    # Writes the data without a new line if the loop is on its last iteration
+                    if n == (len(z)-1):
+                        density.write(str(outside_density))
+                        temperature.write(str(outside_temperature))
+                    # Writes the data with a new line if the loop isn't on its last iteration
+                    else:
+                        density.write(str(outside_density)+'\n')
+                        temperature.write(str(outside_temperature)+'\n')
 
-                # Put all density information into a cube (3d array)
-                density_cube[l,m,n] = cloud_density
-                x_cube[l,m,n] = x[l]
-                y_cube[l,m,n] = y[m]
-                z_cube[l,m,n] = z[n]
+                    # Put all density information into a cube (3d array)
+                    density_cube[l,m,n] = outside_density
+                    x_cube[l,m,n] = x[l]
+                    y_cube[l,m,n] = y[m]
+                    z_cube[l,m,n] = z[n]
 
-            # If above truth statement is not met, code writes the outside conditions
-            else:
-                # Writes the data without a new line if the loop is on its last iteration
-                if n == (len(z)-1):
-                    density.write(str(outside_density))
-                    temperature.write(str(outside_temperature))
-                # Writes the data with a new line if the loop isn't on its last iteration
-                else:
-                    density.write(str(outside_density)+'\n')
-                    temperature.write(str(outside_temperature)+'\n')
-
-                # Put all density information into a cube (3d array)
-                density_cube[l,m,n] = outside_density
-                x_cube[l,m,n] = x[l]
-                y_cube[l,m,n] = y[m]
-                z_cube[l,m,n] = z[n]
-
-density.close()
-temperature.close()
+    density.close()
+    temperature.close()
 
 ################################################################################
 ######################### Set up dustkappa_silicate.inp ########################
@@ -309,7 +315,7 @@ silicate.write(str(nlam) + '               # Nr of wavelength points in the file
 ################################ Write data ################################
 
 for o in range(0,len(w)):
-    if i == len(w):
+    if o == len(w):
         silicate.write(str(w[o])+str('    ')+str(opacity[o]))
     else:
         silicate.write(str(w[o])+str('    ')+str(opacity[o])+str('\n'))
