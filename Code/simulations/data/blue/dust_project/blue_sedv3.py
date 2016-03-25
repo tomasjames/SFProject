@@ -63,7 +63,7 @@ v_cen = cc/(w_cen*10**-4)
 # Check to see if file already exists
 if os.path.isfile('../../../curvefitting/sphdata/blue_average_data.txt') == True:
     print 'Data storage file already exists; opening now\n'
-    save_data = open('../../../curvefitting/blue_average_data.txt', 'a+')
+    save_data = open('../../../curvefitting/sphdata/blue_average_data.txt', 'a+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 else:

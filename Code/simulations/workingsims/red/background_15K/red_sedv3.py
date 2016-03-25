@@ -61,14 +61,14 @@ v_cen = cc/(w_cen*10**-4)
 ############################ Sample flux at each pixel #########################
 
 # Check to see if file already exists
-if os.path.isfile('../../../curvefitting/red_average_data.txt') == True:
+if os.path.isfile('../../../curvefitting/cloud/red_average_data.txt') == True:
     print 'Data storage file already exists; opening now\n'
-    save_data = open('../../../curvefitting/red_average_data.txt', 'a+')
+    save_data = open('../../../curvefitting/cloud/red_average_data.txt', 'a+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 else:
     print 'Data storage file does not already exist; writing now\n'
-    save_data = open('../../../curvefitting/red_average_data.txt', 'w+')
+    save_data = open('../../../curvefitting/cloud/red_average_data.txt', 'w+')
     data_store = csv.writer(save_data, delimiter=' ')
 
 # Sum integer to track the loop

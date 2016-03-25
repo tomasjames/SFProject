@@ -25,7 +25,7 @@ import csv
 from matplotlib.pyplot import *
 
 ###################### Check for correct default.inp files #####################
-
+'''
 print '########################################################################'
 print '########################## Default File Check ##########################'
 print '########################################################################'
@@ -48,12 +48,12 @@ radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
-
+'''
 ########################### Run Monte-Carlo simulation ########################
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda')
+os.system('radmc3d image npix 128 loadlambda sizeau 14200')
 
 ############################# Plot the resulting data ##########################
 

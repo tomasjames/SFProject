@@ -39,21 +39,25 @@ else:
     print '\n--->radmc3d.inp did not alreadt exists; a blank file called radmc3d.inp has been written to the working directory\n'
 
 ############################## Set up initial model ############################
-# Call the data file generation generation script to write the necessary files to the working directory
-execfile('../../../../datafiles/vanilla/datafilegen.py')
+
+data_choice = input('Run datafilegen.py to generate input files, or go straight to raytrace? (\'d\' for datafilegen.py, \'r\' for raytrace)\n')
+if data_choice == 'd':
+    # Call the data file generation generation script to write the necessary files to the working directory
+    execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
+
 # Writes the default parameter file for the 2d sphere model
-radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
+#radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-600000*au,600000*au], ybound=[-600000*au,600000*au], zbound=[-600000*au,600000*au], nphot=2000000.)
+#radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=200, ny=200, nz=1000, xbound=[-600000*au,600000*au], ybound=[-600000*au,600000*au], zbound=[-600000*au,600000*au], nphot=2000000.)
 
 ########################### Run Monte-Carlo simulation ########################
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda')
+os.system('radmc3d image loadlambda npixx 200 npixy 200 npixz 1000')
 
 ############################# Plot the resulting data ##########################
 

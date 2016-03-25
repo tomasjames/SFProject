@@ -87,7 +87,7 @@ flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
 flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
 
 # Read the initial radmc3dPy output to get image dimensions and info
-imag = radmc3dPy.image.readImage('../workingsims/plw/background_15K/image.out')
+imag = radmc3dPy.image.readImage('../../workingsims/plw/background_15K/image.out')
 
 ######################### Determine (again) the opacity ########################
 
@@ -137,8 +137,8 @@ print 'Entering the column density determination script\n'
 d2g = 0.01
 
 # Read in the dust density information
-dust_density = np.loadtxt('.././workingsims/blue/background_15K/dust_density.inp', skiprows=3)
-dust_temperature = np.loadtxt('.././workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
+dust_density = np.loadtxt('../../workingsims/blue/background_15K/dust_density.inp', skiprows=3)
+dust_temperature = np.loadtxt('../../workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
 
 # Create file to store the values
 datafeed_store = open('datafeed.txt', 'w')

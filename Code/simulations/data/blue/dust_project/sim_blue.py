@@ -39,8 +39,11 @@ else:
     print '\n--->radmc3d.inp did not already exists; a blank file called radmc3d.inp has been written to the working directory\n'
 
 ############################## Set up initial model ############################
-# Call the data file generation generation script to write the necessary files to the working directory
-execfile('../../../../datafiles/vanilla/datafilegen.py')
+
+data_choice = input('Run datafilegen.py to generate input files, or go straight to raytrace? (\'d\' for datafilegen.py, \'r\' for raytrace)\n')
+if data_choice == 'd':
+    # Call the data file generation generation script to write the necessary files to the working directory
+    execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
 
@@ -54,7 +57,9 @@ execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda')
+os.system('radmc3d image loadlambda npixx 200 npixy 200 sizeau 140000')
+
+print 'Raytrace complete and image.out saved to the working directory - now moving on to account to for transmission.\n'
 
 ############################# Plot the resulting data ##########################
 
@@ -139,10 +144,10 @@ with open('image_trans_raw.txt', 'w') as g:
 ########################## Plot the resulting data #######################
 
 # Initialise the image
-##imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
 # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-#radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
