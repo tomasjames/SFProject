@@ -57,7 +57,7 @@ if data_choice == 'd':
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda npixx 200 npixy 200 npixz 1000')
+os.system('radmc3d image loadlambda npixx 200 npixy 200 sizeau 140000')
 
 ############################# Plot the resulting data ##########################
 
@@ -142,10 +142,10 @@ with open('image_trans_raw.txt', 'w') as g:
 ########################## Plot the resulting data #######################
 
 # Initialise the image
-#imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
 # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-#radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 
 print '\n######################################################################'

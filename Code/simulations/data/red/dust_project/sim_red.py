@@ -41,7 +41,7 @@ else:
 ############################## Set up initial model ############################
 
 data_choice = input('Run datafilegen.py to generate input files, or go straight to raytrace? (\'d\' for datafilegen.py, \'r\' for raytrace)\n')
-if data_choice == 'd::
+if data_choice == 'd':
     # Call the data file generation generation script to write the necessary files to the working directory
     execfile('../../../../datafiles/vanilla/datafilegen.py')
 
@@ -57,7 +57,7 @@ if data_choice == 'd::
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda npixx 200 npixy 200 npixz 1000')
+os.system('radmc3d image loadlambda npixx 200 npixy 200 sizeau 140000')
 
 ############################# Plot the resulting data ##########################
 

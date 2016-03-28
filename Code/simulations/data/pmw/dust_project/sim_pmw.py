@@ -57,7 +57,7 @@ if data_choice == 'd':
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda npixx 200 npixy 200 npixz 1000')
+os.system('radmc3d image loadlambda npixx 200 npixy 200 sizeau 140000')
 
 ############################# Plot the resulting data ##########################
 

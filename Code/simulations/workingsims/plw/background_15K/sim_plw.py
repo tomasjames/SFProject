@@ -29,7 +29,7 @@ from matplotlib.pyplot import *
 print '########################################################################'
 print '########################## Default File Check ##########################'
 print '########################################################################'
-'''
+
 # Check to see whether radmc3d.inp exists. If so, leave it alone and if not write it to the working directory
 if os.path.isfile('radmc3d.inp') == True:
     print '\nradmc3d.inp already exists; no need to write/overwrite\n'
@@ -48,7 +48,7 @@ radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
-'''
+
 ########################### Run Monte-Carlo simulation ########################
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
@@ -124,7 +124,7 @@ with open('image_trans.out', 'w') as f:
     image_trans.writerows(zip(np.float64(summation)))
 
 # Close the file for memory purposes
-#image_trans.close()
+f.close()
 
 # Save store_all to another .txt file to SED
 with open('image_trans_raw.txt', 'w') as g:

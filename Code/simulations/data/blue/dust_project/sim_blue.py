@@ -141,6 +141,44 @@ with open('image_trans_raw.txt', 'w') as g:
 # Close the file for memory purposes
 #image_trans.close()
 
+####################### Plot a cross-section of the image ######################
+
+# Read in dust density and dust temperature
+density = np.loadtxt('dust_density.inp',skiprows=3)
+temperature = np.loadtxt('dust_temperature.dat',skiprows=3)
+
+# Find the middle data row
+zdim = len(density)/(imag.nx*imag.ny)
+zmid = zdim/2
+
+# Define a start point for the loop
+start = (imag.nx*imag.ny*zmid)
+
+# Define lists to store extracted values
+density_extract, temperature_extract = [], []
+
+# Extract the data in the middle slice
+for i in range(int(start),(start+imag.nx*imag.ny)):
+    density_extract.append(density[i])
+    temperature_extract.append(temperature[i])
+
+# Reshape for better imshow() plotting
+density_slice = np.reshape(density_extract, (imag.nx,imag.ny))
+temperature_slice = np.reshape(temperature_extract, (imag.nx,imag.ny))
+
+# Plot the result
+imshow(density_slice,origin='left')
+colorbar()
+title('An Image Showing the Density Variations through Arepo Data\n')
+savefig('density_slice.png',dpi=300)
+close()
+
+imshow(temperature_slice,origin='left')
+colorbar()
+title('An Image Showing the Temperature Variations through Arepo Data\n')
+savefig('temperature_slice.png',dpi=300)
+close()
+
 ########################## Plot the resulting data #######################
 
 # Initialise the image

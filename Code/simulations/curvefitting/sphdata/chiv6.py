@@ -24,6 +24,9 @@ from matplotlib.pyplot import *
 # Import glob
 import glob
 
+# Import random number generation
+import random
+
 ############################### Define functions ###############################
 
 # Chi squared
@@ -194,7 +197,7 @@ for x in xpix:
         col_full.append(col)
         T_full.append(T_line)
 
-N = np.linspace(np.log10(min(col_full)/10), np.log10(max(col_full)*10), 40)
+N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
 T = np.linspace(8,20,40)
 
 datafeed_store.close()
@@ -216,6 +219,8 @@ cs = csv.writer(chi_store, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
 cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+
+n = random.randint(0,imag.nx*imag.ny)
 
 for h in range(0,imag.nx*imag.ny):
 
@@ -279,6 +284,26 @@ for h in range(0,imag.nx*imag.ny):
     # Write to file
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
+
+    if h == n:
+    # Plot the data
+        figure(1)
+        errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
+        errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
+        errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
+        errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bo',label='PACS: Blue')
+        errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='go',label='PACS: Green')
+        errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='ro',label='PACS: Red')
+        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
+        xlabel(r'$\nu \/(Hz)$')
+        ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+        xscale("log", nonposx='clip')
+        yscale("log", nonposx='clip')
+        grid(True,which='both')
+        legend(loc='best')
+        title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
+        savefig('averages.png',dpi=300)
+        close()
 
 chi_store.close()
 

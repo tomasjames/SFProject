@@ -27,8 +27,8 @@ from matplotlib.pyplot import *
 ############################### Read in image data ##############################
 
 # Read in both data types
-inp_data = np.loadtxt('../curvefitting/sphdata/datafeed.txt')
-chi_data = np.loadtxt('../curvefitting/sphdata/chi.txt')
+inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
+chi_data = np.loadtxt('../../curvefitting/sphdata/chi.txt')
 
 # Split data types into plottable quantities
 inp_N = inp_data[:,2]

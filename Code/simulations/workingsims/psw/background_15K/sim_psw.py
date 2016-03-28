@@ -29,7 +29,7 @@ from matplotlib.pyplot import *
 from astropy.io import fits
 
 ###################### Check for correct default.inp files #####################
-'''
+
 print '########################################################################'
 print '########################## Default File Check ##########################'
 print '########################################################################'
@@ -52,7 +52,7 @@ radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
 radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=1500000.)
-'''
+
 ############################ Run Monte-Carlo simulation ########################
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
@@ -127,7 +127,7 @@ with open('image_trans.out', 'w') as f:
     image_trans.writerows(zip(np.float64(summation)))
 
 # Close the file for memory purposes
-#image_trans.close()
+f.close()
 
 # Save store_all to another .txt file to SED
 with open('image_trans_raw.txt', 'w') as g:
