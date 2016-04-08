@@ -31,8 +31,8 @@ inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
 chi_data = np.loadtxt('../../curvefitting/sphdata/chi.txt',skiprows=1)
 
 # Split data types into plottable quantities
-inp_N = inp_data[:,2]
-inp_T = inp_data[:,3]
+inp_N = inp_data[:,1]
+inp_T = inp_data[:,2]
 
 chi_N = chi_data[:,1]
 chi_T = chi_data[:,2]

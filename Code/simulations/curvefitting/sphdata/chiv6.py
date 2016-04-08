@@ -165,39 +165,51 @@ dust_mass = muh2*mp*d2g
 # Determine solid angle of the pixel
 sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 
-# Loop over the pixels in dust_density
-for x in xpix:
-    for y in ypix:
-        # Reset the dust storage list
-        dust_cumulative, T_cumulative, dust_density_line, T_line = [], [], [], []
-        for z in zpix:
-            # Append the dust storage list with the value of the every dust density along the z axis
-            dust_cumulative.append(dust_density[x+y+z])
-            T_cumulative.append(dust_temperature[x+y+z])
+# Instantiate a counter and a number of lists to store values (and for diagnostics)
+count = 0
+store_density, store_loc, store_temp = [], [], []
 
-        # Store the sum
-        dust_density_line.append(sum(dust_cumulative))
-        T_line.append(np.mean(T_cumulative))
+# Loop over the 2D image square cube
+for i in range(0,len(xpix)*len(ypix)):
 
-        # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-        dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
+    # Add to the counter
+    count += 1
 
-        # Determine the number of dust grains in the pixel
-        N_d = (dust_mass_pixel/dust_mass)
+    # Finds the locations of every each pixel's Z values
+    loc = np.arange(i,len(zpix)*(len(xpix)*len(ypix)),len(xpix)*len(ypix))
 
-        # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
-        col = N_d/((D**2)*(sigma_pix))
+    # Sums these values (i.e. sums along the line of sight) and stores the locations
+    store_density.append(sum(dust_density[loc]))
+    store_loc.append(loc)
 
-        # Assign all of the writable items to a variable for easier write
-        df_towrite = [x, y, col, np.mean(T_cumulative)]
+    # Repeat similar procedure for the temperature
+    store_temp.append(np.mean(dust_temperature[loc]))
 
-        # Save to a file
-        df.writerow(df_towrite)
+    # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
+    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
 
-        col_full.append(col)
-        T_full.append(T_line)
+    # Determine the number of dust grains in the pixel
+    N_d = (dust_mass_pixel/dust_mass)
 
-N = np.linspace(np.log10(min(col_full)/1000), np.log10(max(col_full)*1000), 40)
+    # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
+    col = N_d/((D**2)*(sigma_pix))
+
+    # Assign all of the writable items to a variable for easier write
+    df_towrite = [i, col, np.mean(dust_temperature[loc])]
+
+    # Save to a file
+    df.writerow(df_towrite)
+
+    col_full.append(col)
+    T_full.append(T_line)
+
+# Must account for the possibility that the minimum column density could be 0
+if min(col_full) == 0:
+    N = np.linspace(min(col_full), np.log10(max(col_full)/100), 40)
+else:
+    N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+
+# T is independent of the column density in determination so this remains unchanged
 T = np.linspace(8,20,40)
 
 datafeed_store.close()
@@ -286,6 +298,7 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
+    '''
     if h == n:
     # Plot the data
         figure(1)
@@ -305,7 +318,7 @@ for h in range(0,imag.nx*imag.ny):
         title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
         savefig('averages.png',dpi=300)
         close()
-
+    '''
 chi_store.close()
 
 '''

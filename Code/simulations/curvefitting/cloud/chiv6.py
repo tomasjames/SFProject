@@ -145,8 +145,8 @@ datafeed_store = open('datafeed.txt', 'w')
 df = csv.writer(datafeed_store, delimiter=' ')
 
 # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-npix = np.round(len(dust_density)**(1./3))
-xpix, ypix, zpix = np.arange(0,npix), np.arange(0,npix), np.arange(0,npix)
+imag = radmc3dPy.image.readImage('/Users/tomasjames/Documents/University/Cardiff/Project/Project/Code/simulations/workingsims/blue/background_15K/image.out')
+xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
 
 # Create list to store values of dust density summed along every x,y coordinate
 dust_density_line, T_line, col_full, T_full = [], [], [], []
@@ -162,46 +162,51 @@ dust_mass = muh2*mp*d2g
 # Determine solid angle of the pixel
 sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 
-'''
-# Loop over the pixels in dust_density
-for z in zpix:
-    for y in ypix:
-        # Reset the dust storage list
-        dust_cumulative, T_cumulative, dust_density_line, T_line = [], [], [], []
-        for x in xpix:
-            # Append the dust storage list with the value of the every dust density along the z axis
-            dust_cumulative.append(dust_density[x+y+z])
-            T_cumulative.append(dust_temperature[x+y+z])
-
-        # Store the sum
-        dust_density_line.append(sum(dust_cumulative))
-        T_line.append(np.mean(T_cumulative))
-
-        # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-        dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(npix*imag.sizepix_y))
-
-        # Determine the number of dust grains in the pixel
-        N_d = (dust_mass_pixel/dust_mass)
-
-        # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
-        col = N_d/((D**2)*(sigma_pix))
-
-        # Assign all of the writable items to a variable for easier write
-        df_towrite = [x, y, col, np.mean(T_cumulative)]
-
-        # Save to a file
-        df.writerow(df_towrite)
-
-        col_full.append(col)
-        T_full.append(T_line)
-'''
-
+# Instantiate a counter and a number of lists to store values (and for diagnostics)
 count = 0
-for i in range(0,128**2):
-        loc = np.arange(i,1000*(128**2),128)
-        sum(dust_density[loc])
+store_density, store_loc, store_temp = [], [], []
 
-N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+# Loop over the 2D image square cube
+for i in range(0,len(xpix)*len(ypix)):
+
+    # Add to the counter
+    count += 1
+
+    # Finds the locations of every each pixel's Z values
+    loc = np.arange(i,len(zpix)*(len(xpix)*len(ypix)),len(xpix)*len(ypix))
+
+    # Sums these values (i.e. sums along the line of sight) and stores the locations
+    store_density.append(sum(dust_density[loc]))
+    store_loc.append(loc)
+
+    # Repeat similar procedure for the temperature
+    store_temp.append(np.mean(dust_temperature[loc]))
+
+    # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
+    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
+
+    # Determine the number of dust grains in the pixel
+    N_d = (dust_mass_pixel/dust_mass)
+
+    # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
+    col = N_d/((D**2)*(sigma_pix))
+
+    # Assign all of the writable items to a variable for easier write
+    df_towrite = [i, col, np.mean(dust_temperature[loc])]
+
+    # Save to a file
+    df.writerow(df_towrite)
+
+    col_full.append(col)
+    T_full.append(T_line)
+
+# Must account for the possibility that the minimum column density could be 0
+if min(col_full) == 0:
+    N = np.linspace(min(col_full), np.log10(max(col_full)/100), 40)
+else:
+    N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+
+# T is independent of the column density in determination so this remains unchanged
 T = np.linspace(8,20,40)
 
 datafeed_store.close()

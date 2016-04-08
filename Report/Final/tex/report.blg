@@ -1,0 +1,9 @@
+[0] Config.pm:324> INFO - This is Biber 2.1
+[0] Config.pm:327> INFO - Logfile is 'report.blg'
+[45] biber-darwin:276> INFO - === Fri Apr  8, 2016, 14:19:56
+[45] Biber.pm:333> INFO - Reading 'report.bcf'
+[144] Biber.pm:645> INFO - Found 15 citekeys in bib section 0
+[173] Biber.pm:2977> INFO - Processing section 0
+[200] Biber.pm:3115> INFO - Looking for bibtex format file '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib' for section 0
+[283] Utils.pm:162> ERROR - Cannot find '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib'!
+[283] Biber.pm:110> INFO - ERRORS: 1
