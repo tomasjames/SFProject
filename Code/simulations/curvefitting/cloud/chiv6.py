@@ -162,12 +162,13 @@ dust_mass = muh2*mp*d2g
 # Determine solid angle of the pixel
 sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 
+'''
 # Loop over the pixels in dust_density
-for x in xpix:
+for z in zpix:
     for y in ypix:
         # Reset the dust storage list
-        dust_cumulative, T_cumulative = [], []
-        for z in zpix:
+        dust_cumulative, T_cumulative, dust_density_line, T_line = [], [], [], []
+        for x in xpix:
             # Append the dust storage list with the value of the every dust density along the z axis
             dust_cumulative.append(dust_density[x+y+z])
             T_cumulative.append(dust_temperature[x+y+z])
@@ -193,6 +194,12 @@ for x in xpix:
 
         col_full.append(col)
         T_full.append(T_line)
+'''
+
+count = 0
+for i in range(0,128**2):
+        loc = np.arange(i,1000*(128**2),128)
+        sum(dust_density[loc])
 
 N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
 T = np.linspace(8,20,40)

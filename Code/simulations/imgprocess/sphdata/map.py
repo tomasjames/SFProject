@@ -28,7 +28,7 @@ from matplotlib.pyplot import *
 
 # Read in both data types
 inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
-chi_data = np.loadtxt('../../curvefitting/sphdata/chi.txt')
+chi_data = np.loadtxt('../../curvefitting/sphdata/chi.txt',skiprows=1)
 
 # Split data types into plottable quantities
 inp_N = inp_data[:,2]
@@ -40,23 +40,48 @@ chi_T = chi_data[:,2]
 ################################# Plot image data ################################
 
 # Reshape the data such that x and y pixels correspond
-N_pix = chi_N.reshape(np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))
-T_pix = chi_T.reshape(np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))
+N_chi_inp = np.reshape(chi_N, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
+T_chi_inp = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
+
+N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
+T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
 # Plot the 2 images side by side for comparison
-subplot2grid((6,12), (0,0), colspan=6,rowspan=6)
-imshow(N_pix,origin='lower')
+figure(1)
+imshow(N_chi_inp,origin='lower')
 colorbar()
 xlabel('X')
 ylabel('Y')
-title('$N$')
-subplot2grid((6,12), (0,6), colspan=6,rowspan=6)
-imshow(T_pix,origin='lower')
+title('A Map of the $\chi^{2}$ Recovered $N$\n')
+savefig('map_N_chi.png', dpi=300)
+close()
+
+figure(2)
+imshow(T_chi_inp,origin='lower')
 colorbar()
 xlabel('X')
 ylabel('Y')
-title('$T$')
-suptitle('Maps of the $\chi^{2}$ Recovered $N$ and $T$\n')
+title('A Map of the $\chi^{2}$ Recovered $T$\n')
 tight_layout()
-savefig('map.png', dpi=300)
+savefig('map_T_chi.png', dpi=300)
+close()
+
+figure(3)
+imshow(N_data_inp,origin='lower')
+colorbar()
+xlabel('X')
+ylabel('Y')
+title('A Map of the $N$ from the User Defined Values\n')
+tight_layout()
+savefig('map_N_data.png', dpi=300)
+close()
+
+figure(4)
+imshow(T_data_inp,origin='lower')
+colorbar()
+xlabel('X')
+ylabel('Y')
+title('A Map of the $T$ from the User Defined Values\n')
+tight_layout()
+savefig('map_T_data.png', dpi=300)
 close()

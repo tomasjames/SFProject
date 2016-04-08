@@ -61,6 +61,8 @@
 \fancyfoot[RO,LE]{\thepage} % Custom footer text
 %\rhead{Student ID: 1158976}
 
+\usepackage{dirtytalk}
+
 \title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{How good is dust emission as a tracer of star forming regions in molecular clouds?}} % Article title
 
 % Define title and author
@@ -105,7 +107,27 @@ A data reduction pipeline to analyse Herschel images of early star forming regio
 %-----------------------------------------------------------------
 
 \section{Introduction}
-%A star is defined as a spherical object of ionised plasma bound by its own gravity. A star is not itself a static object as nuclear fusion actively changes the composition of the star throughout its lifetime.
+
+\subsection{Molecular clouds}
+A molecular cloud is a dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}, however despite this minimal presense dust remains a crucial component in the evolution of the cloud and the subsequent star forming process.
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.4\textwidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/rho.jpg}
+    \caption[An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.]{An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.}
+  \end{center}
+  \label{fig:rho}
+\end{wrapfigure}
+
+Figure \ref{fig:rho} shows the Rho Ophiuchi cloud complex as imaged by the Infra-red Astronomical Satellite (IRAS). Rho Opiuchi is the nearest active star forming molecular cloud complex to the Milky Way\footnote{\textcite{rho-dist} estimates the range of distances as being between 125pc-165pc - a range of almost 40\percent.}. As a result of this, Rho Ophiuchi provides an unprecedented oppurtunity to study the sites of early star formation at high resolution. This is in spite of the large uncertainty in estimates of the distance to Rho Ophiuchi \parencite{rho-dist}.
+
+Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos, with both filamentary structure and (potentially) magnetic fields running through the cloud itself. These filaments are regions of higher density, and as \textcite{evo-mol} states \say{One fundamental characteristic of molecular clouds is that they are not, as has sometimes been assumed, isolated ‘billiard balls’ moving about independently in space, but instead are just dense condensations in more widely distributed, mostly atomic gas. Although molecular clouds may often appear to have sharp boundaries, these boundaries do not represent the edge of the matter distribution but just rapid transitions from the molecular gas to the surrounding atomic gas, which is distributed in extended envelopes that typically have comparable mass (Blitz 1988, 1991)}. These filaments act as preferential sites for star formation \parencite{filaments}.
+
+These star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse \parencite{jeans}. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse.
+
+Much like the ISM, molecular clouds are composed of gas and cosmic dust, however a molecular cloud differs from the ISM in that significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is thought to be around $10^{5}\,g\,cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $10^{2}\,g\,cm^{-3}$.
+
+The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM bathes the cooler cloud, resulting in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance.
 
 \subsection{Star Formation}
 The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
@@ -116,24 +138,76 @@ Stars are essentially chemical foundaries, acting as the primary source of eleme
   \ce{^{1}{H} + ^{1}{H} -> ^{2}{He} + e^{+} + v_{e} + 0.42 MeV}
 \end{equation}
 
-Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct results of observations of the $21cm$ line parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the $1s$ electron's spin flips to become antiparellel with the spin of the nucleus. This produces photon emission at $\lambda=21cm$.
+Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$.
 
-\ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}. 
+\subsubsection{Fusion}
+The fusion process occuring within stars adapts and evolves with the star itself. After the star has undergone its initial fusion process described in Equation \ref{ppchain}, it begins to cool.
 
-\subsection{Molecular clouds}
-Molecular clouds themselves are dense regions of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Much like the ISM, they are composed of gas and cosmic dust, however a molecular cloud differs from the ISM in that significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is thought to be around $10^{5}\,g\,cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $10^{2}\,g\,cm^{-3}$. The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM bathes the cooler cloud, resulting in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with radius.
+\ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}.
 
-Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The large (by mass) gaseous component does not radiate in the
+\subsection{Dust emission}
+Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The large (by mass) gaseous component does not radiate in the infra-red, and is thought to not interact
 
-Dust radiates as a modified black body approximated by Equation \ref{mbb}.
+Dust radiates as a modified black body approximated by Equation \ref{mbb} \parencite{noise}.
 
 \begin{equation} \label{mbb}
   S_{\nu} = N \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
 \end{equation}
 
-In Equation \ref{mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index and $B_{\nu}(T)$ is the frequency dependent Planck function.
+In Equation \ref{mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index and $B_{\nu}(T)$ is the frequency dependent Planck function. In terms of intensity:
+
+\begin{equation} \label{mbb-int}
+  I_{\nu} = \frac{N}{R_{dust-gas}} \mu m_{p} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
+\end{equation}
+
+All variables in Equation \ref{mbb-int} are as defined in Equation \ref{mbb}, with the addition of $R$. $R$ is the dust-to-gas ratio, here approximated as being $\frac{1}{100}$. Throughout this project, dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
 
 Dust properties such as the spectral index $\beta$ and temperature $T$ have an effect on dust emission and therefore the ability to detect radiation from within a molecular cloud due to, for example, a prestellar core and therefore understand the processes governing its formation and evolution.
+
+\subsection{RADMC-3D} \label{radmc}
+RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond and written in Fortran 90 for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}. One of the newest additions to RADMC-3D is a Python ‘wrapper’, \texttt{radmc3dPy}, that allows RADMC-3D objects to be handled in Python.
+
+RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas. The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations require input files for RADMC-3D to read and use in its simulations. RADMC-3D’s Python port, \texttt{radmc3dPy}, is able to write these input files, however for this project a custom script was written such that file creation was independent of \texttt{radmc3dPy}.
+
+\subsection{Thermal Monte-Carlo dust emission}
+The thermal Monte-Carlo simulation is able to compute dust temperatures – using the technique described in \textcite{b&w} – from user-defined dust densities, providing a source of flux (and therefore photons) exists. This source of flux can either be through a star in the image space or an Interstellar Radiation Field. The code then ‘fires’ photons out from the flux source into the image space.
+
+\subsection{Ray tracing dust emission}
+Conversely the image ray trace reads in both user-defined dust temperatures and dust densities, thus bypassing the computation of the dust temperatures as would have been the case in the thermal Monte-Carlo simulation. The result, however, is the same in both cases: a \'map\' of the dust emission intensity in the image plane.
+
+\subsection{Input files}
+As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined input files in order to operate. These input files act as parameter spaces, defining boundary conditions along with step sizes for each given input files. Figure \ref{radmc3d-workflow} shows a workflow of RADMC-3D's operation, including all files required in order to operate.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/radmc3d-workflow}
+  \caption[A schematic representation of the RADMC-3D workflow.]{A schematic representation of the RADMC-3D workflow.}
+  \label{fig:radmc3d-workflow}
+\end{figure}
+
+As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D have extension \textit{.inp} whilst all output files have extension \textit{.out}. Any intermediate files, such as those directly calculated by RADMC-3D, have extension \textit{.dat}. \textit{Most} input files' initial lines - the header information - contain quantitative information regarding the number of pixels/cells in the file, the pixel/cell width along with other identifiers.
+
+\texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}.
+
+\section{Methodology}
+
+\subsection{Model setup}
+RADMC-3D includes a number of basic example scripts to familiarise the user with the software's operation and capabilities. As a result, they provide an excellent introductory exercise to using RADMC-3D. Examples of 1D and 2D thermal Monte-Carlo simulations were run in this regard, generating Figures \ref{fig:1d} and \ref{fig:2d}.
+
+\begin{figure}[!htb]
+\minipage{0.48\textwidth}
+  \includegraphics[width=\linewidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/1d}
+  \caption{The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 1D.}\label{fig:1d}
+\endminipage\hfill
+\minipage{0.48\textwidth}
+  \includegraphics[width=\linewidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/2d}
+  \caption{The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 2D.}\label{fig:2d}
+\endminipage
+\end{figure}
+
+In order to begin operation, RADMC-3D requires a number of user defined inputs that define parameter spaces. RADMC-3D takes these user defined inputs from a number of input files that have subtle differences depending on their intended uses. The examples were used to understand how RADMC-3D generated these files, as well as how the code used them and for what purpose. These examples were basic, consisting of both 1D and 2D sphere projections with user defined stars at their centres that ran thermal Monte-Carlo simulations to build dust temperatures.
+
+To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. All code was version controlled using GitHub and stored in a private repository
 
 %-----------------------------------------------------------------
 % Bibliography

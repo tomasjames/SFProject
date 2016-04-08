@@ -77,7 +77,7 @@ count = 0
 # Instantiate lists to store values
 flux, flux_trans, flux_trans_index = [], [], []
 
-# Loop through the array to find the middle pixel and log its flux
+# Loop over every pixel and log its flux
 for x in range(0,imag.nx):
     for y in range(0,imag.ny):
         for l in range(0,imag.nwav):
@@ -106,7 +106,7 @@ for x in range(0,imag.nx):
         # Reset the lists to 0
         flux, flux_trans, flux_trans_index = [], [], []
 
-if sum == imag.nx*imag.ny*imag.nwav:
+if count == imag.nx*imag.ny:
     print 'The loop has been executed over all of the elements.\n'
 
 # Close the file

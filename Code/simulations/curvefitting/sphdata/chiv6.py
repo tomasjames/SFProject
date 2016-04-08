@@ -90,7 +90,7 @@ flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
 flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
 
 # Read the initial radmc3dPy output to get image dimensions and info
-imag = radmc3dPy.image.readImage('../../data/plw/dust_project/image.out')
+imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
 
 ######################### Determine (again) the opacity ########################
 
@@ -148,8 +148,8 @@ datafeed_store = open('datafeed.txt', 'w')
 df = csv.writer(datafeed_store, delimiter=' ')
 
 # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-npix = np.round(len(dust_density)**(1./3))
-xpix, ypix, zpix = np.arange(0,npix), np.arange(0,npix), np.arange(0,npix)
+imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
+xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
 
 # Create list to store values of dust density summed along every x,y coordinate
 dust_density_line, T_line, col_full, T_full = [], [], [], []
@@ -169,7 +169,7 @@ sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
 for x in xpix:
     for y in ypix:
         # Reset the dust storage list
-        dust_cumulative, T_cumulative = [], []
+        dust_cumulative, T_cumulative, dust_density_line, T_line = [], [], [], []
         for z in zpix:
             # Append the dust storage list with the value of the every dust density along the z axis
             dust_cumulative.append(dust_density[x+y+z])
@@ -180,7 +180,7 @@ for x in xpix:
         T_line.append(np.mean(T_cumulative))
 
         # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-        dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(npix*imag.sizepix_y))
+        dust_mass_pixel = (sum(dust_cumulative))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
 
         # Determine the number of dust grains in the pixel
         N_d = (dust_mass_pixel/dust_mass)
@@ -197,7 +197,7 @@ for x in xpix:
         col_full.append(col)
         T_full.append(T_line)
 
-N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+N = np.linspace(np.log10(min(col_full)/1000), np.log10(max(col_full)*1000), 40)
 T = np.linspace(8,20,40)
 
 datafeed_store.close()
@@ -219,6 +219,7 @@ cs = csv.writer(chi_store, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
 cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+cs.writerow(cs_towrite)
 
 n = random.randint(0,imag.nx*imag.ny)
 
