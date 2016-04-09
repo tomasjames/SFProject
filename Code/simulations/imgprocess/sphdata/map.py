@@ -24,6 +24,8 @@ import csv
 
 from matplotlib.pyplot import *
 
+from astropy.io import fits
+
 ############################### Read in image data ##############################
 
 # Read in both data types
@@ -85,3 +87,24 @@ title('A Map of the $T$ from the User Defined Values\n')
 tight_layout()
 savefig('map_T_data.png', dpi=300)
 close()
+
+################################# Save image data ################################
+
+# Collate all of the data into one array
+combined = [N_chi_inp, T_chi_inp, N_data_inp, T_data_inp]
+
+# Define the names of the individual data sets
+combined_names = ['N_chi_inp', 'T_chi_inp', 'N_data_inp', 'T_data_inp']
+
+for i in range(0,len(combined)):
+    # Define a new header file
+    hdul = fits.HDUList()
+
+    # Append to a primary header
+    hdul.append(fits.PrimaryHDU())
+
+    # Append the data
+    hdul.append(fits.ImageHDU(data=combined[i]))
+
+    # Write the data to a fits file with name of the data array
+    hdul.writeto(str(combined_names[i])+str('.fits'))
