@@ -42,11 +42,13 @@ for file in glob.glob('*.fits'):
     # Read in using astropy and then append the data to a list for use later
     contents = fits.getdata(str(file))
 
+    '''
     # Append the name of the file to the position (count+len(data)) followed by
     # the file contents
     data.insert(count+len(data), file)
     data.append(contents)
     filenames.append(file)
+    '''
 
     # Define a dendrogram instance
     d = Dendrogram.compute(contents, verbose=True)
@@ -57,12 +59,34 @@ for file in glob.glob('*.fits'):
     # Add the data to a figure
     fig = figure()
     ax = fig.add_subplot(1, 1, 1)
-    ax.imshow(contents, origin='lower', interpolation='nearest', cmap=cm.Blues, vmax=4.0)
+
+    # Plot the entire tree in black
+    p.plot_tree(ax, color='black')
+
+    # Add labels to the plot
+    if 'T_chi' in file:
+        ax.set_xlabel('Structure')
+        ax.set_ylabel('$T\/(K)$')
+        title('A Dendrogram Showing the Structure of $T$ for the $\chi^{2}$ Recovered Values')
+    elif 'N_chi' in file:
+        ax.set_xlabel('Structure')
+        ax.set_ylabel('$N\/(g\/cm^{-3})$')
+        title('A Dendrogram Showing the Structure of $N$ for the $\chi^{2}$ Recovered Values')
+    elif 'T_data' in file:
+        ax.set_xlabel('Structure')
+        ax.set_ylabel('$T\/(K)$')
+        title('A Dendrogram Showing the Structure of $T$ for the Data Input Values')
+    elif 'N_chi' in file:
+        ax.set_xlabel('Structure')
+        ax.set_ylabel('$N\/(g\/cm^{-3})$')
+        title('A Dendrogram Showing the Structure of $N$ for the Data Input Values')
+
+    #ax.imshow(contents, origin='lower', interpolation='nearest', cmap=cm.Blues, vmax=4.0)
 
     # Plot black contours on to the data
     # Show contour for ``min_value``
-    p.plot_contour(ax, color='black')
+    #p.plot_contour(ax, color='black')
 
     # Save the image and then close to save memory and allow the next image to take its place
-    fig.savefig(str(file)+str('.jpg'))
+    fig.savefig(str(file)+str('.jpg'), dpi=300)
     close()

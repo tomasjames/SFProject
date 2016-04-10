@@ -47,43 +47,71 @@ T_chi_inp = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
 N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
-# Plot the 2 images side by side for comparison
-figure(1)
-imshow(N_chi_inp,origin='lower')
-colorbar()
+# Plot the data along with a PDF
+subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
+imshow(np.log10(N_chi_inp),origin='lower')
+colorbar(label='$N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $N$\n')
+
+subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
+hist(np.log10(N_chi_inp),bins=50,log=True)
+title('PDF of $\chi^{2}$ Recovered $N$')
+xlabel('$log_{10}N\/(g\/cm^{-3})$')
+ylabel('Frequency')
+
 savefig('map_N_chi.png', dpi=300)
 close()
 
-figure(2)
+# Plot the data along with a PDF
+subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(T_chi_inp,origin='lower')
-colorbar()
+colorbar(label='$T\/(K)$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $T$\n')
-tight_layout()
+
+subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
+hist(T_chi_inp,bins=50,log=True)
+title('PDF of $\chi^{2}$ Recovered $T$')
+xlabel('$log_{10}N\/(g\/cm^{-3})$')
+ylabel('Frequency')
+
 savefig('map_T_chi.png', dpi=300)
 close()
 
-figure(3)
-imshow(N_data_inp,origin='lower')
-colorbar()
+# Plot the data along with a PDF
+subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
+imshow(np.log10(N_data_inp),origin='lower')
+colorbar(label='$N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
-title('A Map of the $N$ from the User Defined Values\n')
-tight_layout()
+title('A Map of the Data Input $N$\n')
+
+subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
+hist(np.log10(N_data_inp),bins=50,log=True)
+title('PDF of Data Input $N$')
+xlabel('$log_{10}N\/(g\/cm^{-3})$')
+ylabel('Frequency')
+
 savefig('map_N_data.png', dpi=300)
 close()
 
-figure(4)
+# Plot the data along with a PDF
+subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(T_data_inp,origin='lower')
-colorbar()
+colorbar(label='$T\/(K)$')
 xlabel('X')
 ylabel('Y')
-title('A Map of the $T$ from the User Defined Values\n')
-tight_layout()
+title('A Map of the Data Input $T$\n')
+
+subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
+hist(T_data_inp,bins=50,log=True)
+title('PDF of Data Input $T$')
+xlabel('$log_{10}N\/(g\/cm^{-3})$')
+ylabel('Frequency')
+
 savefig('map_T_data.png', dpi=300)
 close()
 
