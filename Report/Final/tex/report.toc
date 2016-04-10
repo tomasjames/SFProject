@@ -9,6 +9,6 @@
 \contentsline {subsection}{\numberline {IV}RADMC-3D}{4}{subsection.0.1.4}
 \contentsline {subsection}{\numberline {V}Input files}{4}{subsection.0.1.5}
 \contentsline {subsection}{\numberline {VI}Thermal Monte-Carlo dust emission}{5}{subsection.0.1.6}
-\contentsline {subsection}{\numberline {VII}Ray tracing dust emission}{5}{subsection.0.1.7}
+\contentsline {subsection}{\numberline {VII}Ray tracing dust emission}{6}{subsection.0.1.7}
 \contentsline {section}{\numberline {II}Methodology}{6}{section.0.2}
 \contentsline {subsection}{\numberline {I}Model setup}{6}{subsection.0.2.1}

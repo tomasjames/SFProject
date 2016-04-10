@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bcf:controlfile version="2.7" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="2.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIBER OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -419,6 +419,9 @@
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" level="driver">
+      <bcf:map>
+        <bcf:map_step map_field_set="day" map_null="1"/>
+      </bcf:map>
       <bcf:map>
         <bcf:map_step map_type_source="conference" map_type_target="inproceedings"/>
         <bcf:map_step map_type_source="electronic" map_type_target="online"/>
@@ -2260,11 +2263,13 @@
     <bcf:citekey order="22">noise</bcf:citekey>
     <bcf:citekey order="23">noise</bcf:citekey>
     <bcf:citekey order="24">RADMC-3D</bcf:citekey>
-    <bcf:citekey order="25">b&amp;w</bcf:citekey>
-    <bcf:citekey order="26">manual</bcf:citekey>
+    <bcf:citekey order="25">SPIRE</bcf:citekey>
+    <bcf:citekey order="26">PACS</bcf:citekey>
     <bcf:citekey order="27">b&amp;w</bcf:citekey>
-    <bcf:citekey order="28">b&amp;w</bcf:citekey>
-    <bcf:citekey order="29">manual</bcf:citekey>
+    <bcf:citekey order="28">manual</bcf:citekey>
+    <bcf:citekey order="29">b&amp;w</bcf:citekey>
+    <bcf:citekey order="30">b&amp;w</bcf:citekey>
+    <bcf:citekey order="31">manual</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" name="nyt" type="entry" sortscheme="nyt">
   <bcf:sorting>
