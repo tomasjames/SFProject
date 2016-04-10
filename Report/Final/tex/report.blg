@@ -1,9 +1,18 @@
-[0] Config.pm:324> INFO - This is Biber 2.1
-[0] Config.pm:327> INFO - Logfile is 'report.blg'
-[45] biber-darwin:276> INFO - === Fri Apr  8, 2016, 14:19:56
-[45] Biber.pm:333> INFO - Reading 'report.bcf'
-[144] Biber.pm:645> INFO - Found 15 citekeys in bib section 0
-[173] Biber.pm:2977> INFO - Processing section 0
-[200] Biber.pm:3115> INFO - Looking for bibtex format file '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib' for section 0
-[283] Utils.pm:162> ERROR - Cannot find '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib'!
-[283] Biber.pm:110> INFO - ERRORS: 1
+[0] Config.pm:327> INFO - This is Biber 2.2
+[0] Config.pm:330> INFO - Logfile is 'report.blg'
+[67] biber-darwin:286> INFO - === Sun Apr 10, 2016, 00:32:50
+[67] Biber.pm:334> INFO - Reading 'report.bcf'
+[205] Biber.pm:677> INFO - Found 19 citekeys in bib section 0
+[224] Biber.pm:3054> INFO - Processing section 0
+[239] Biber.pm:3193> INFO - Looking for bibtex format file '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib' for section 0
+[259] bibtex.pm:1072> INFO - Decoding LaTeX character macros into UTF-8
+[265] bibtex.pm:935> INFO - Found BibTeX data source '/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib'
+[731] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[731] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[731] Biber.pm:2931> INFO - Sorting list 'nyt' of type 'entry' with scheme 'nyt' and locale 'en-US'
+[731] Biber.pm:2935> INFO - No sort tailoring available for locale 'en-US'
+[790] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'ascii'
+[798] Utils.pm:147> WARN - The entry 'manual' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[818] Utils.pm:147> WARN - The entry 'SPIRE' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[822] bbl.pm:596> INFO - Output to report.bbl
+[823] Biber.pm:107> INFO - WARNINGS: 2
