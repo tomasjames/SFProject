@@ -502,7 +502,7 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{chapter}{The evolution of molecular clouds}
-      \field{isbn}{9783540490357}
+      \field{isbn}{978-3-540-49035-7}
       \field{title}{The Structure and Content of Molecular Clouds 25 Years of Molecular Radioastronomy: Proceedings of a Conference Held at Schloss Ringberg, Tegernsee, Germany 14--16 April 1993}
       \field{year}{1994}
       \field{pages}{13\bibrangedash 28}
@@ -542,6 +542,37 @@
       \verb 0709.0505
       \endverb
       \keyw{astrometry,ISM: kinematics and dynamics,ISM: clouds,reflection nebulae,open clusters and associations: individual (Sco OB2,Ophiuchus)}
+    \endentry
+    \entry{21cm}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=59a03cd768db005676d03eb152170036}{Muller}{M\bibinitperiod}{C.\bibnamedelimi A.}{C\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=6c7ed9c81670e52893252edd03b5ae04}{Oort}{O\bibinitperiod}{J.\bibnamedelimi H.}{J\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{ba87c77ffbc2237c894460740e76b9c6}
+      \strng{fullhash}{ba87c77ffbc2237c894460740e76b9c6}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{labelyear}{1951}
+      \field{labelmonth}{09}
+      \field{labelday}{01}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{01}
+      \field{journaltitle}{Nature}
+      \field{month}{09}
+      \field{number}{4270}
+      \field{title}{Observation of a Line in the Galactic Radio Spectrum: The Interstellar Hydrogen Line at 1,420 Mc./sec., and an Estimate of Galactic Rotation}
+      \field{volume}{168}
+      \field{year}{1951}
+      \field{pages}{357\bibrangedash 358}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1038/168357a0
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1038/168357a0
+      \endverb
     \endentry
     \entry{filaments}{unpublished}{}
       \name{author}{2}{}{%

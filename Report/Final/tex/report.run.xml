@@ -79,7 +79,7 @@
       <file>report.bcf</file>
     </requires>
     <requires type="editable">
-      <file>/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib</file>
+      <file>../refs/refs.bib</file>
     </requires>
   </external>
 </requests>

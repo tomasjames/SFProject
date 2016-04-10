@@ -33,7 +33,7 @@
 \renewcommand*{\revsdnamepunct}{}
 \renewbibmacro{in:}{} % Remove 'in' from bibliography
 \DeclareNameAlias{sortname}{last-first} % Change ordering of name
-\addbibresource{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/refs/refs.bib}% Syntax for version >= 1.2
+\addbibresource{../refs/refs.bib}% Syntax for version >= 1.2
 
 \usepackage{abstract} % Allows abstract customization
 \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
@@ -115,7 +115,7 @@ A molecular cloud is a dense region of the Interstellar Medium (ISM), composed p
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
-    \includegraphics[width=0.4\textwidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/rho.jpg}
+    \includegraphics[width=0.4\textwidth]{../img/rho.jpg}
     \caption[An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.]{An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.}
   \end{center}
 \end{wrapfigure} \label{fig:rho}
@@ -163,7 +163,7 @@ The fusion process occuring within stars adapts and evolves with the star itself
 \subsection{Dust emission}
 Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The large (by mass) gaseous component does not radiate in the infra-red, and is thought to not interact
 
-Dust radiates as a modified black body approximated by Equation \ref{mbb} \parencite{noise}.
+Dust radiates as a modified black body approximated by Equation \ref{eq:mbb} \parencite{noise}.
 
 \begin{equation} \label{eq:mbb}
   S_{\nu} = N \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
@@ -189,7 +189,7 @@ As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined inp
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.4]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/radmc3d-workflow}
+  \includegraphics[scale=0.4]{../img/radmc3d-workflow}
   \caption[A schematic representation of the RADMC-3D workflow.]{A schematic representation of the RADMC-3D workflow.}
   \label{fig:radmc3d-workflow}
 \end{figure}
@@ -200,8 +200,8 @@ As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D ha
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/amr_grid_structure}
-  \caption[A pictorial representation of the structure of \texttt{amr_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr_grid.inp}.]{A pictorial representation of the structure of \texttt{amr_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr_grid.inp}.}
+  \includegraphics[scale=0.5]{../img/amr_grid_structure}
+  \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.}
   \label{fig:amr_grid_structure}
 \end{figure}
 
@@ -212,7 +212,7 @@ The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's pos
 
 \begin{wrapfigure}{r}{0.5\textwidth}
   \centering
-  \includegraphics[scale=0.3]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/amr_grid_structure}
+  \includegraphics[scale=0.3]{../img/amr_grid_structure}
   \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.}
 \end{wrapfigure}\label{fig:amr_grid_structure}
 
@@ -241,11 +241,11 @@ RADMC-3D includes a number of basic example scripts to familiarise the user with
 
 \begin{figure}[!htb]
 \minipage{0.48\textwidth}
-  \includegraphics[width=\linewidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/1d}
+  \includegraphics[width=\linewidth]{../img/1d}
   \caption{The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 1D.}\label{fig:1d}
 \endminipage\hfill
 \minipage{0.48\textwidth}
-  \includegraphics[width=\linewidth]{/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Report/Final/img/2d}
+  \includegraphics[width=\linewidth]{../img/2d}
   \caption{The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 2D.}\label{fig:2d}
 \endminipage
 \end{figure}

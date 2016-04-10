@@ -83,6 +83,7 @@ savefig('map_T_chi.png', dpi=300)
 close()
 
 # Plot the data along with a PDF
+N_data_inp[N_data_inp == 0] = np.nan
 subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(np.log10(N_data_inp),origin='lower')
 colorbar(label='$N\/(g\/cm^{-3})$')

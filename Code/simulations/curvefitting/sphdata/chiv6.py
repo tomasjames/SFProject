@@ -284,6 +284,27 @@ for h in range(0,imag.nx*imag.ny):
 
             #print str('Found the chi-squared landscape. Moving to the next values...\n')
 
+    if h == imag.nx*imag.ny/10:
+        print '\r[=>         ] 10%'
+    elif h == 2*(imag.nx*imag.ny)/10:
+        print '\r[==>        ] 20%'
+    elif h == 3*(imag.nx*imag.ny)/10:
+        print '\r[===>       ] 30%'
+    elif h == 4*(imag.nx*imag.ny)/10:
+        print '\r[====>      ] 40%'
+    elif h == 5*(imag.nx*imag.ny)/10:
+        print '\r[=====>     ] 50%'
+    elif h == 6*(imag.nx*imag.ny)/10:
+        print '\r[======>    ] 60%'
+    elif h == 7*(imag.nx*imag.ny)/10:
+        print '\r[=======>   ] 70%'
+    elif h == 8*(imag.nx*imag.ny)/10:
+        print '\r[========>  ] 80%'
+    elif h == 9*(imag.nx*imag.ny)/10:
+        print '\r[=========> ] 90%'
+    elif h == 10*(imag.nx*imag.ny)/10:
+        print '\r[==========>] 100%'
+
     # Determine the chi squared minimum
     chi_min_index = chivals.index(min(chivals))
     chi_min_blackbody = mod[chi_min_index]
