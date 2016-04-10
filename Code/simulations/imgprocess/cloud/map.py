@@ -23,6 +23,7 @@ import numpy as np
 import csv
 
 from matplotlib.pyplot import *
+from astropy.io import fits
 
 ############################### Read in image data ##############################
 
@@ -40,11 +41,11 @@ chi_T = chi_data[:,2]
 ################################# Plot image data ################################
 
 # Reshape the data such that x and y pixels correspond
-N_chi_inp = chi_N.reshape(np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))
-T_chi_inp = chi_T.reshape(np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))
+N_chi_inp = np.reshape(chi_N, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
+T_chi_inp = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
 
-N_data_inp = inp_N.reshape(np.sqrt(len(inp_data)),np.sqrt(len(inp_data)))
-T_data_inp = inp_T.reshape(np.sqrt(len(inp_data)),np.sqrt(len(inp_data)))
+N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
+T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
 # Plot the 2 images side by side for comparison
 figure(1)
@@ -85,3 +86,24 @@ title('A Map of the $T$ from the User Defined Values\n')
 tight_layout()
 savefig('map_T_data.png', dpi=300)
 close()
+
+################################# Save image data ################################
+
+# Collate all of the data into one array
+combined = [N_chi_inp, T_chi_inp, N_data_inp, T_data_inp]
+
+# Define the names of the individual data sets
+combined_names = ['N_chi_inp', 'T_chi_inp', 'N_data_inp', 'T_data_inp']
+
+for i in range(0,len(combined)):
+    # Define a new header file
+    hdul = fits.HDUList()
+
+    # Append to a primary header
+    hdul.append(fits.PrimaryHDU())
+
+    # Append the data
+    hdul.append(fits.ImageHDU(data=combined[i]))
+
+    # Write the data to a fits file with name of the data array
+    hdul.writeto(str(combined_names[i])+str('.fits'))

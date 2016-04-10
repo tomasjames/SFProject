@@ -206,7 +206,7 @@ As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D ha
   \label{fig:amr_grid_structure}
 \end{figure}
 
-The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}.
+The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}. For example, 
 
 \texttt{dust\_density.inp} is the file that gives RADMC-3D its density information. It has the same structure as \texttt{amr\_grid.inp}, however in place of the start and end pixel points that are found in \texttt{amr\_grid.inp}, \texttt{dust\_density.inp} defines the dust density (in $cgs$ units) at each pixel. This therefore creates a density parameter space with which to work from. Similarly, \texttt{dust\_temperature.dat} draws upon the same idea, however instead of defining dust densities, \texttt{dust\_temperature.dat} defines the dust temperature (in $K$) at each pixel point. These 3 files therefore create 3 parameter spaces: spatial, density and temperature.
 
