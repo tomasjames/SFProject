@@ -186,7 +186,7 @@ for i in range(0,len(xpix)*len(ypix)):
     dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
 
     # Account for the column-weighted temperature
-    col_T = (dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc]))
+    col_T = np.sum((dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc])))
 
     # Repeat similar procedure for the temperature
     store_temp.append(col_T)
@@ -198,7 +198,7 @@ for i in range(0,len(xpix)*len(ypix)):
     col = N_d/((D**2)*(sigma_pix))
 
     # Assign all of the writable items to a variable for easier write
-    df_towrite = [i, col, np.mean(dust_temperature[loc])]
+    df_towrite = [i, col, col_T]
 
     # Save to a file
     df.writerow(df_towrite)

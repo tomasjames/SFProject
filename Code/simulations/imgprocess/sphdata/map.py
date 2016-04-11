@@ -49,9 +49,10 @@ N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
 # Plot the data along with a PDF
+figure()
 subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(np.log10(N_chi_inp),origin='lower')
-colorbar(label='$N\/(g\/cm^{-3})$')
+colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $N$\n')
@@ -66,6 +67,7 @@ savefig('map_N_chi.png', dpi=300)
 close()
 
 # Plot the data along with a PDF
+figure()
 subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(T_chi_inp,origin='lower')
 colorbar(label='$T\/(K)$')
@@ -76,23 +78,24 @@ title('A Map of the $\chi^{2}$ Recovered $T$\n')
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
 hist(T_chi_inp,bins=50,log=True)
 title('PDF of $\chi^{2}$ Recovered $T$')
-xlabel('$log_{10}N\/(g\/cm^{-3})$')
+xlabel('$T\/(K)$')
 ylabel('Frequency')
 
 savefig('map_T_chi.png', dpi=300)
 close()
 
 # Plot the data along with a PDF
+figure()
 N_data_inp[N_data_inp == 0] = np.nan
 subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(np.log10(N_data_inp),origin='lower')
-colorbar(label='$N\/(g\/cm^{-3})$')
+colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the Data Input $N$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(np.log10(N_data_inp),bins=50,log=True)
+#hist(np.log10(N_data_inp),bins=50,log=True)
 title('PDF of Data Input $N$')
 xlabel('$log_{10}N\/(g\/cm^{-3})$')
 ylabel('Frequency')
@@ -101,6 +104,8 @@ savefig('map_N_data.png', dpi=300)
 close()
 
 # Plot the data along with a PDF
+figure()
+T_data_inp[T_data_inp == 0] = np.nan
 subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
 imshow(T_data_inp,origin='lower')
 colorbar(label='$T\/(K)$')
@@ -109,9 +114,9 @@ ylabel('Y')
 title('A Map of the Data Input $T$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(T_data_inp,bins=50,log=True)
+#hist(T_data_inp,bins=50,log=True)
 title('PDF of Data Input $T$')
-xlabel('$log_{10}N\/(g\/cm^{-3})$')
+xlabel('$T\/(K)$')
 ylabel('Frequency')
 
 savefig('map_T_data.png', dpi=300)

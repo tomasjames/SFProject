@@ -1,18 +1,18 @@
 [0] Config.pm:324> INFO - This is Biber 2.1
 [0] Config.pm:327> INFO - Logfile is 'report.blg'
-[80] biber-darwin:276> INFO - === Sun Apr 10, 2016, 21:29:51
+[80] biber-darwin:276> INFO - === Mon Apr 11, 2016, 18:31:00
 [80] Biber.pm:333> INFO - Reading 'report.bcf'
 [184] Biber.pm:645> INFO - Found 20 citekeys in bib section 0
-[288] Biber.pm:2977> INFO - Processing section 0
-[423] Biber.pm:3115> INFO - Looking for bibtex format file '../refs/refs.bib' for section 0
-[436] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
-[441] bibtex.pm:895> INFO - Found BibTeX data source '../refs/refs.bib'
-[932] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[932] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[932] Biber.pm:2854> INFO - Sorting list 'nyt' of type 'entry' with scheme 'nyt' and locale 'en-US'
-[932] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
-[983] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'ascii'
-[986] Utils.pm:146> WARN - The entry 'manual' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
-[996] Utils.pm:146> WARN - The entry 'SPIRE' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
-[1000] bbl.pm:596> INFO - Output to report.bbl
-[1000] Biber.pm:106> INFO - WARNINGS: 2
+[287] Biber.pm:2977> INFO - Processing section 0
+[420] Biber.pm:3115> INFO - Looking for bibtex format file '../refs/refs.bib' for section 0
+[434] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
+[438] bibtex.pm:895> INFO - Found BibTeX data source '../refs/refs.bib'
+[927] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[927] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[927] Biber.pm:2854> INFO - Sorting list 'nyt' of type 'entry' with scheme 'nyt' and locale 'en-US'
+[928] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
+[979] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'ascii'
+[983] Utils.pm:146> WARN - The entry 'manual' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[993] Utils.pm:146> WARN - The entry 'SPIRE' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[997] bbl.pm:596> INFO - Output to report.bbl
+[997] Biber.pm:106> INFO - WARNINGS: 2

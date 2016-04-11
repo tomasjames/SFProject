@@ -55,6 +55,8 @@
 \usepackage{mhchem}
 \usepackage{siunitx}
 
+\setcounter{secnumdepth}{3}
+
 \usepackage{fancyhdr} % Headers and footers
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
@@ -108,9 +110,9 @@ A data analysis pipeline to analyse synthetic Herschel images of early star form
 % Introduction
 %-----------------------------------------------------------------
 
-\section{Introduction}
+\chapter{Introduction}
 
-\subsection{Molecular clouds}
+\section{Molecular clouds}
 A molecular cloud is a dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}, however despite this minimal presense dust remains a crucial component in the evolution of the cloud and the subsequent star forming process.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -144,7 +146,7 @@ Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref
 
 Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures.
 
-\subsection{Star Formation}
+\section{Star Formation}
 The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
 
 Stars are essentially chemical foundaries, acting as the primary source of elements heavier than \ce{^{2}He} in the Universe. The production of \ce{^{1}H} is thought to have occured approximately 380,0000 years after the Big Bang \parencite{peebles}, when the primordial quark-gluon plasma had cooled sufficiently to allow protons and neutrons (hereafter $p$ and $n$) to bind and form atoms. \ce{^{2}He}, according to \textcite{bbc}, also formed at this time however the fundamental particles required to form elements were produced within the first few seconds after the Big Bang. Whilst further production of \ce{^{2}He} can occur via the first fusion process, the proton-proton (pp) reaction described by Equation \ref{ppchain} \parencite{synthesis} is the primary source of \ce{^{2}He} in stars. This is in stark contrast to \ce{^{1}H}, which cannot be produced via a fusion process.
@@ -155,12 +157,12 @@ Stars are essentially chemical foundaries, acting as the primary source of eleme
 
 Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line \parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$. This transition corresponds to a temperature of $T~0.014 K$ according to Wien's displacement law $\lambda_{max}=0.0029/T$, meaning the excitation can occur almost anywhere in the Universe.
 
-\subsubsection{Fusion}
+\subsection{Fusion}
 The fusion process occuring within stars adapts and evolves with the star itself. After the star has undergone its initial fusion process described in Equation \ref{ppchain}, it begins to cool.
 
 \ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}.
 
-\subsection{Dust emission}
+\section{Dust emission}
 Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The sources of flux embedded deep within the cloud radiate across a wide range of wavelengths, however the dust surrounding the source has the effect of absorbing and then re-radiating photons at a different wavelength. As such, these sources of flux (be they prestellar cores, protostars or pre-main sequence stars) are occluded by the dust enveloping them.
 
 Dust radiates as a modified black body approximated by Equation \ref{eq:mbb} \parencite{noise}.
@@ -179,10 +181,13 @@ All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mb
 
 Dust properties such as the spectral index $\beta$ and temperature $T$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. These parameters therefore effect the ability to detect radiation from within a molecular cloud.
 
-\subsection{RADMC-3D} \label{radmc}
-RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond and written in Fortran 90 for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}. One of the newest additions to RADMC-3D is a Python ‘wrapper’, \texttt{radmc3dPy}, that allows RADMC-3D objects to be handled in Python.
+\section{RADMC-3D} \label{radmc}
+RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond and written in Fortran 90 for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}.
 
-RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas. The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations require input files for RADMC-3D to read and use in its simulations. RADMC-3D \textquotesingle s Python port, \texttt{radmc3dPy}, is able to write these input files, however for this project a custom script was written such that file creation was independent of \texttt{radmc3dPy}.
+RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas. The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations require input files for RADMC-3D to read and use in its simulations. RADMC-3D \textquotesingle s Python port, \texttt{radmc3dPy} \parencite{radmc3dPy}, is able to write these input files, however for this project a custom script was written such that file creation was independent of \texttt{radmc3dPy}.
+
+\subsection{\texttt{radmc3dPy}}
+Whilst RADMC-3D is written in Fortran 90, a Python ‘wrapper’, \texttt{radmc3dPy} allows Python to handle RADMC-3D objects. 
 
 \subsection{Input files} \label{inp}
 As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined input files in order to operate. These input files act as parameter spaces, defining boundary conditions along with step sizes for each given input files. Figure \ref{radmc3d-workflow} shows a workflow of RADMC-3D's operation, including all files required in order to operate.
@@ -226,11 +231,9 @@ $I_{result}$ is the dust emission intensity of the cell, $I_{start}$ is the dust
 
 The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane.
 
-\subsection{Ray tracing dust emission} \ref{rt_des}
+\chapter{Methodology}
 
-\section{Methodology}
-
-\subsection{Model setup}
+\section{Model setup}
 RADMC-3D includes a number of basic example scripts to familiarise the user with the software's operation and capabilities. As a result, they provide an excellent introductory exercise to using RADMC-3D. Examples of 1D and 2D thermal Monte-Carlo simulations were run in this regard, generating Figures \ref{fig:1d} and \ref{fig:2d}.
 
 \begin{figure}[!htb]
@@ -246,7 +249,7 @@ RADMC-3D includes a number of basic example scripts to familiarise the user with
 
 In order to begin operation, RADMC-3D's example scripts were analysed and run. The examples were used to understand how RADMC-3D generated the input files required (and as discussed in Section \ref{inp}) as well as how the code used them and for what purpose. These examples were basic, consisting of both 1D and 2D sphere projections with user defined stars at their centres.
 
-These examples ran thermal Monte-Carlo simulations. The first stage in this computation after writing the input files from the user inputs was to build dust temperatures. This was achieved using the process described in Section \ref{mctherm}. Once dust temperatures had been computed, RADMC-3D then performed a ray-trace in order to build the dust intensity. This was again achieved using the method  described in Section \ref{rt_des}.
+These examples ran thermal Monte-Carlo simulations. The first stage in this computation after writing the input files from the user inputs was to build dust temperatures. This was achieved using the process described in Section \ref{mctherm}. Once dust temperatures had been computed, RADMC-3D then performed a ray-trace in order to build the dust emission intensity. This was again achieved using the method described in Section \ref{rt_des}.
 
 To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. This also resulted in some of \texttt{radmc3dPy\textquotesingle}s model setup commands being made redundant. For example, \texttt{radmc3dPy.setup.problemSetupDust} sets up the model using input parameters that are parsed to a model file. This phase was handled solely by \texttt{datafilegen.py}, so this command was redundant. Instead, required parameters such as the number of pixels in each dimension was given to RADMC-3D when calling it from the command line using \texttt{os.system(radmc3d image loadlambda)}. Again, the image ray-trace could be initiated through Python via the \texttt{os.system(radmc3d image)} command. The \texttt{loadlambda} keyword informs RADMC-3D that it should use the \texttt{camera\_wavelength\_micron.inp} module.
 
