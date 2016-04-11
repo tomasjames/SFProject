@@ -37,11 +37,11 @@
 
 \usepackage{abstract} % Allows abstract customization
 \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
-\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+\renewcommand{\abstracttextfont}{\normalfont\medium\itshape} % Set the abstract itself to small italic text
 
 \usepackage{titlesec} % Allows customization of titles
-\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
-\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+%\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+%\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
 \titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
 \titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
 
@@ -94,7 +94,7 @@ Student ID: 1158976\endgraf\bigskip}} % author name
 %-----------------------------------------------------------------
 
 \begin{abstract}
-A data reduction pipeline to analyse Herschel images of early star forming regions to probe the dust emission characteristics of the data was written in the Python programming language. Initially a simple scenario of a spherical molecular cloud was simulated using RADMC-3D \parencite{RADMC-3D}, with bespoke input files generated using the Python programming language. This simulation was performed across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$ as well as the 3 PACS \parencite{PACS} wavebands centered on 72 $\mu m$, 103 $\mu m$ and 167 $\mu m$. This data was then `degraded` by accounting for the instrument's transmission curve to better simulate an object observed by Herschel. This data was then subsequently analysed by plotting Spectral Energy Distributions (SEDs) on a pixel by pixel basis to recover the column density $N$ and temperature $T$ at each pixel. The goodness-of-fit was assessed using a $\chi^{2}$ test. 2-dimensional maps of these regions was then constructed and the recovered values of $N$ and $T$ compared to the initial input values of density and temperature. Finally this machinery was applied to data from the SPH simulation Arepo to emulate real Herschel data.
+A data analysis pipeline to analyse synthetic Herschel images of early star forming regions to probe the dust emission characteristics of the data was written in the Python programming language. Initially a simple scenario of a spherical molecular cloud was simulated using RADMC-3D \parencite{RADMC-3D}, with bespoke input files generated using the Python programming language. This simulation was performed across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$ as well as the 3 PACS \parencite{PACS} wavebands centered on 72 $\mu m$, 103 $\mu m$ and 167 $\mu m$. This data was then `degraded` by accounting for the instrument's transmission curve to better simulate an object observed by Herschel. This data was then subsequently analysed by plotting Spectral Energy Distributions (SEDs) on a pixel by pixel basis to recover the column density $N$ and temperature $T$ at each pixel. The goodness-of-fit was assessed using a $\chi^{2}$ test. 2-dimensional maps of these regions was then constructed and the recovered values of $N$ and $T$ compared to the initial input values of density and temperature. Finally this machinery was applied to data from the SPH simulation Arepo to emulate real Herschel data.
 \end{abstract}
 
 %-----------------------------------------------------------------
@@ -124,7 +124,7 @@ Figure \ref{fig:rho} shows the Rho Ophiuchi cloud complex as imaged by the Infra
 
 Much like the ISM, molecular clouds are composed of gas and cosmic dust, however a molecular cloud differs from the ISM in that significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is thought to be around $10^{5}\,g\,cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $10^{2}\,g\,cm^{-3}$.
 
-The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM bathes the cooler cloud, resulting in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance.
+The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM bathes the cooler cloud, resulting in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance from the centre of the cloud.
 
 Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos within the cloud, with both filamentary structure and (potentially) magnetic fields running through the cloud itself. These filaments are regions of higher density, and as \textcite{evo-mol} states \say{One fundamental characteristic of molecular clouds is that they are not, as has sometimes been assumed, isolated ‘billiard balls’ moving about independently in space, but instead are just dense condensations in more widely distributed, mostly atomic gas. Although molecular clouds may often appear to have sharp boundaries, these boundaries do not represent the edge of the matter distribution but just rapid transitions from the molecular gas to the surrounding atomic gas, which is distributed in extended envelopes that typically have comparable mass (Blitz 1988, 1991)}. These filaments act as preferential sites for star formation \parencite{filaments}.
 
@@ -142,7 +142,7 @@ Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the
 
 Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref{eq:jeans}.
 
-Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures. As \textcite{bound} explain, the idea that a molecular cloud is gravitationally bound
+Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures.
 
 \subsection{Star Formation}
 The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
@@ -161,7 +161,7 @@ The fusion process occuring within stars adapts and evolves with the star itself
 \ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}.
 
 \subsection{Dust emission}
-Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The large (by mass) gaseous component does not radiate in the infra-red, and is thought to not interact
+Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The sources of flux embedded deep within the cloud radiate across a wide range of wavelengths, however the dust surrounding the source has the effect of absorbing and then re-radiating photons at a different wavelength. As such, these sources of flux (be they prestellar cores, protostars or pre-main sequence stars) are occluded by the dust enveloping them.
 
 Dust radiates as a modified black body approximated by Equation \ref{eq:mbb} \parencite{noise}.
 
@@ -172,7 +172,7 @@ Dust radiates as a modified black body approximated by Equation \ref{eq:mbb} \pa
 In Equation \ref{eq:mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index and $B_{\nu}(T)$ is the frequency dependent Planck function. In terms of intensity:
 
 \begin{equation} \label{eq:mbb-int}
-  I_{\nu} = \frac{N}{R_{dust-gas}} \mu m_{p} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
+  I_{\nu} = \frac{N}{R_{dust-gas}} \mu m_{p} \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
 \end{equation}
 
 All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mbb}, with the addition of $R_{dust-gas}$. $R_{dust-gas}$ is the dust-to-gas ratio, here approximated as being $\frac{1}{100}$. Throughout this project, dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
@@ -198,32 +198,26 @@ As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D ha
 
 \texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}. They essentially \textquotesingle insert \textquotesingle a value of a physical quantity into each cell, therefore producing another parameter space. This structure is illustrated in Figure \ref{fig:amr_grid_structure}.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=0.5]{../img/amr_grid_structure}
-  \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.}
-  \label{fig:amr_grid_structure}
-\end{figure}
-
-The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}. For example,
-
-\texttt{dust\_density.inp} is the file that gives RADMC-3D its density information. It has the same structure as \texttt{amr\_grid.inp}, however in place of the start and end pixel points that are found in \texttt{amr\_grid.inp}, \texttt{dust\_density.inp} defines the dust density (in $cgs$ units) at each pixel. This therefore creates a density parameter space with which to work from. Similarly, \texttt{dust\_temperature.dat} draws upon the same idea, however instead of defining dust densities, \texttt{dust\_temperature.dat} defines the dust temperature (in $K$) at each pixel point. These 3 files therefore create 3 parameter spaces: spatial, density and temperature.
-
-
 \begin{wrapfigure}{r}{0.5\textwidth}
   \centering
   \includegraphics[scale=0.3]{../img/amr_grid_structure}
   \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.}
 \end{wrapfigure}\label{fig:amr_grid_structure}
 
+
+
+The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}. For example,
+
+\texttt{dust\_density.inp} is the file that gives RADMC-3D its density information. It has the same structure as \texttt{amr\_grid.inp}, however in place of the start and end pixel points that are found in \texttt{amr\_grid.inp}, \texttt{dust\_density.inp} defines the dust density (in $cgs$ units) at each pixel. This therefore creates a density parameter space with which to work from. Similarly, \texttt{dust\_temperature.dat} draws upon the same idea, however instead of defining dust densities, \texttt{dust\_temperature.dat} defines the dust temperature (in $K$) at each pixel point. These 3 files therefore create 3 parameter spaces: spatial, density and temperature.
+
 Another crucial file is the \texttt{wavelength\_micron.inp} file. This input file defines the wavelengths over which RADMC-3D should compute. By default, \texttt{wavelength\_micron.inp} runs from $\SI{0.1}{\micro\meter}$ to $\SI{1000}{\micro\meter}$ with $150$ points. Dust emission intensity can then be determined at any wavelength between these two bounds. In reality however, computing dust emission intensity over such a wide wavelength range is not always necessary (or practical). RADMc-3D thus allows the user to define a \texttt{camera\_wavelength\_micron.inp} file. This file is designed to constrict the range of wavelengths over which RADMC-3D computes, thus emulating the wavelengths available to a given telescope or filter. In this project \texttt{camera\_wavelength\_micron.inp} was used in order to allow RADMC-3D to compute dust emission intensity in wavelength bands corresponding to those found on both SPIRE \parencite{SPIRE} and PACS \parencite{PACS}.
 
-\subsection{Thermal Monte-Carlo dust emission}
+\subsection{Thermal Monte-Carlo dust emission} \ref{mctherm}
 The thermal Monte-Carlo simulation is able to compute dust temperatures – using the technique described in \textcite{b&w} – from user-defined dust densities, providing a source of flux (and therefore photons) exists. This source of flux can either be through a star in the image space or an Interstellar Radiation Field. The process used to compute the dust temperature, according to \textcite{manual}, is as follows. The total luminosity of the source is first split into $nphot$ photon packets. The code then proceeds to \textquotesingle fire \textquotesingle photons out from the flux source into the image space. These photons can then either scatter off of dust grains or be absorbed by one, thus immediately being re-emitted at a different wavelength and direction as defined in \textcite{b&w}. Under scattering/re-emission the photon will travel through the image space as defined in \texttt{amr\_grid.inp} - see Section \ref{inp} - entering different adjoining pixels as it does so. This increases the temperature of that pixel, again according to \textcite{b&w}. This process of \textquotesingle ping-ponging \textquotesingle throughout the image space is continued until the photon packet leaves the image space. At this point, a new photon packet is \textquotesingle fired \textquotesingle and the process is repeated using the previously determined dust temperatures until no further photon packets remain. The dust temperature at this point is therefore the solution.
 
 Naturally the more pixels an image space comprises then the longer the simulation takes to compute owing to the large number of pixels and therefore collisions encountered. Likewise the greater the dust density at a given point the longer the simulation takes to run owing to a similar effect. Normally, RADMC-3D would write the calculated dust temperatures to \texttt{dust\_temperature.dat} however as the thermal Monte-Carlo simulation was not used in this project, RADMC-3D was supplied with idealised dust temperatures in the form of a pre-determined \texttt{dust\_temperature.dat} file.
 
-\subsection{Ray tracing dust emission}
+\subsection{Ray tracing dust emission} \ref{rt_des}
 Conversely the image ray trace reads in both user-defined dust temperatures and dust densities, thus bypassing the computation of the dust temperatures as would have been the case in the thermal Monte-Carlo simulation. Again, according to \textcite{manual}, the ray-trace follows, by default, a first-order integration where the source function, $S = j_{\nu}/\alpha$ and opacity (and therefore extinction $\alpha$) are constant across the ray. This is described by Equation \ref{raytrace}.
 
 \begin{equation}
@@ -233,6 +227,8 @@ Conversely the image ray trace reads in both user-defined dust temperatures and 
 $I_{result}$ is the dust emission intensity of the cell, $I_{start}$ is the dust emission intensity of the cell prior to the ray entering it and $\tau$ is the optical depth along the path of the ray through the cell. The optical depth $\tau$ is defined as $\tau = \alpha s$ where $\alpha$ is as defined earlier and $s$ is the distance the ray travels through the cell. The option to perform second-order integration is also made possible by varying the source function $S$ and extinction across the ray. Specifically $S$ and $\alpha$ are fixed at the ingress and egress points of the ray. These points act as boundary conditions such that the variation in $S$ amd $\alpha$ can then be linearly interpolated across the path of the ray through the cell.
 
 The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane.
+
+\subsection{Ray tracing dust emission} \ref{rt_des}
 
 \section{Methodology}
 
@@ -250,7 +246,9 @@ RADMC-3D includes a number of basic example scripts to familiarise the user with
 \endminipage
 \end{figure}
 
-In order to begin operation, RADMC-3D requires a number of user defined inputs that define parameter spaces. RADMC-3D takes these user defined inputs from a number of input files that have subtle differences depending on their intended uses. The examples were used to understand how RADMC-3D generated these files, as well as how the code used them and for what purpose. These examples were basic, consisting of both 1D and 2D sphere projections with user defined stars at their centres that ran thermal Monte-Carlo simulations to build dust temperatures.
+In order to begin operation, RADMC-3D's example scripts were analysed and run. The examples were used to understand how RADMC-3D generated the input files required (and as discussed in Section \ref{inp}) as well as how the code used them and for what purpose. These examples were basic, consisting of both 1D and 2D sphere projections with user defined stars at their centres.
+
+These examples ran thermal Monte-Carlo simulations. The first stage in this computation after writing the input files from the user inputs was to build dust temperatures. This was achieved using the process described in Section \ref{mctherm}. Once dust temperatures had been computed, RADMC-3D then performed a ray-trace in order to build the dust intensity. This was again achieved using the method  described in Section \ref{rt_des}.
 
 To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. This also resulted in some of \texttt{radmc3dPy\textquotesingle}s model setup commands being made redundant. For example, \texttt{radmc3dPy.setup.problemSetupDust} sets up the model using input parameters that are parsed to a model file. This phase was handled solely by \texttt{datafilegen.py}, so this command was redundant. Instead, required parameters such as the number of pixels in each dimension was given to RADMC-3D when calling it from the command line using \texttt{os.system(radmc3d image loadlambda)}. Again, the image ray-trace could be initiated through Python via the \texttt{os.system(radmc3d image)} command. The \texttt{loadlambda} keyword informs RADMC-3D that it should use the \texttt{camera\_wavelength\_micron.inp} module.
 
