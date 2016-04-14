@@ -40,6 +40,9 @@
 \renewcommand{\abstracttextfont}{\normalfont\medium\itshape} % Set the abstract itself to small italic text
 
 \usepackage{titlesec} % Allows customization of titles
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing{\chapter}{0pt}{0pt}{0pt}
 %\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
 %\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
 \titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
@@ -187,7 +190,7 @@ RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code 
 RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas. The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations require input files for RADMC-3D to read and use in its simulations. RADMC-3D \textquotesingle s Python port, \texttt{radmc3dPy} \parencite{radmc3dPy}, is able to write these input files, however for this project a custom script was written such that file creation was independent of \texttt{radmc3dPy}.
 
 \subsection{\texttt{radmc3dPy}}
-Whilst RADMC-3D is written in Fortran 90, a Python ‘wrapper’, \texttt{radmc3dPy} allows Python to handle RADMC-3D objects. 
+Whilst RADMC-3D is written in Fortran 90, a Python ‘wrapper’, \texttt{radmc3dPy} allows Python to handle RADMC-3D objects.
 
 \subsection{Input files} \label{inp}
 As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined input files in order to operate. These input files act as parameter spaces, defining boundary conditions along with step sizes for each given input files. Figure \ref{radmc3d-workflow} shows a workflow of RADMC-3D's operation, including all files required in order to operate.

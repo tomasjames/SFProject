@@ -37,7 +37,7 @@ data_type = input('Are you analysing ideal simulation (\'sim\') data or SPH/Arep
 print '######################################################################\n'
 
 if data_type == 'sim':
-
+    '''
     # Run through the files
     for suffix in band:
 
@@ -86,7 +86,7 @@ if data_type == 'sim':
 
     # Change the directory back to the folder containing this file
     os.chdir('../../../')
-
+    '''
     ################### Run the mapping and dendrogram suites ######################
 
     # Print the intentions of the script to keep track of code's location

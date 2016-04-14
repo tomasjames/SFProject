@@ -140,8 +140,8 @@ print 'Entering the column density determination script\n'
 d2g = 0.01
 
 # Read in the dust density information
-dust_density = np.loadtxt('../../data/plw/dust_project/dust_density.inp', skiprows=3)
-dust_temperature = np.loadtxt('../../data/plw/dust_project/dust_temperature.dat', skiprows=3)
+dust_density = np.loadtxt('../../data/blue/dust_project/dust_density.inp', skiprows=3)
+dust_temperature = np.loadtxt('../../data/blue/dust_project/dust_temperature.dat', skiprows=3)
 
 # Create file to store the values
 datafeed_store = open('datafeed.txt', 'w')
