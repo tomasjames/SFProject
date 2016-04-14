@@ -145,7 +145,7 @@ datafeed_store = open('datafeed.txt', 'w')
 df = csv.writer(datafeed_store, delimiter=' ')
 
 # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-imag = radmc3dPy.image.readImage('/Users/tomasjames/Documents/University/Cardiff/Project/Project/Code/simulations/workingsims/blue/background_15K/image.out')
+imag = radmc3dPy.image.readImage('../../workingsims/blue/background_15K/image.out')
 xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
 
 # Create list to store values of dust density summed along every x,y coordinate
@@ -183,7 +183,7 @@ for i in range(0,len(xpix)*len(ypix)):
     dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(zpix)*imag.sizepix_y)
 
     # Account for the column-weighted temperature
-    col_T = np.sum((dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc])))
+    col_T = np.sum((dust_temperature[loc]*dust_density[loc]))/(np.sum(dust_density[loc]))
 
     # Repeat similar procedure for the temperature
     store_temp.append(col_T)
