@@ -180,7 +180,7 @@ for i in range(0,len(xpix)*len(ypix)):
     store_loc.append(loc)
 
     # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
+    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(zpix)*imag.sizepix_y)
 
     # Account for the column-weighted temperature
     col_T = np.sum((dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc])))
@@ -231,6 +231,9 @@ cs = csv.writer(chi_store, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
 cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+cs.writerow(cs_towrite)
+
+n = random.randint(0,imag.nx*imag.ny)
 
 for h in range(0,imag.nx*imag.ny):
 
@@ -299,7 +302,7 @@ for h in range(0,imag.nx*imag.ny):
         print '\r[========>  ] 80%'
     elif h == 9*(imag.nx*imag.ny)/10:
         print '\r[=========> ] 90%'
-    elif h == 10*(imag.nx*imag.ny)/10:
+    elif h == (imag.nx*imag.ny):
         print '\r[==========>] 100%'
 
     # Determine the chi squared minimum
@@ -316,7 +319,7 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if h == 0:
+    if h == n:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
@@ -339,6 +342,25 @@ for h in range(0,imag.nx*imag.ny):
 chi_store.close()
 
 '''
+# Plot the data
+figure(1)
+errorbar(psw[0],psw[1],yerr=psw[2],fmt='co',label='SPIRE: PSW')
+errorbar(pmw[0],pmw[1],yerr=pmw[2],fmt='yo',label='SPIRE: PMW')
+errorbar(plw[0],plw[1],yerr=plw[2],fmt='mo',label='SPIRE: PLW')
+errorbar(blue[0],blue[1],yerr=blue[2],fmt='bo',label='PACS: Blue')
+errorbar(green[0],green[1],yerr=green[2],fmt='go',label='PACS: Green')
+errorbar(red[0],red[1],yerr=red[2],fmt='ro',label='PACS: Red')
+plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
+xlabel(r'$\nu \/(Hz)$')
+ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+xscale("log", nonposx='clip')
+yscale("log", nonposx='clip')
+grid(True,which='both')
+legend(loc='best')
+title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n')
+savefig('SPIRE_averages_v4.png',dpi=300)
+close()
+
 # Plot the figure and save for reference
 figure(2)
 plot(N,chivals)

@@ -44,10 +44,10 @@ execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
-radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
+#radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
+#radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
 
 ########################### Run Monte-Carlo simulation ########################
 
@@ -137,12 +137,14 @@ with open('image_trans_raw.txt', 'w') as g:
 
 ########################## Plot the resulting data #######################
 
-# Initialise the image
-imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+p = input('Shall the image be plotted?')
 
-# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+if p == 'yes':
+    # Initialise the image
+    imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
+    # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'

@@ -183,7 +183,7 @@ for i in range(0,len(xpix)*len(ypix)):
     store_loc.append(loc)
 
     # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y*(len(ypix)*imag.sizepix_y))
+    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(zpix)*imag.sizepix_y)
 
     # Account for the column-weighted temperature
     col_T = np.sum((dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc])))
@@ -305,7 +305,7 @@ for h in range(0,imag.nx*imag.ny):
         print '\r[========>  ] 80%'
     elif h == 9*(imag.nx*imag.ny)/10:
         print '\r[=========> ] 90%'
-    elif h == 10*(imag.nx*imag.ny)/10:
+    elif h == (imag.nx*imag.ny):
         print '\r[==========>] 100%'
 
     # Determine the chi squared minimum

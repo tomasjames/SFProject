@@ -57,7 +57,7 @@ if data_choice == 'd':
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image loadlambda npixx 200 npixy 200 sizeau 140000')
+os.system('radmc3d image loadlambda npix 200 sizeau 133692')
 
 print 'Raytrace complete and image.out saved to the working directory - now moving on to account to for transmission.\n'
 
@@ -65,7 +65,7 @@ print 'Raytrace complete and image.out saved to the working directory - now movi
 
 # Define wavelength ranges of spire to plot (PSW, PMW and PLW)
 #spire = [[196.5351,298.1259],[277.3117,423.4707],[386.6218,679.3126]]
-blue = [556.70637,977.40323]
+blue = [55.670637,97.740323]
 
 # Plot image for first SPIRE wavelength band (PSW)
 #radmc3dPy.image.makeImage(npix=150000, sizeau=20000, incl=90., lambdarange=plw_ext, nlam=60)
@@ -181,11 +181,14 @@ close()
 
 ########################## Plot the resulting data #######################
 
-# Initialise the image
-imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+p = input('Shall the image be plotted?')
 
-# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+if p == 'yes':
+    # Initialise the image
+    imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+
+    # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
