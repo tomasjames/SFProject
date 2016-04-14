@@ -582,7 +582,7 @@ trans = open('transmission.txt', 'w')
 
 points = input('How many wavelength points should be computed for camera_wavelength_micron.inp?\n')
 
-print 'There will be', points, 'points between', lower, 'um and', higher, 'um.\n'
+print 'There will be', points, 'points between', lower, 'Am and', higher, 'Am.\n'
 print ''
 
 # This determines whether the spacing is linear or logarithmic

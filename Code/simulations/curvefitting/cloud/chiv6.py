@@ -205,12 +205,12 @@ for i in range(0,len(xpix)*len(ypix)):
 
 # Must account for the possibility that the minimum column density could be 0
 if min(col_full) == 0:
-    N = np.linspace(min(col_full), np.log10(max(col_full)/100), 40)
+    N = np.linspace(min(col_full), np.log10(max(col_full)/10), 40)
 else:
-    N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+    N = np.linspace(np.log10(min(col_full)/10), np.log10(max(col_full)*10), 40)
 
 # T is independent of the column density in determination so this remains unchanged
-T = np.linspace(8,20,40)
+T = np.linspace(min(dust_temperature)-1,max(dust_temperature)+1,40)
 
 datafeed_store.close()
 
