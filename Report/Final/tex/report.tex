@@ -51,6 +51,8 @@
 \usepackage{listings} % Allow code to be input into appendix
 \usepackage{courier}
 
+\usepackage{verbatim}
+
 \usepackage{wrapfig}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -149,21 +151,23 @@ Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref
 
 Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures.
 
-\section{Star Formation}
-The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
+\begin{comment}
+  \section{Star Formation}
+  The star forming process is one of the most important processes in the cosmos, as star formation (and the subsequent evolution of the star) poses an unequivocal factor driving the evolution of the Universe forward.
 
-Stars are essentially chemical foundaries, acting as the primary source of elements heavier than \ce{^{2}He} in the Universe. The production of \ce{^{1}H} is thought to have occured approximately 380,0000 years after the Big Bang \parencite{peebles}, when the primordial quark-gluon plasma had cooled sufficiently to allow protons and neutrons (hereafter $p$ and $n$) to bind and form atoms. \ce{^{2}He}, according to \textcite{bbc}, also formed at this time however the fundamental particles required to form elements were produced within the first few seconds after the Big Bang. Whilst further production of \ce{^{2}He} can occur via the first fusion process, the proton-proton (pp) reaction described by Equation \ref{ppchain} \parencite{synthesis} is the primary source of \ce{^{2}He} in stars. This is in stark contrast to \ce{^{1}H}, which cannot be produced via a fusion process.
+  Stars are essentially chemical foundaries, acting as the primary source of elements heavier than \ce{^{2}He} in the Universe. The production of \ce{^{1}H} is thought to have occured approximately 380,0000 years after the Big Bang \parencite{peebles}, when the primordial quark-gluon plasma had cooled sufficiently to allow protons and neutrons (hereafter $p$ and $n$) to bind and form atoms. \ce{^{2}He}, according to \textcite{bbc}, also formed at this time however the fundamental particles required to form elements were produced within the first few seconds after the Big Bang. Whilst further production of \ce{^{2}He} can occur via the first fusion process, the proton-proton (pp) reaction described by Equation \ref{ppchain} \parencite{synthesis} is the primary source of \ce{^{2}He} in stars. This is in stark contrast to \ce{^{1}H}, which cannot be produced via a fusion process.
 
-\begin{equation} \label{ppchain}
-  \ce{^{1}{H} + ^{1}{H} -> ^{2}{He} + e^{+} + v_{e} + 0.42 MeV}
-\end{equation}
+  \begin{equation} \label{ppchain}
+    \ce{^{1}{H} + ^{1}{H} -> ^{2}{He} + e^{+} + v_{e} + 0.42 MeV}
+  \end{equation}
 
-Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line \parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$. This transition corresponds to a temperature of $T~0.014 K$ according to Wien's displacement law $\lambda_{max}=0.0029/T$, meaning the excitation can occur almost anywhere in the Universe.
+  Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line \parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$. This transition corresponds to a temperature of $T~0.014 K$ according to Wien's displacement law $\lambda_{max}=0.0029/T$, meaning the excitation can occur almost anywhere in the Universe.
 
-\subsection{Fusion}
-The fusion process occuring within stars adapts and evolves with the star itself. After the star has undergone its initial fusion process described in Equation \ref{ppchain}, it begins to cool.
+  \subsection{Fusion}
+  The fusion process occuring within stars adapts and evolves with the star itself. After the star has undergone its initial fusion process described in Equation \ref{ppchain}, it begins to cool.
 
-\ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}.
+  \ce{^{56}Fe} cannot be fused to create any heavier elements as this fusion requires more energy to fuse than the fusion would produce, thus acting as a net loss of energy. As a direct result of this, fusion stops within a star at \ce{^{56}Fe}.
+\end{comment}
 
 \section{Dust emission}
 Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The sources of flux embedded deep within the cloud radiate across a wide range of wavelengths, however the dust surrounding the source has the effect of absorbing and then re-radiating photons at a different wavelength. As such, these sources of flux (be they prestellar cores, protostars or pre-main sequence stars) are occluded by the dust enveloping them.
@@ -183,6 +187,11 @@ In Equation \ref{eq:mbb} $S_{\nu}$ is the flux density, $N$ is the column densit
 All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mbb}, with the addition of $R_{dust-gas}$. $R_{dust-gas}$ is the dust-to-gas ratio, here approximated as being $\frac{1}{100}$. Throughout this project, dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
 
 Dust properties such as the spectral index $\beta$ and temperature $T$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. These parameters therefore effect the ability to detect radiation from within a molecular cloud.
+
+\section{Herchel Space Observatory}
+The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $~55-672 \micro\meter$. SPIRE itself had an photometry wavelength range $~200-670 \micro\meter$ whilst PACS was sensitive to a photometry wavelength range $~60-210 \micro\meter$. This therefore produces effectively continuous coverage of the wavelength range $~60-670$\footnote{Further coverage is achieved down to $55 \micro\meter$ using HiFi however this is only achievable for spectroscopic applications.}
+
+In order to achieve the effective wavelength range described above, both SPIRE and PACS detectors required extensive cooling to a temperature of $0.3 K$ via $^{3}{He}$ sorption coolers \parencite{herschel}. Again according to \textcite{herschel} the image focal plane required cooling to $1.7 K$, again achieved using 2160 litres of Helium cryogen. To minimise any thermal radiation from the observatory itself, the spacecraft was radiatively cooled to a temperature of $85 K$ \parencite{herschel}. These temperatures allowed effective detection (via a bolometric detector in the case of SPIRE and a photometer in the case of PACS) of infra-red and sub-mm photons. 
 
 \section{RADMC-3D} \label{radmc}
 RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond and written in Fortran 90 for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}.
@@ -232,11 +241,13 @@ Conversely the image ray trace reads in both user-defined dust temperatures and 
 
 $I_{result}$ is the dust emission intensity of the cell, $I_{start}$ is the dust emission intensity of the cell prior to the ray entering it and $\tau$ is the optical depth along the path of the ray through the cell. The optical depth $\tau$ is defined as $\tau = \alpha s$ where $\alpha$ is as defined earlier and $s$ is the distance the ray travels through the cell. The option to perform second-order integration is also made possible by varying the source function $S$ and extinction across the ray. Specifically $S$ and $\alpha$ are fixed at the ingress and egress points of the ray. These points act as boundary conditions such that the variation in $S$ amd $\alpha$ can then be linearly interpolated across the path of the ray through the cell.
 
-The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane.
+The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane. RADMc-3D is also capable of accounting for scattering of photons off of dust grains however this project focussed solely upon absorption and re-emission only.
 
 \chapter{Methodology}
 
 \section{Model setup}
+
+\subsection{Example scripts}
 RADMC-3D includes a number of basic example scripts to familiarise the user with the software's operation and capabilities. As a result, they provide an excellent introductory exercise to using RADMC-3D. Examples of 1D and 2D thermal Monte-Carlo simulations were run in this regard, generating Figures \ref{fig:1d} and \ref{fig:2d}.
 
 \begin{figure}[!htb]
@@ -254,8 +265,15 @@ In order to begin operation, RADMC-3D's example scripts were analysed and run. T
 
 These examples ran thermal Monte-Carlo simulations. The first stage in this computation after writing the input files from the user inputs was to build dust temperatures. This was achieved using the process described in Section \ref{mctherm}. Once dust temperatures had been computed, RADMC-3D then performed a ray-trace in order to build the dust emission intensity. This was again achieved using the method described in Section \ref{rt_des}.
 
+\subsection{Modelling a cloud}
 To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. This also resulted in some of \texttt{radmc3dPy\textquotesingle}s model setup commands being made redundant. For example, \texttt{radmc3dPy.setup.problemSetupDust} sets up the model using input parameters that are parsed to a model file. This phase was handled solely by \texttt{datafilegen.py}, so this command was redundant. Instead, required parameters such as the number of pixels in each dimension was given to RADMC-3D when calling it from the command line using \texttt{os.system(radmc3d image loadlambda)}. Again, the image ray-trace could be initiated through Python via the \texttt{os.system(radmc3d image)} command. The \texttt{loadlambda} keyword informs RADMC-3D that it should use the \texttt{camera\_wavelength\_micron.inp} module.
 
+RADMC-3D then performs its raytrace and outputs the computed intensities to an \texttt{image.out} file. This image is a 2D image with image dimensions in the x-y plane corresponding to the initial x and y image dimensions supplied to RADMC-3D. This file contains the dust emission intensity values at each pixel within that plane. This intensity is, however, an idealised intensity that does not account for any ineffeciences. It was assumed that the source is imaged in the absence of any occluding material, thus exctinction was neglected. It was necessary however in order to simulate data as imaged by Herschel to account for the frequency dependent transmission of Herschel's filters.
+
+\subsection{Simulating Herschel}
+No telescope or observatory can produce perfect images or data; components within the telescope, the observatory or the surroundings all degrade the data quality. Refraction at the telescope aperture  Not all photons that fall on a filter are transmitted owing to reflection off of the filter itself. This is frequency dependent and thus produces a ``transmission curve''.
+
+\section{Appendix}
 All code was version controlled using GitHub and stored in a private repository throughout development. The repository containing all code can be found at \href{http://www.github.com/tomasjames/ZiggyStarDust}{http://www.github.com/tomasjames/ZiggyStarDust}.
 
 %-----------------------------------------------------------------
