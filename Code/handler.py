@@ -63,7 +63,7 @@ if data_type == 'sim':
         os.chdir('../../../../')
 
         # Code will now go back to the top of the loop and execute over the next band
-
+    '''
     ############################# Run the Chi-squared #############################
 
     print '#######################################################################'
@@ -86,7 +86,7 @@ if data_type == 'sim':
 
     # Change the directory back to the folder containing this file
     os.chdir('../../../')
-    '''
+
     ################### Run the mapping and dendrogram suites ######################
 
     # Print the intentions of the script to keep track of code's location

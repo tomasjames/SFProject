@@ -67,8 +67,7 @@ radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=12
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-#os.system('radmc3d image loadlambda npixx 128 npixy 128 sizeau 15000')
-os.system('radmc3d image loadlambda sizeau 14344')
+os.system('radmc3d image loadlambda npixx 128 npixy 128 sizeau 14344')
 
 ########################## Initailise the resulting data #######################
 

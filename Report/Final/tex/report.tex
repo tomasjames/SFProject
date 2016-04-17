@@ -161,7 +161,7 @@ Interestingly the onset of collapse is also the onset of gravitational binding. 
     \ce{^{1}{H} + ^{1}{H} -> ^{2}{He} + e^{+} + v_{e} + 0.42 MeV}
   \end{equation}
 
-  Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line \parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$. This transition corresponds to a temperature of $T~0.014 K$ according to Wien's displacement law $\lambda_{max}=0.0029/T$, meaning the excitation can occur almost anywhere in the Universe.
+  Despite the lack of \ce{^{1}H} production, \ce{^{1}H} is still the most abundant element in the Universe, amounting to roughly 72\% by mass according to \textcite{abundance}. This relative prevalence of \ce{^{1}H} is known as a direct result of observations of the $21cm$ line \parencite{21cm}. The $21cm$ line originates from the hyperfine splitting that occurs when the only electron in \ce{^{1}H} in the $1s$ orbital spin flips to become antiparellel with the spin of the nucleus. This produces the characteristic photon emission at $\lambda=21cm$. This transition corresponds to a temperature of $T\sim 0.014 K$ according to Wien's displacement law $\lambda_{max}=0.0029/T$, meaning the excitation can occur almost anywhere in the Universe.
 
   \subsection{Fusion}
   The fusion process occuring within stars adapts and evolves with the star itself. After the star has undergone its initial fusion process described in Equation \ref{ppchain}, it begins to cool.
@@ -189,9 +189,36 @@ All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mb
 Dust properties such as the spectral index $\beta$ and temperature $T$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. These parameters therefore effect the ability to detect radiation from within a molecular cloud.
 
 \section{Herchel Space Observatory}
-The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $~55-672 \micro\meter$. SPIRE itself had an photometry wavelength range $~200-670 \micro\meter$ whilst PACS was sensitive to a photometry wavelength range $~60-210 \micro\meter$. This therefore produces effectively continuous coverage of the wavelength range $~60-670$\footnote{Further coverage is achieved down to $55 \micro\meter$ using HiFi however this is only achievable for spectroscopic applications.}
+The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $\sim \SI{55}{\micro\meter}$ to $\sim \SI{672}{\micro\meter}$. Both PACS and SPIRE were capable of being run in ``Parallel mode'' - effective simultaneous operation according to \textcite{herschel}. SPIRE itself had an photometry wavelength range $\sim \SI{200}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$ whilst PACS was sensitive to a photometry wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{210}{\micro\meter}$. This therefore produces effectively continuous coverage of the wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$.\footnote{Further coverage is achieved down to $\SI{55}{\micro\meter}$ using HiFi however this is only achievable for spectroscopic applications.}
 
-In order to achieve the effective wavelength range described above, both SPIRE and PACS detectors required extensive cooling to a temperature of $0.3 K$ via $^{3}{He}$ sorption coolers \parencite{herschel}. Again according to \textcite{herschel} the image focal plane required cooling to $1.7 K$, again achieved using 2160 litres of Helium cryogen. To minimise any thermal radiation from the observatory itself, the spacecraft was radiatively cooled to a temperature of $85 K$ \parencite{herschel}. These temperatures allowed effective detection (via a bolometric detector in the case of SPIRE and a photometer in the case of PACS) of infra-red and sub-mm photons. 
+Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passbands for each of the filters within SPIRE and PACS.
+
+\begin{table}h
+  \parbox{.45\linewidth}{
+  \centering
+  \begin{tabular}{ll}
+  Filter & Passband ($\mu m$) \\
+  PSW    &    199.4540 --	298.5657   \\
+  PMW    &    281.6949 --	424.7548   \\
+  PLW    &    391.4346 --	690.8139
+  \end{tabular}
+  \caption{The passbands (for extended source) for the SPIRE instrument \parencite{pass}.}
+  \label{table:SPIRE-pass}
+  }
+  \parbox{.45\linewidth}{
+  \centering
+  \begin{tabular}{ll}
+  Filter & Passband ($\mu m$) \\
+  Blue   &    55.6706 -- 97.7403       \\
+  Green  &    79.1026 --	135.1498       \\
+  Red    &    117.7762 --	243.6431
+  \end{tabular}
+  \caption{The passbands for the PACS instrument \parencite{pass}.}
+  \label{table:PACS-pass}
+  }
+\end{table}
+
+In order to achieve the effective wavelength range described in Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass}, both SPIRE and PACS detectors required extensive cooling to a temperature of $0.3 K$ via $^{3}{He}$ sorption coolers \parencite{herschel}. Again according to \textcite{herschel} the image focal plane required cooling to $1.7 K$, again achieved using 2160 litres of Helium cryogen. To minimise any thermal radiation from the observatory itself, the spacecraft was radiatively cooled to a temperature of $85 K$ \parencite{herschel}. These temperatures allowed effective detection (via a bolometric detector in the case of SPIRE and a photometer in the case of PACS) of infra-red and sub-mm photons.
 
 \section{RADMC-3D} \label{radmc}
 RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond and written in Fortran 90 for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}.
@@ -233,11 +260,11 @@ The thermal Monte-Carlo simulation is able to compute dust temperatures – usin
 Naturally the more pixels an image space comprises then the longer the simulation takes to compute owing to the large number of pixels and therefore collisions encountered. Likewise the greater the dust density at a given point the longer the simulation takes to run owing to a similar effect. Normally, RADMC-3D would write the calculated dust temperatures to \texttt{dust\_temperature.dat} however as the thermal Monte-Carlo simulation was not used in this project, RADMC-3D was supplied with idealised dust temperatures in the form of a pre-determined \texttt{dust\_temperature.dat} file.
 
 \subsection{Ray tracing dust emission} \ref{rt_des}
-Conversely the image ray trace reads in both user-defined dust temperatures and dust densities, thus bypassing the computation of the dust temperatures as would have been the case in the thermal Monte-Carlo simulation. Again, according to \textcite{manual}, the ray-trace follows, by default, a first-order integration where the source function, $S = j_{\nu}/\alpha$ and opacity (and therefore extinction $\alpha$) are constant across the ray. This is described by Equation \ref{raytrace}.
+Conversely the image ray trace reads in both user-defined dust temperatures and dust densities, thus bypassing the computation of the dust temperatures as would have been the case in the thermal Monte-Carlo simulation. Again, according to \textcite{manual}, the ray-trace follows, by default, a first-order integration where the source function, $S = j_{\nu}/\alpha$ and opacity (and therefore extinction $\alpha$) are constant across the ray. This is described by Equation \ref{eq:raytrace}.
 
 \begin{equation}
   I_{result} = I_{start}e^{-\tau}+(1+e^{-\tau})S
-\end{equation}\ref{raytrace}
+\end{equation}\ref{eq:raytrace}
 
 $I_{result}$ is the dust emission intensity of the cell, $I_{start}$ is the dust emission intensity of the cell prior to the ray entering it and $\tau$ is the optical depth along the path of the ray through the cell. The optical depth $\tau$ is defined as $\tau = \alpha s$ where $\alpha$ is as defined earlier and $s$ is the distance the ray travels through the cell. The option to perform second-order integration is also made possible by varying the source function $S$ and extinction across the ray. Specifically $S$ and $\alpha$ are fixed at the ingress and egress points of the ray. These points act as boundary conditions such that the variation in $S$ amd $\alpha$ can then be linearly interpolated across the path of the ray through the cell.
 
@@ -246,6 +273,7 @@ The result, however, is the same in both Thermal Monte-Carlo simulation and ray-
 \chapter{Methodology}
 
 \section{Model setup}
+In order to begin developing analysis tools a ``test-bed'' was required. This test-bed comprised a simple, spherical cloud of uniform density and temperature placed within a medium of greater temperature and lower density. This effectively simulated a cold and dense molecular cloud bathed in a warmer, diffuse ISM. Prior to this however it was necessary to investigate the simulation software's (RADMC-3D) operation. This was achieved using example scripts bundled with the code.
 
 \subsection{Example scripts}
 RADMC-3D includes a number of basic example scripts to familiarise the user with the software's operation and capabilities. As a result, they provide an excellent introductory exercise to using RADMC-3D. Examples of 1D and 2D thermal Monte-Carlo simulations were run in this regard, generating Figures \ref{fig:1d} and \ref{fig:2d}.
@@ -266,12 +294,54 @@ In order to begin operation, RADMC-3D's example scripts were analysed and run. T
 These examples ran thermal Monte-Carlo simulations. The first stage in this computation after writing the input files from the user inputs was to build dust temperatures. This was achieved using the process described in Section \ref{mctherm}. Once dust temperatures had been computed, RADMC-3D then performed a ray-trace in order to build the dust emission intensity. This was again achieved using the method described in Section \ref{rt_des}.
 
 \subsection{Modelling a cloud}
-To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. This also resulted in some of \texttt{radmc3dPy\textquotesingle}s model setup commands being made redundant. For example, \texttt{radmc3dPy.setup.problemSetupDust} sets up the model using input parameters that are parsed to a model file. This phase was handled solely by \texttt{datafilegen.py}, so this command was redundant. Instead, required parameters such as the number of pixels in each dimension was given to RADMC-3D when calling it from the command line using \texttt{os.system(radmc3d image loadlambda)}. Again, the image ray-trace could be initiated through Python via the \texttt{os.system(radmc3d image)} command. The \texttt{loadlambda} keyword informs RADMC-3D that it should use the \texttt{camera\_wavelength\_micron.inp} module.
+To begin building 3D models outside of the example scripts, specific input files needed to be created. As stated, a custom Python script \texttt{datafilegen.py} was written to handle this file creation. Traditionally, \texttt{radmc3dPy} would handle file creation at the model setup phase, however given that RADMC-3D is designed to be run from the command line it was determined that reducing the number of dependencies would allow greater compatibility with different machines. This is critical if the code was to be run on a machine that may not have \texttt{radmc3dPy} installed, such as a supercomputer for larger computations. This also resulted in some of \texttt{radmc3dPy\textquotesingle s} model setup commands being made redundant. For example, \texttt{radmc3dPy.setup.problemSetupDust} sets up the model using input parameters that are parsed to a model file. This phase was handled solely by \texttt{datafilegen.py}, so this command was redundant. Instead, required parameters such as the number of pixels in each dimension was given to RADMC-3D when calling it from the command line using \texttt{os.system(radmc3d image loadlambda)}. Again, the image ray-trace could be initiated through Python via the \texttt{os.system(radmc3d image)} command. The \texttt{loadlambda} keyword informs RADMC-3D that it should use the \texttt{camera\_wavelength\_micron.inp} module.
 
-RADMC-3D then performs its raytrace and outputs the computed intensities to an \texttt{image.out} file. This image is a 2D image with image dimensions in the x-y plane corresponding to the initial x and y image dimensions supplied to RADMC-3D. This file contains the dust emission intensity values at each pixel within that plane. This intensity is, however, an idealised intensity that does not account for any ineffeciences. It was assumed that the source is imaged in the absence of any occluding material, thus exctinction was neglected. It was necessary however in order to simulate data as imaged by Herschel to account for the frequency dependent transmission of Herschel's filters.
+RADMC-3D then performs its raytrace using the method discussed in Section \ref{rt_des} and outputs the computed intensities to an \texttt{image.out} file. This image is a 2D image with image dimensions in the x-y plane corresponding to the initial x and y image dimensions supplied to RADMC-3D. This file contains the dust emission intensity values at each pixel within that plane. This intensity is, however, an idealised intensity that does not account for any ineffeciences. It was assumed that the source is imaged in the absence of any occluding material along the line of sight between the observer and the source, and thus exctinction was neglected.
+
+By supplying \texttt{datafilegen.py} with the mass of the cloud, along with the number density of dust both inside and outside of the cloud, it calculates the expected radius of the cloud using a simple mass-density-volume relation. By then supplying the number of image dimensions ($128\times128\times128$) and the image bounds ($2r$ where $r$ is the radius of the cloud)
+
+It was necessary however in order to simulate data as imaged by Herschel to account for the frequency dependent transmission of Herschel's filters.
 
 \subsection{Simulating Herschel}
-No telescope or observatory can produce perfect images or data; components within the telescope, the observatory or the surroundings all degrade the data quality. Refraction at the telescope aperture  Not all photons that fall on a filter are transmitted owing to reflection off of the filter itself. This is frequency dependent and thus produces a ``transmission curve''.
+No telescope or observatory can produce perfect images or data; components within the telescope, the observatory or the surroundings all degrade the data quality. In real world applications maximising the SNR is crucial to data quality, but the principles of this will not be touched on here. Furthermore SNR (and therefore integration time) is not accounted for in the simulations or data analysis - images are plotted as if the source is integrated for sufficient time such that the fictional ``detector'' responds and detects all photons from the source incident upon it as they were emitted from the dust.
+
+Naturally this is an idealised assumption; not all photons that fall on a detector are detected. Detectors have a given responsivity that is a measure of how many of the incident photons do not contribute to the signal. Furthermore, filters are essential to telescope operation as they discriminate wanted and unwanted frequencies to ensure only frequencies within the passband of interest are transmitted to the detector. This introduces a large inefficiency in that not all incident photons are transmitted owing to reflection off of the filter itself, as well as absorption within the filter. This is frequency dependent and thus produces a ``transmission curve''.
+
+This transmission curve varies depending on the filter under consideration and therefore acts as a measure of characterisation. As SPIRE`s PSW, PMW and PLW bands along with PACS` Blue, Green and Red filers were considered for this project their transmission data was required. This data was downloaded from \textcite{pass} and subsequently plotted using Python. Figure \ref{fig:transmission} shows the transmission curves as a function of frequency for each band.
+
+\begin{figure}
+\centering
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_blue.png}
+\caption{The transmission curve for the PACS Blue band.}\label{fig:blue}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_psw.png}
+\caption{The transmission curve for the SPIRE PSW band.}\label{fig:psw}
+\end{subfigure}
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_green.png}
+\caption{The transmission curve for the PACS Green band.}\label{fig:green}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_pmw.png}
+\caption{The transmission curve for the SPIRE PMW band.}\label{fig:pmw}
+\end{subfigure}
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_red.png}
+\caption{The transmission curve for the PACS Red band.}\label{fig:red}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/interpolated_plw.png}
+\caption{The transmission curve for the SPIRE PLW band.}\label{fig:plw}
+\end{subfigure}
+
+\end{figure} \label{fig:transmission}
+
+
 
 \section{Appendix}
 All code was version controlled using GitHub and stored in a private repository throughout development. The repository containing all code can be found at \href{http://www.github.com/tomasjames/ZiggyStarDust}{http://www.github.com/tomasjames/ZiggyStarDust}.

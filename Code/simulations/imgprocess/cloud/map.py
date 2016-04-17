@@ -29,7 +29,7 @@ from astropy.io import fits
 
 # Read in both data types
 inp_data = np.loadtxt('../../curvefitting/cloud/datafeed.txt')
-chi_data = np.loadtxt('../../curvefitting/cloud/chi.txt')
+chi_data = np.loadtxt('../../curvefitting/cloud/chi.txt',skiprows=1)
 
 # Split data types into plottable quantities
 inp_N = inp_data[:,1]
@@ -57,7 +57,7 @@ ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $N$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(np.log10(N_chi_inp),bins=50,log=True,norm=True)
+hist(np.log10(N_chi_inp),bins=50,log=True,normed=True)
 title('PDF of $\chi^{2}$ Recovered $N$')
 xlabel('$log_{10}N\/(g\/cm^{-3})$')
 ylabel('Frequency')
@@ -75,7 +75,7 @@ ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $T$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(T_chi_inp,bins=50,log=True,norm=True)
+hist(T_chi_inp,bins=50,log=True,normed=True)
 title('PDF of $\chi^{2}$ Recovered $T$')
 xlabel('$T\/(K)$')
 ylabel('Frequency')
@@ -94,7 +94,7 @@ ylabel('Y')
 title('A Map of the Data Input $N$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(np.log10(N_data_inp),bins=50,log=True,norm=True)
+hist(np.log10(N_data_inp),bins=50,log=True,normed=True)
 title('PDF of Data Input $N$')
 xlabel('$log_{10}N\/(g\/cm^{-3})$')
 ylabel('Frequency')
@@ -113,7 +113,7 @@ ylabel('Y')
 title('A Map of the Data Input $T$\n')
 
 subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(T_data_inp,bins=50,log=True,norm=True)
+hist(T_data_inp,bins=50,log=True,normed=True)
 title('PDF of Data Input $T$')
 xlabel('$T\/(K)$')
 ylabel('Frequency')

@@ -24,7 +24,6 @@ from matplotlib.pyplot import *
 # Import glob
 import glob
 
-# Import random number generation
 import random
 
 ############################### Define functions ###############################
@@ -90,7 +89,7 @@ flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
 flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
 
 # Read the initial radmc3dPy output to get image dimensions and info
-imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
+#imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
 
 ######################### Determine (again) the opacity ########################
 
@@ -183,16 +182,16 @@ for i in range(0,len(xpix)*len(ypix)):
     store_loc.append(loc)
 
     # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(zpix)*imag.sizepix_y)
+    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(dust_density[loc])*imag.sizepix_y)
 
     # Account for the column-weighted temperature
-    col_T = np.sum((dust_temperature[loc]*dust_density[loc])/(np.sum(dust_density[loc])))
+    col_T = np.sum((dust_temperature[loc]*dust_density[loc]))/(np.sum(dust_density[loc]))
 
     # Repeat similar procedure for the temperature
     store_temp.append(col_T)
 
     # Determine the number of dust grains in the pixel
-    N_d = (dust_mass_pixel/dust_mass)
+    N_d = (dust_mass_pixel/(dust_mass*len(dust_density[loc])))
 
     # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
     col = N_d/((D**2)*(sigma_pix))
@@ -204,16 +203,13 @@ for i in range(0,len(xpix)*len(ypix)):
     df.writerow(df_towrite)
 
     col_full.append(col)
-    T_full.append(T_line)
+    T_full.append(col_T)
 
-# Must account for the possibility that the minimum column density could be 0
-if min(col_full) == 0:
-    N = np.linspace(min(col_full), np.log10(max(col_full)/10), 40)
-else:
-    N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
 
 # T is independent of the column density in determination so this remains unchanged
-T = np.linspace(min(dust_temperature)-1,max(dust_temperature)+1,40)
+T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
+#T = np.linspace(4,20,40)
 
 datafeed_store.close()
 
@@ -305,7 +301,7 @@ for h in range(0,imag.nx*imag.ny):
         print '\r[========>  ] 80%'
     elif h == 9*(imag.nx*imag.ny)/10:
         print '\r[=========> ] 90%'
-    elif h == (imag.nx*imag.ny):
+    elif h == (imag.nx*imag.ny)-1:
         print '\r[==========>] 100%'
 
     # Determine the chi squared minimum
@@ -322,7 +318,6 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    '''
     if h == n:
     # Plot the data
         figure(1)
@@ -342,7 +337,7 @@ for h in range(0,imag.nx*imag.ny):
         title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
         savefig('averages.png',dpi=300)
         close()
-    '''
+
 chi_store.close()
 
 '''

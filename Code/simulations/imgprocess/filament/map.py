@@ -23,7 +23,6 @@ import numpy as np
 import csv
 
 from matplotlib.pyplot import *
-
 from astropy.io import fits
 
 ############################### Read in image data ##############################

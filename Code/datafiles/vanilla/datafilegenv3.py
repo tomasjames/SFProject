@@ -189,11 +189,11 @@ x_cube = np.zeros([l,l,l])
 y_cube = np.zeros([l,l,l])
 z_cube = np.zeros([l,l,l])
 
-r_fil = 100*au # Radius of the filament in AU
+r_fil = 1000*au # Radius of the filament in AU
 n_0_fil = 10**6 # Central filament number density
 T_0_fil = 9 # Central prestellar core temperature in K
 
-r_proto = 10*au # Radius of the protostar in AU
+r_proto = 100*au # Radius of the protostar in AU
 n_0_proto = 10**7 # Number density at the centre of the protostar (from Stamatellos and Whitworth)
 T_0_proto = 7 # Temperature of the protostar (from Stamatellos and Whitworth)
 
@@ -206,6 +206,8 @@ r_proto = 0 # Radius of the protostar in AU
 n_0_proto = 0 # Number density at the centre of the protostar (from Stamatellos and Whitworth)
 T_0_proto = 0 # Temperature of the protostar (from Stamatellos and Whitworth)
 '''
+
+print 'Entering the loop'
 
 # Determine where centre of cloud lies in model space by looping through all 3 dimensions
 for n in range(0,len(z)-1):
@@ -232,6 +234,7 @@ for n in range(0,len(z)-1):
                     # Repeat the procedure to for the protostar
                     n_proto = n_0_proto*(1./(1+(r_point/r_fil)**2))
                     proto_density = n_fil*muh2*mp*d2g
+
                     # Repeat for temperature
                     T_proto = T_0_proto*(1+((r_point/r_fil)**2))
                     proto_temperature = T_proto

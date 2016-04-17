@@ -48,40 +48,6 @@
       \endverb
       \keyw{Stars: Circumstellar Matter,ISM: Dust,Extinction,Radiative Transfer,Scattering}
     \endentry
-    \entry{synthesis}{article}{}
-      \name{author}{4}{}{%
-        {{uniquename=0,hash=a63fa4d6fe69a0cd310b2da74e29b759}{Burbidge}{B\bibinitperiod}{E.\bibnamedelimi Margaret}{E\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=4cac42053ce4ed8819a21452fb83e2b3}{Burbidge}{B\bibinitperiod}{G.\bibnamedelimi R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=6c648fc6061fed9445747844884c3303}{Fowler}{F\bibinitperiod}{William\bibnamedelima A.}{W\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=ae74b4d090e71ba97e5a4d70f2634fc4}{Hoyle}{H\bibinitperiod}{F.}{F\bibinitperiod}{}{}{}{}}%
-      }
-      \list{publisher}{1}{%
-        {American Physical Society}%
-      }
-      \strng{namehash}{e751a165faf74868f0fb003c9074f3ec}
-      \strng{fullhash}{ec56efaa18dbd8a084123c08b1d418d2}
-      \field{sortinit}{B}
-      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
-      \field{labelyear}{1957}
-      \field{labelmonth}{10}
-      \field{datelabelsource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issue}{4}
-      \field{journaltitle}{Rev. Mod. Phys.}
-      \field{month}{10}
-      \field{title}{Synthesis of the Elements in Stars}
-      \field{volume}{29}
-      \field{year}{1957}
-      \field{pages}{547\bibrangedash 650}
-      \range{pages}{104}
-      \verb{doi}
-      \verb 10.1103/RevModPhys.29.547
-      \endverb
-      \verb{url}
-      \verb http://link.aps.org/doi/10.1103/RevModPhys.29.547
-      \endverb
-    \endentry
     \entry{rho}{online}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=fe8ec8246087ce1be09ab58b3aec79ff}{Caltech}{C\bibinitperiod}{}{}{}{}{}{}}%
@@ -180,6 +146,52 @@
       \field{pagetotal}{174}
       \field{title}{Manual for RADMC-3D}
       \field{version}{Version 0.39}
+    \endentry
+    \entry{fact}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=afafc7a086f96baed3f76650e4fcdc5d}{ESA}{E\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \strng{namehash}{afafc7a086f96baed3f76650e4fcdc5d}
+      \strng{fullhash}{afafc7a086f96baed3f76650e4fcdc5d}
+      \field{sortinit}{E}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
+      \field{labelyear}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Fact-sheet}
+      \field{title}{Herschel Fact Sheet}
+      \verb{url}
+      \verb http://esamultimedia.esa.int/docs/herschel/Herschel-Factsheet.pdf
+      \endverb
+    \endentry
+    \entry{herschel}{manual}{}
+      \name{author}{8}{}{%
+        {{uniquename=0,hash=901fb662cfa70ce6e4eb625e197de123}{{Garcia-Lario}}{G\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=960bc742b2f86a6c87b626734026d04c}{{Lorente}}{L\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f00586a5a8881ef8a0bb1320fd724b0e}{{Merin}}{M\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=b383d488f37e7d89810814a647848cfb}{{Sanchez-Portal}}{S\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=872df7fbd95af7a70a5276f9ea199fd7}{{Kidger}}{K\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=edf0e47d110acc548a11c34ac636cc07}{{Prusti}}{P\bibinitperiod}{T.}{T\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=6d307eed2885f2e8ae92ed489c213336}{{Verdugo}}{V\bibinitperiod}{E.}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=131b0a5ef0fddb75e4610fa1e4383655}{{Abreu}}{A\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {English}%
+      }
+      \list{organization}{1}{%
+        {ESA}%
+      }
+      \strng{namehash}{e18bde7c14d1fea79dfccd848e154770}
+      \strng{fullhash}{1ae800af6336e5b700e4698a3307a393}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelyear}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{pagetotal}{124}
+      \field{title}{Herschel Observer's Manual}
+      \field{version}{Version 5.0.3}
+      \warn{\item Datamodel: Entry 'herschel' (../refs/refs.bib): Invalid format 'March 7, 2014' of date field 'date' - ignoring}
     \endentry
     \entry{SPIRE}{article}{}
       \name{author}{179}{}{%
@@ -390,6 +402,37 @@
       \endverb
       \keyw{instrumentation: photometers,instrumentation: spectrographs,space vehicles: instruments,submillimeter: general}
     \endentry
+    \entry{HiFi}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=d0df600347ac4ad2c1a25dce8a42cfb1}{{Helmich}}{H\bibinitperiod}{F.\bibnamedelimi P.}{F\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{4}{}{%
+        {{hash=d0a09d0e643e07db7af414136dc540bd}{{R\"{o}llig}}{R\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=de874fedb7eec8e0c5273f1d712783a8}{{Simon}}{S\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=c8af387a7e36cb3a77e245d8d4dc70dc}{{Ossenkopf}}{O\bibinitperiod}{V.}{V\bibinitperiod}{}{}{}{}}%
+        {{hash=33f9264e764ccf3b6b32ba5133604883}{{Stutzki}}{S\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d0df600347ac4ad2c1a25dce8a42cfb1}
+      \strng{fullhash}{d0df600347ac4ad2c1a25dce8a42cfb1}
+      \field{sortinit}{H}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
+      \field{labelyear}{2011}
+      \field{labelmonth}{11}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{EAS Publications Series}
+      \field{month}{11}
+      \field{series}{EAS Publications Series}
+      \field{title}{{Herschel HIFI - the Heterodyne Instrument for the Far-Infrared}}
+      \field{volume}{52}
+      \field{year}{2011}
+      \field{pages}{15\bibrangedash 20}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1051/eas/1152003
+      \endverb
+    \endentry
     \entry{dustopacity}{article}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=fca70a21473f0f6c743e15fb226eb65f}{{Hildebrand}}{H\bibinitperiod}{R.\bibnamedelimi H.}{R\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
@@ -443,6 +486,21 @@
       \verb{url}
       \verb http://rsta.royalsocietypublishing.org/content/199/312-320/1
       \endverb
+    \endentry
+    \entry{radmc3dPy}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=0e840c61820e27680ab41b92ba5dea88}{{Juhasz}}{J\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0e840c61820e27680ab41b92ba5dea88}
+      \strng{fullhash}{0e840c61820e27680ab41b92ba5dea88}
+      \field{sortinit}{J}
+      \field{sortinithash}{ec3950a647c092421b9fcca6d819504a}
+      \field{labelyear}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{radmc3dPy}
+      \field{version}{0.25}
+      \keyw{Software}
     \endentry
     \entry{krumholz}{inproceedings}{}
       \name{author}{1}{}{%
@@ -543,37 +601,6 @@
       \endverb
       \keyw{astrometry,ISM: kinematics and dynamics,ISM: clouds,reflection nebulae,open clusters and associations: individual (Sco OB2,Ophiuchus)}
     \endentry
-    \entry{21cm}{article}{}
-      \name{author}{2}{}{%
-        {{uniquename=0,hash=59a03cd768db005676d03eb152170036}{Muller}{M\bibinitperiod}{C.\bibnamedelimi A.}{C\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=6c7ed9c81670e52893252edd03b5ae04}{Oort}{O\bibinitperiod}{J.\bibnamedelimi H.}{J\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{ba87c77ffbc2237c894460740e76b9c6}
-      \strng{fullhash}{ba87c77ffbc2237c894460740e76b9c6}
-      \field{sortinit}{M}
-      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
-      \field{labelyear}{1951}
-      \field{labelmonth}{09}
-      \field{labelday}{01}
-      \field{datelabelsource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{day}{01}
-      \field{journaltitle}{Nature}
-      \field{month}{09}
-      \field{number}{4270}
-      \field{title}{Observation of a Line in the Galactic Radio Spectrum: The Interstellar Hydrogen Line at 1,420 Mc./sec., and an Estimate of Galactic Rotation}
-      \field{volume}{168}
-      \field{year}{1951}
-      \field{pages}{357\bibrangedash 358}
-      \range{pages}{2}
-      \verb{doi}
-      \verb 10.1038/168357a0
-      \endverb
-      \verb{url}
-      \verb http://dx.doi.org/10.1038/168357a0
-      \endverb
-    \endentry
     \entry{filaments}{unpublished}{}
       \name{author}{2}{}{%
         {{uniquename=0,hash=c76bb3666251e4ee846e016f95e43513}{{Murphy}}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
@@ -592,52 +619,6 @@
       \field{year}{2014}
       \verb{url}
       \verb https://science.nrao.edu/science/meetings/2014/filamentary-structure
-      \endverb
-    \endentry
-    \entry{bbc}{misc}{}
-      \name{author}{2}{}{%
-        {{uniquename=0,hash=e5001874eb5a8a6c44811db90031c075}{{Olive}}{O\bibinitperiod}{K.A.}{K\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=7a037201fffb4df2d86c73045341657c}{{Peacock}}{P\bibinitperiod}{J.A.}{J\bibinitperiod}{}{}{}{}}%
-      }
-      \list{publisher}{2}{%
-        {University of Minnesota}%
-        {University of Edinburgh}%
-      }
-      \strng{namehash}{ec455322de5617640dfe5a358ced9d90}
-      \strng{fullhash}{ec455322de5617640dfe5a358ced9d90}
-      \field{sortinit}{O}
-      \field{sortinithash}{7803d2715d5e795e70382b084ab8d00e}
-      \field{labelyear}{2011}
-      \field{labelmonth}{09}
-      \field{datelabelsource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{month}{09}
-      \field{title}{Big Bang cosmology}
-      \field{year}{2011}
-    \endentry
-    \entry{peebles}{article}{}
-      \name{author}{1}{}{%
-        {{uniquename=0,hash=2361e2e56f7b908a279910a5f81d9423}{{Peebles}}{P\bibinitperiod}{P.\bibnamedelimi J.\bibnamedelimi E.}{P\bibinitperiod\bibinitdelim J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      }
-      \strng{namehash}{2361e2e56f7b908a279910a5f81d9423}
-      \strng{fullhash}{2361e2e56f7b908a279910a5f81d9423}
-      \field{sortinit}{P}
-      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
-      \field{labelyear}{1968}
-      \field{labelmonth}{07}
-      \field{datelabelsource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{\apj}
-      \field{month}{07}
-      \field{title}{{Recombination of the Primeval Plasma}}
-      \field{volume}{153}
-      \field{year}{1968}
-      \field{pages}{1}
-      \range{pages}{1}
-      \verb{doi}
-      \verb 10.1086/149628
       \endverb
     \endentry
     \entry{lecture}{unpublished}{}
@@ -687,6 +668,23 @@
       \verb 10.1051/eas:0934004
       \endverb
     \endentry
+    \entry{pass}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=8f5a18c360480a3bf6fde5d55734f28c}{Service}{S\bibinitperiod}{SVO\bibnamedelimb Filter\bibnamedelima Profile}{S\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{8f5a18c360480a3bf6fde5d55734f28c}
+      \strng{fullhash}{8f5a18c360480a3bf6fde5d55734f28c}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelyear}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Online database comprising values and data for filter profiling}
+      \field{title}{Filer Profile Service: An experiment about filter standardization in the VO}
+      \verb{url}
+      \verb http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php?mode=browse&gname=Herschel&gname2=Pacs
+      \endverb
+    \endentry
     \entry{noise}{article}{}
       \name{author}{5}{}{%
         {{uniquename=0,hash=e95ee200ec4bd14b75394387d6de3507}{{Shetty}}{S\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
@@ -720,38 +718,6 @@
       \verb 0902.3477
       \endverb
       \keyw{dust,extinction,infrared: ISM,ISM: clouds,methods: miscellaneous,stars: formation}
-    \endentry
-    \entry{abundance}{article}{}
-      \name{author}{2}{}{%
-        {{uniquename=0,hash=b909b1915a4199e94d47dbe6dad5af49}{Suess}{S\bibinitperiod}{Hans\bibnamedelima E.}{H\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=a2952e6cfa3a360de9415bba63a3cc5e}{Urey}{U\bibinitperiod}{Harold\bibnamedelima C.}{H\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
-      }
-      \list{publisher}{1}{%
-        {American Physical Society}%
-      }
-      \strng{namehash}{ab953086b3341b95d41db6a2effc62de}
-      \strng{fullhash}{ab953086b3341b95d41db6a2effc62de}
-      \field{sortinit}{S}
-      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
-      \field{labelyear}{1956}
-      \field{labelmonth}{01}
-      \field{datelabelsource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issue}{1}
-      \field{journaltitle}{Rev. Mod. Phys.}
-      \field{month}{01}
-      \field{title}{Abundances of the Elements}
-      \field{volume}{28}
-      \field{year}{1956}
-      \field{pages}{53\bibrangedash 74}
-      \range{pages}{22}
-      \verb{doi}
-      \verb 10.1103/RevModPhys.28.53
-      \endverb
-      \verb{url}
-      \verb http://link.aps.org/doi/10.1103/RevModPhys.28.53
-      \endverb
     \endentry
   \endsortlist
 \endrefsection
