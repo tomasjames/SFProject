@@ -1,20 +1,20 @@
-[0] Config.pm:324> INFO - This is Biber 2.1
-[0] Config.pm:327> INFO - Logfile is 'report.blg'
-[80] biber-darwin:276> INFO - === Sat Apr 16, 2016, 13:31:51
-[80] Biber.pm:333> INFO - Reading 'report.bcf'
-[185] Biber.pm:645> INFO - Found 20 citekeys in bib section 0
-[287] Biber.pm:2977> INFO - Processing section 0
-[419] Biber.pm:3115> INFO - Looking for bibtex format file '../refs/refs.bib' for section 0
-[428] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
-[433] bibtex.pm:895> INFO - Found BibTeX data source '../refs/refs.bib'
-[531] Utils.pm:146> WARN - Datamodel: Entry 'herschel' (../refs/refs.bib): Invalid format 'March 7, 2014' of date field 'date' - ignoring
-[947] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[947] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[947] Biber.pm:2854> INFO - Sorting list 'nyt' of type 'entry' with scheme 'nyt' and locale 'en-US'
-[948] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
-[998] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'ascii'
-[1000] Utils.pm:146> WARN - The entry 'manual' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
-[1011] Utils.pm:146> WARN - The entry 'SPIRE' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
-[1013] Utils.pm:146> WARN - The entry 'HiFi' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
-[1015] bbl.pm:596> INFO - Output to report.bbl
-[1016] Biber.pm:106> INFO - WARNINGS: 4
+[0] Config.pm:327> INFO - This is Biber 2.2
+[0] Config.pm:330> INFO - Logfile is 'report.blg'
+[87] biber-darwin:286> INFO - === Sun Apr 17, 2016, 18:38:39
+[87] Biber.pm:334> INFO - Reading 'report.bcf'
+[229] Biber.pm:677> INFO - Found 20 citekeys in bib section 0
+[308] Biber.pm:3054> INFO - Processing section 0
+[396] Biber.pm:3193> INFO - Looking for bibtex format file '../refs/refs.bib' for section 0
+[411] bibtex.pm:1072> INFO - Decoding LaTeX character macros into UTF-8
+[419] bibtex.pm:935> INFO - Found BibTeX data source '../refs/refs.bib'
+[605] Utils.pm:147> WARN - Datamodel: Entry 'herschel' (../refs/refs.bib): Invalid format 'March 7, 2014' of date field 'date' - ignoring
+[1000] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1000] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1000] Biber.pm:2931> INFO - Sorting list 'nyt' of type 'entry' with scheme 'nyt' and locale 'en-US'
+[1000] Biber.pm:2935> INFO - No sort tailoring available for locale 'en-US'
+[1068] bbl.pm:505> INFO - Writing 'report.bbl' with encoding 'ascii'
+[1072] Utils.pm:147> WARN - The entry 'manual' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[1092] Utils.pm:147> WARN - The entry 'SPIRE' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[1095] Utils.pm:147> WARN - The entry 'HiFi' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[1098] bbl.pm:596> INFO - Output to report.bbl
+[1098] Biber.pm:107> INFO - WARNINGS: 4

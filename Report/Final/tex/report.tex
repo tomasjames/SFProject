@@ -172,29 +172,37 @@ Interestingly the onset of collapse is also the onset of gravitational binding. 
 \section{Dust emission}
 Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The sources of flux embedded deep within the cloud radiate across a wide range of wavelengths, however the dust surrounding the source has the effect of absorbing and then re-radiating photons at a different wavelength. As such, these sources of flux (be they prestellar cores, protostars or pre-main sequence stars) are occluded by the dust enveloping them.
 
-Dust radiates as a modified black body approximated by Equation \ref{eq:mbb} \parencite{noise}.
+According to \textcite{noise}, dust radiates as a modified black body in the far infra-red regime (i.e. from $\lambda=\SI{60}{\micro\meter}$) that can approximated using Equation \ref{eq:mbb}.
 
 \begin{equation} \label{eq:mbb}
   S_{\nu} = N \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
 \end{equation}
 
-In Equation \ref{eq:mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index and $B_{\nu}(T)$ is the frequency dependent Planck function. In terms of intensity:
+In Equation \ref{eq:mbb} $S_{\nu}$ is the flux density, $N$ is the column density, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index (for siliciate and carbonaceous grains, \textcite{beta} approximates $\beta \sim 2$) and $B_{\nu}(T)$ is the frequency dependent Planck function. An assumption made here, as stated by \textcite{kelly}, that the dust is optically thin such that
+$\tau_{\nu} = N\kappa_{\nu} \ll 1$. In terms of intensity:
 
 \begin{equation} \label{eq:mbb-int}
   I_{\nu} = \frac{N}{R_{dust-gas}} \mu m_{p} \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
 \end{equation}
 
-All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mbb}, with the addition of $R_{dust-gas}$. $R_{dust-gas}$ is the dust-to-gas ratio, here approximated as being $\frac{1}{100}$. Throughout this project, dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
+All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mbb}, with the addition of $R_{dust-gas}$. $R_{dust-gas}$ is the dust-to-gas ratio, here approximated as being $100$. Throughout this project, dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
 
-Dust properties such as the spectral index $\beta$ and temperature $T$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. These parameters therefore effect the ability to detect radiation from within a molecular cloud.
+Dust properties such as the spectral index $\beta$ and temperature $T$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. These parameters therefore effect the ability to detect radiation from within a molecular cloud. These properties, however, are experimentally difficult to measure and \textcite{kelly} states that most observational attempts to determine $T$ and $\beta$ reply on a $\chi^{2}$ SED fitting routine.
+
+\subsection{The $\beta$-$T$ degeneracy}
+As Equation \ref{eq:mbb-int} shows, dust does not radiate as a perfect blackbody. This is accounted for by multiplying the Planck function (i.e. the function that describes the a body that radiates as a perfect blackbody) by the dust opacity term $\kappa = \kappa_{0}(\frac{\nu}{\nu_{0}})^{\beta}$. Two key variables here are the dust spectral index $\beta$ and the dust temperature $T$. These two properties suffer from a degeneracy \parencite{degen} such that any $\chi^{2}$ test applied to determining the values of $\beta$ and $T$ may understimate one parameter whilst overestimating another. 
+
+
 
 \section{Herchel Space Observatory}
-The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $\sim \SI{55}{\micro\meter}$ to $\sim \SI{672}{\micro\meter}$. Both PACS and SPIRE were capable of being run in ``Parallel mode'' - effective simultaneous operation according to \textcite{herschel}. SPIRE itself had an photometry wavelength range $\sim \SI{200}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$ whilst PACS was sensitive to a photometry wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{210}{\micro\meter}$. This therefore produces effectively continuous coverage of the wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$.\footnote{Further coverage is achieved down to $\SI{55}{\micro\meter}$ using HiFi however this is only achievable for spectroscopic applications.}
+The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $\sim \SI{55}{\micro\meter}$ to $\sim \SI{672}{\micro\meter}$. Both PACS and SPIRE were capable of being run in ``Parallel mode'' - effective simultaneous operation according to \textcite{herschel}. SPIRE itself had an photometry wavelength range
+$\sim \SI{200}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$ whilst PACS was sensitive to a photometry wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{210}{\micro\meter}$. This therefore produces effectively continuous coverage of the wavelength range $\sim \SI{60}{\micro\meter}$ to $\sim \SI{670}{\micro\meter}$.
+\footnote{Further coverage is achieved down to $\SI{55}{\micro\meter}$ using HiFi however this is only achievable for spectroscopic applications.}
 
 Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passbands for each of the filters within SPIRE and PACS.
 
-\begin{table}h
-  \parbox{.45\linewidth}{
+\begin{table}[h]
+  \parbox{.42\linewidth}{
   \centering
   \begin{tabular}{ll}
   Filter & Passband ($\mu m$) \\
@@ -205,7 +213,7 @@ Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passband
   \caption{The passbands (for extended source) for the SPIRE instrument \parencite{pass}.}
   \label{table:SPIRE-pass}
   }
-  \parbox{.45\linewidth}{
+  \parbox{.42\linewidth}{
   \centering
   \begin{tabular}{ll}
   Filter & Passband ($\mu m$) \\
@@ -240,13 +248,13 @@ As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined inp
 
 As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D have extension \texttt{.inp} whilst all output files have extension \texttt{.out}. Any intermediate files, such as those directly calculated by RADMC-3D, have extension \texttt{.dat}. \textit{Most} input files' initial lines - the header information - contain quantitative information regarding the number of pixels/cells in the file, the pixel/cell width along with other identifiers that inform RADMC-3D whether to look for binary files, the number of dust species being considered and so on.
 
-\texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}. They essentially \textquotesingle insert \textquotesingle a value of a physical quantity into each cell, therefore producing another parameter space. This structure is illustrated in Figure \ref{fig:amr_grid_structure}.
-
 \begin{wrapfigure}{r}{0.5\textwidth}
   \centering
   \includegraphics[scale=0.3]{../img/amr_grid_structure}
   \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}.}
 \end{wrapfigure}\label{fig:amr_grid_structure}
+
+\texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}. They essentially \textquotesingle insert \textquotesingle a value of a physical quantity into each cell, therefore producing another parameter space. This structure is illustrated in Figure \ref{fig:amr_grid_structure}.
 
 The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}. For example,
 
@@ -307,6 +315,7 @@ No telescope or observatory can produce perfect images or data; components withi
 
 Naturally this is an idealised assumption; not all photons that fall on a detector are detected. Detectors have a given responsivity that is a measure of how many of the incident photons do not contribute to the signal. Furthermore, filters are essential to telescope operation as they discriminate wanted and unwanted frequencies to ensure only frequencies within the passband of interest are transmitted to the detector. This introduces a large inefficiency in that not all incident photons are transmitted owing to reflection off of the filter itself, as well as absorption within the filter. This is frequency dependent and thus produces a ``transmission curve''.
 
+\subsection{Transmission}
 This transmission curve varies depending on the filter under consideration and therefore acts as a measure of characterisation. As SPIRE`s PSW, PMW and PLW bands along with PACS` Blue, Green and Red filers were considered for this project their transmission data was required. This data was downloaded from \textcite{pass} and subsequently plotted using Python. Figure \ref{fig:transmission} shows the transmission curves as a function of frequency for each band.
 
 \begin{figure}
@@ -341,7 +350,10 @@ This transmission curve varies depending on the filter under consideration and t
 
 \end{figure} \label{fig:transmission}
 
+In order to begin accounting for the transmission effects it was necessary to multiply each datapoint at a given frequency/wavelength by the transmission coefficient at that frequency/wavelength. However the data downloaded from \textcite{pass} did not have linearly spaced intervals, resulting in the transmission coefficients and freqencies supplied not matching with those used in the simulation (specifically the data in \texttt{camera\_wavelength\_micron.inp} file). To account for this, Python's \texttt{interp1d} function was used. This function would construct linearly spaced intermediate points between the existing datapoints supplied using a `cubic` routine\footnote{Other routines to interpolate were available, however the cubic routine provided accurate results so alternatives were not exploreed.}. The result was a reconstruction of the original data with a user-defined number of points between upper and lower bounds. By choosing these upper and lower bounds to match the upper and lower bounds of \texttt{camera\_wavelength\_micron.inp} (with the same number of wavelength points) the transmission curve could be reconstructed to match the temporal data supplied to the simulation. Figure \ref{fig:transmission} illustrates this. The red $+$ datapoints indicate the original data supplied from \textcite{pass}, whilst the blue $--$ datapoints indicate the reconstructed, interpolated data. The interpolation is handled by \texttt{datafilegen.py} at the input file creation phase.
 
+\subsubsection{Composite imaging}
+In reality images are not taken at one discrete wavelength. Instead, images are a composite of wavelengths across a broad range defined by the telescope's filter. To illustrate, consider the SPIRE PSW band. As Table \ref{table:SPIRE-pass} illustrates, the PSW band is sensitive to wavelengths in the range $\SI{199.4540}{\micro\meter} --	\SI{298.5657}{\micrometer}$. This means that an image using the PSW band is actually a composite image comprising a weighted average of the wavelengths imaged across.
 
 \section{Appendix}
 All code was version controlled using GitHub and stored in a private repository throughout development. The repository containing all code can be found at \href{http://www.github.com/tomasjames/ZiggyStarDust}{http://www.github.com/tomasjames/ZiggyStarDust}.
