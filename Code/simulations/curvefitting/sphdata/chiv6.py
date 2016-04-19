@@ -205,11 +205,12 @@ for i in range(0,len(xpix)*len(ypix)):
     col_full.append(col)
     T_full.append(col_T)
 
-N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+#N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
+N = np.linspace(18, 26, 40)
 
 # T is independent of the column density in determination so this remains unchanged
-T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
-#T = np.linspace(4,20,40)
+#T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
+T = np.linspace(4,20,40)
 
 datafeed_store.close()
 
@@ -225,7 +226,7 @@ print 'Now determining the modified blackbody curves.\n'
 chi_min_index_all, chi_min_blackbody_all = [], []
 
 # Save this to a file for storage
-chi_store = open('chi.txt', 'w')
+chi_store = open('chi_coarse.txt', 'w')
 cs = csv.writer(chi_store, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
@@ -335,10 +336,149 @@ for h in range(0,imag.nx*imag.ny):
         grid(True,which='both')
         legend(loc='best')
         title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
-        savefig('averages.png',dpi=300)
+        savefig('averages_coarse.png',dpi=300)
         close()
 
 chi_store.close()
+
+###################### Repeat for a second time #######################
+
+# Reopen the chi-squared storage
+chi_coarse = np.loadtxt('chi_coarse.txt', skiprows=1)
+
+# Determine the minimum and maximum column densities and temperatures
+min_N_loc, max_N_loc = np.where(chi_coarse[:,1] == chi_coarse[:,1].min())[0][0], np.where(chi_coarse[:,1] == chi_coarse[:,1].max())[0][0]
+min_T_loc, max_T_loc = np.where(chi_coarse[:,2] == chi_coarse[:,2].min())[0][0], np.where(chi_coarse[:,2] == chi_coarse[:,2].max())[0][0]
+
+min_N, max_N = chi_coarse[:,1][min_N_loc], chi_coarse[:,1][max_N_loc]
+min_T, max_T = chi_coarse[:,2][min_T_loc], chi_coarse[:,2][max_T_loc]
+
+print 'Now determining the (new) modified blackbody curves.\n'
+
+# Define the new N and T
+N = np.linspace(np.log10(min_N-min_N/2), np.log10(max_N+min_N/2), 40)
+T = np.linspace(min_T-min_T/2, max_T+min_T/2, 40)
+
+print 'I am now considering N from', min(N), 'to', max(N), 'and T from'
+print min(T), 'to', max(T), '.\n'
+
+chi_min_index_all, chi_min_blackbody_all = [], []
+
+# Save this to a file for storage
+chi_fine = open('chi_fine.txt', 'w')
+cs = csv.writer(chi_fine, delimiter=' ')
+
+# Save a line to allow better understanding of the columns
+cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+cs.writerow(cs_towrite)
+
+n = random.randint(0,imag.nx*imag.ny)
+
+for h in range(0,imag.nx*imag.ny):
+
+    # Loop through each column density and determine modified black body curve
+    mod,chivals,N_index,T_index = [],[],[],[]
+
+    # Loop through both N and T to determine the blackbody
+    for i in range(0,len(N)):
+        for j in range(0,len(T)):
+            blackbody = mbb(10**N[i],dust_mass,opacity,v,T=T[j])
+
+            # Append the value of the given blackbody to a list for storage
+            mod.append(blackbody)
+
+            # Append the given values of N and T
+            N_index.append(10**N[i])
+            T_index.append(T[j])
+
+            #print 'N=',10**N[i],'and T=',T[i]
+
+            # Define lists to store band fluxes
+            to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
+
+            # Find the flux at the index determined earlier
+            to_fit_psw = blackbody[psw_index[0]]
+            to_fit_pmw = blackbody[pmw_index[0]]
+            to_fit_plw = blackbody[plw_index[0]]
+            to_fit_blue = blackbody[blue_index[0]]
+            to_fit_green = blackbody[green_index[0]]
+            to_fit_red = blackbody[red_index[0]]
+
+            # Put the fitting fluxes into an array
+            to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+            #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+
+            # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
+            points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+            points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
+
+            # Append the chi squared value
+            chisquared = chi(to_fit,points,sigma=points_error)
+
+            if chisquared == np.inf:
+                chivals.append(np.nan)
+            else:
+                chivals.append(chisquared)
+            #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
+
+            #print str('Found the chi-squared landscape. Moving to the next values...\n')
+
+    if h == imag.nx*imag.ny/10:
+        print '\r[=>         ] 10%'
+    elif h == 2*(imag.nx*imag.ny)/10:
+        print '\r[==>        ] 20%'
+    elif h == 3*(imag.nx*imag.ny)/10:
+        print '\r[===>       ] 30%'
+    elif h == 4*(imag.nx*imag.ny)/10:
+        print '\r[====>      ] 40%'
+    elif h == 5*(imag.nx*imag.ny)/10:
+        print '\r[=====>     ] 50%'
+    elif h == 6*(imag.nx*imag.ny)/10:
+        print '\r[======>    ] 60%'
+    elif h == 7*(imag.nx*imag.ny)/10:
+        print '\r[=======>   ] 70%'
+    elif h == 8*(imag.nx*imag.ny)/10:
+        print '\r[========>  ] 80%'
+    elif h == 9*(imag.nx*imag.ny)/10:
+        print '\r[=========> ] 90%'
+    elif h == (imag.nx*imag.ny)-1:
+        print '\r[==========>] 100%'
+
+    # Determine the chi squared minimum
+    chi_min_index = chivals.index(min(chivals))
+    chi_min_blackbody = mod[chi_min_index]
+
+    # Append this value to a list to store the values
+    chi_min_index_all.append(chi_min_index)
+    chi_min_blackbody_all.append(chi_min_blackbody)
+
+    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+
+    # Write to file
+    cs.writerow(cs_towrite)
+    #print 'Writing row to datafile...\n'
+
+    if h == n:
+    # Plot the data
+        figure(1)
+        errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
+        errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
+        errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
+        errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bo',label='PACS: Blue')
+        errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='go',label='PACS: Green')
+        errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='ro',label='PACS: Red')
+        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
+        xlabel(r'$\nu \/(Hz)$')
+        ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+        xscale("log", nonposx='clip')
+        yscale("log", nonposx='clip')
+        grid(True,which='both')
+        legend(loc='best')
+        title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
+        savefig('averages_fine.png',dpi=300)
+        close()
+
+chi_fine.close()
 
 '''
 # Plot the data
