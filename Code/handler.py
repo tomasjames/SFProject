@@ -37,7 +37,7 @@ data_type = input('Are you analysing ideal simulation (\'sim\') data, filament s
 print '######################################################################\n'
 
 if data_type == 'sim':
-    '''
+
     # Run through the files
     for suffix in band:
 
@@ -63,7 +63,7 @@ if data_type == 'sim':
         os.chdir('../../../../')
 
         # Code will now go back to the top of the loop and execute over the next band
-    '''
+    
     ############################# Run the Chi-squared #############################
 
     print '#######################################################################'

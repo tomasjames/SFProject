@@ -68,6 +68,8 @@ for file in glob.glob('*.fits'):
     #ax13 = subplot2grid((3, 3), (1, 0), colspan=2, rowspan=2)
     #ax14 = subplot2grid((3, 3), (1, 2), rowspan=2)
 
+    leaves = []
+
     # Find the structure within the data
     for i in range(0,len(d)):
         struct = d[i]
@@ -82,9 +84,14 @@ for file in glob.glob('*.fits'):
 
         # Show contour for ``min_value``
         p.plot_contour(ax1, color='black')
+        p.colorbar()
 
-        # Highlight two branches
-        p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
+        # Determine the type of structure
+        if struct.is_leaf:
+            leaves.append(struct)
+
+            # Highlight two branches
+            p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
 
     # Plot the entire tree in black
     p.plot_tree(ax2, color='black')

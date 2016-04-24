@@ -30,10 +30,10 @@ execfile('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/data
 
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
-radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
+#radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
+#radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
 
 ########################### Run Monte-Carlo simulation ########################
 
@@ -45,10 +45,10 @@ os.system('radmc3d image loadlambda')
 
 # Define wavelength ranges of spire to plot (PSW, PMW and PLW)
 #spire = [[196.5351,298.1259],[277.3117,423.4707],[386.6218,679.3126]]
-pmw_ext = [281.6949,424.7548]
+#pmw_ext = [281.6949,424.7548]
 
 # Plot image for first SPIRE wavelength band (PSW)
-radmc3dPy.image.makeImage(npix=100000, sizeau=20000, incl=90., lambdarange=pmw_ext, nlam=60)
+#radmc3dPy.image.makeImage(npix=100000, sizeau=20000, incl=90., lambdarange=pmw_ext, nlam=60)
 
 ########################### Account for transmission ###########################
 
