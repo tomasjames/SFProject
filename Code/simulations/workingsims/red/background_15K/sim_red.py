@@ -44,16 +44,16 @@ execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 ############################## Set up initial model ############################
 # Writes the default parameter file for the 2d sphere model
-radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
+#radmc3dPy.analyze.writeDefaultParfile('3d_cloud')
 
 # Setup the dust module with the ascii input files
-radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
+#radmc3dPy.setup.problemSetupDust('3d_cloud', binary=False, nx=128, ny=128, nz=128, xbound=[-15000*au,15000*au], ybound=[-15000*au,15000*au], zbound=[-15000*au,15000*au], nphot=2000000.)
 
 ########################### Run Monte-Carlo simulation ########################
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image npix 128 loadlambda sizeau 14200')
+os.system('radmc3d image npix 128 loadlambda sizeau 14344')
 
 ############################# Plot the resulting data ##########################
 
@@ -137,12 +137,14 @@ f.close()
 
 ########################## Plot the resulting data #######################
 
-# Initialise the image
-imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
+p = input('Shall the image be plotted?')
 
-# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+if p == 'yes':
+    # Initialise the image
+    imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
+    # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'

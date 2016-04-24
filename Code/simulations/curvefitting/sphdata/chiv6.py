@@ -206,11 +206,15 @@ for i in range(0,len(xpix)*len(ypix)):
     T_full.append(col_T)
 
 #N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
-N = np.linspace(18, 26, 40)
+N = np.linspace(20, 24, 40)
 
 # T is independent of the column density in determination so this remains unchanged
 #T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
-T = np.linspace(4,20,40)
+#T = np.logspace(np.log10(5),np.log10(15),80,base=10)
+T = np.linspace(5, 15, 40)
+
+# Create 2 2D arrays of the data to track the progress of the loop
+T_mesh, N_mesh = np.meshgrid(T,N)
 
 datafeed_store.close()
 
@@ -220,7 +224,7 @@ print 'Column densities have been evaluated and have been saved to the file data
 #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
 
 ###################### Determine the modified black body #######################
-
+'''
 print 'Now determining the modified blackbody curves.\n'
 
 chi_min_index_all, chi_min_blackbody_all = [], []
@@ -230,10 +234,10 @@ chi_store = open('chi_coarse.txt', 'w')
 cs = csv.writer(chi_store, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
-cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared', 'One-Sigma N', 'One-Sigma T', 'Two-Sigma N', 'Two-Sigma T', 'Three-Sigma N', 'Three-Sigma T']
 cs.writerow(cs_towrite)
 
-n = random.randint(0,imag.nx*imag.ny)
+n = random.sample(range(0,imag.nx*imag.ny), 4)
 
 for h in range(0,imag.nx*imag.ny):
 
@@ -309,17 +313,48 @@ for h in range(0,imag.nx*imag.ny):
     chi_min_index = chivals.index(min(chivals))
     chi_min_blackbody = mod[chi_min_index]
 
+    ############## Error analysis begins here #############
+
+    # Reshape the chivals to fit the format of N_mesh and T_mesh
+    chivals_mesh = np.reshape(chivals, (len(N),len(T)))
+
+    # Determine error in the value by finding location of points that lie within 3 sigma
+    # Start by finding the location in the mesh of the minimum chi-squared value
+    val = zip(*np.where(chivals_mesh == np.amin(chivals_mesh)))
+
+    # According to Data Analysis notes 2D distribution has the following values of delta-chi-squared
+    delta_1 = 2.3 #(one_sigma)
+    delta_2 = 6.17 #(two_sigma)
+    delta_3 = 11.8 #(three_sigma)
+
+    # Find the locations of the points within these bounds
+    one_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_1) & (chivals_mesh <= chivals_mesh[val[0]]+delta_1)))
+    two_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_2) & (chivals_mesh <= chivals_mesh[val[0]]+delta_2)))
+    three_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_3) & (chivals_mesh <= chivals_mesh[val[0]]+delta_3)))
+
+    T_temp, N_temp = [], []
+    T_error, N_error = [], []
+
+    # Pull the values of N and T at these points
+    for b in [one_sigma, two_sigma, three_sigma]:
+        for a in b:
+            T_temp.append(T_mesh[a])
+            N_temp.append(10**N_mesh[a])
+
+        T_error.append(max(T_temp) - min(T_temp))
+        N_error.append(max(N_temp) - min(N_temp))
+
     # Append this value to a list to store the values
     chi_min_index_all.append(chi_min_index)
     chi_min_blackbody_all.append(chi_min_blackbody)
 
-    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals), N_error[0], T_error[0], N_error[1], T_error[1], N_error[2], T_error[2]]
 
     # Write to file
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if h == n:
+    if h == 4000:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
@@ -328,7 +363,7 @@ for h in range(0,imag.nx*imag.ny):
         errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bo',label='PACS: Blue')
         errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='go',label='PACS: Green')
         errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='ro',label='PACS: Red')
-        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
+        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[2]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[2]/2)+str('$\/K$'))
         xlabel(r'$\nu \/(Hz)$')
         ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
         xscale("log", nonposx='clip')
@@ -339,8 +374,21 @@ for h in range(0,imag.nx*imag.ny):
         savefig('averages_coarse.png',dpi=300)
         close()
 
-chi_store.close()
+    # Also plot probability contour
+        figure(2)
+        #plot(10**N_mesh,T_mesh, 'b.')
+        plot(N_index[chi_min_index], T_index[chi_min_index], 'r.', label=str(r'$\chi^{2}$ Minimum=')+str(min(chivals)))
+        CS = contour(10**N_mesh,T_mesh,chivals_mesh)
+        clabel(CS)
+        xlabel(r'$N\/(g\/cm^{-3})$')
+        ylabel(r'$T\/(K)$')
+        title(r'$\chi^{2} Contours$')
+        legend(loc='best')
+        savefig('contours.png',dpi=300)
+        close()
 
+chi_store.close()
+'''
 ###################### Repeat for a second time #######################
 
 # Reopen the chi-squared storage
@@ -356,8 +404,11 @@ min_T, max_T = chi_coarse[:,2][min_T_loc], chi_coarse[:,2][max_T_loc]
 print 'Now determining the (new) modified blackbody curves.\n'
 
 # Define the new N and T
-N = np.linspace(np.log10(min_N-min_N/2), np.log10(max_N+min_N/2), 40)
-T = np.linspace(min_T-min_T/2, max_T+min_T/2, 40)
+N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 80)
+T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
+
+# Create 2 2D arrays of the data to track the progress of the loop
+T_mesh, N_mesh = np.meshgrid(T,N)
 
 print 'I am now considering N from', min(N), 'to', max(N), 'and T from'
 print min(T), 'to', max(T), '.\n'
@@ -369,7 +420,7 @@ chi_fine = open('chi_fine.txt', 'w')
 cs = csv.writer(chi_fine, delimiter=' ')
 
 # Save a line to allow better understanding of the columns
-cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared']
+cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared', 'One-Sigma N', 'One-Sigma T', 'Two-Sigma N', 'Two-Sigma T', 'Three-Sigma N', 'Three-Sigma T']
 cs.writerow(cs_towrite)
 
 n = random.randint(0,imag.nx*imag.ny)
@@ -452,13 +503,48 @@ for h in range(0,imag.nx*imag.ny):
     chi_min_index_all.append(chi_min_index)
     chi_min_blackbody_all.append(chi_min_blackbody)
 
-    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals)]
+    ############## Error analysis begins here #############
+
+    # Reshape the chivals to fit the format of N_mesh and T_mesh
+    chivals_mesh = np.reshape(chivals, (len(N),len(T)))
+
+    # Determine error in the value by finding location of points that lie within 3 sigma
+    # Start by finding the location in the mesh of the minimum chi-squared value
+    val = zip(*np.where(chivals_mesh == np.amin(chivals_mesh)))
+
+    # According to Data Analysis notes 2D distribution has the following values of delta-chi-squared
+    delta_1 = 2.3 #(one_sigma)
+    delta_2 = 6.17 #(two_sigma)
+    delta_3 = 11.8 #(three_sigma)
+
+    # Find the locations of the points within these bounds
+    one_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_1) & (chivals_mesh <= chivals_mesh[val[0]]+delta_1)))
+    two_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_2) & (chivals_mesh <= chivals_mesh[val[0]]+delta_2)))
+    three_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_3) & (chivals_mesh <= chivals_mesh[val[0]]+delta_3)))
+
+    T_temp, N_temp = [], []
+    T_error, N_error = [], []
+
+    # Pull the values of N and T at these points
+    for d in [one_sigma, two_sigma, three_sigma]:
+        for c in d:
+            T_temp.append(T_mesh[c])
+            N_temp.append(10**N_mesh[c])
+
+        T_error.append(max(T_temp) - min(T_temp))
+        N_error.append(max(N_temp) - min(N_temp))
+
+    # Append this value to a list to store the values
+    chi_min_index_all.append(chi_min_index)
+    chi_min_blackbody_all.append(chi_min_blackbody)
+
+    cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals), N_error[0], T_error[0], N_error[1], T_error[1], N_error[2], T_error[2]]
 
     # Write to file
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if h == n:
+    if h == 4000:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
@@ -467,7 +553,7 @@ for h in range(0,imag.nx*imag.ny):
         errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bo',label='PACS: Blue')
         errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='go',label='PACS: Green')
         errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='ro',label='PACS: Red')
-        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('$K$'))
+        plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[2]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[2]/2)+str('$\/K$'))
         xlabel(r'$\nu \/(Hz)$')
         ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
         xscale("log", nonposx='clip')
@@ -475,7 +561,20 @@ for h in range(0,imag.nx*imag.ny):
         grid(True,which='both')
         legend(loc='best')
         title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
-        savefig('averages_fine.png',dpi=300)
+        savefig('averages_coarse.png',dpi=300)
+        close()
+
+    # Also plot probability contour
+        figure(2)
+        #plot(10**N_mesh,T_mesh, 'b.')
+        plot(N_index[chi_min_index], T_index[chi_min_index], 'r.', label=str(r'$\chi^{2}$ Minimum=')+str(min(chivals)))
+        CS = contour(10**N_mesh,T_mesh,chivals_mesh)
+        clabel(CS)
+        xlabel(r'$N\/(g\/cm^{-3})$')
+        ylabel(r'$T\/(K)$')
+        title(r'$\chi^{2} Contours$')
+        legend(loc='best')
+        savefig('contours_fine.png',dpi=300)
         close()
 
 chi_fine.close()

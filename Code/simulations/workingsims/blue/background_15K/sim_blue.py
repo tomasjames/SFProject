@@ -53,7 +53,7 @@ execfile('../../../../datafiles/vanilla/datafilegen.py')
 
 # Interface with operating system to run the Monte-Carlo sim (and allowing the
 # code to use wavelength_micron.inp)
-os.system('radmc3d image npix 128 loadlambda sizeau 14200')
+os.system('radmc3d image npix 128 loadlambda sizeau 14344')
 
 ############################# Plot the resulting data ##########################
 

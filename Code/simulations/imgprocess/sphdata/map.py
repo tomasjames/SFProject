@@ -50,36 +50,36 @@ T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
 # Plot the data along with a PDF
 figure()
-subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
-imshow(np.log10(N_chi_inp),origin='lower')
+subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+imshow(np.log10(N_chi_inp),origin='lower',vmin=np.log10(min(chi_N)),vmax=np.log10(max(inp_N)))
 colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $N$\n')
 
-subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(np.log10(N_chi_inp),bins=50,normed=True)
+subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+hist(np.log10(N_chi_inp),bins=5,normed=True)
 title('PDF of $\chi^{2}$ Recovered $N$')
 xlabel('$log_{10}N\/(g\/cm^{-3})$')
-ylabel('Frequency')
+ylabel('Normalised \n Frequency')
 
 savefig('map_N_chi.png', dpi=300)
 close()
 
 # Plot the data along with a PDF
 figure()
-subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
-imshow(T_chi_inp,origin='lower')
-colorbar(label='$T\/(K)$')
+subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+imshow(T_chi_inp,origin='lower',vmin=min(inp_T),vmax=max(inp_T))
+colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $T$\n')
 
-subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(T_chi_inp,bins=50,normed=True)
+subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+hist(T_chi_inp,bins=5,normed=True)
 title('PDF of $\chi^{2}$ Recovered $T$')
 xlabel('$T\/(K)$')
-ylabel('Frequency')
+ylabel('Normalised \n Frequency')
 
 savefig('map_T_chi.png', dpi=300)
 close()
@@ -87,18 +87,18 @@ close()
 # Plot the data along with a PDF
 figure()
 N_data_inp[N_data_inp == 0] = np.nan
-subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
-imshow(np.log10(N_data_inp),origin='lower')
+subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+imshow(np.log10(N_data_inp),origin='lower',vmin=np.log10(min(chi_N)),vmax=np.log10(max(inp_N)))
 colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the Data Input $N$\n')
 
-subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(np.log10(N_data_inp),bins=50,normed=True)
+subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+hist(np.log10(N_data_inp),bins=5,normed=True)
 title('PDF of Data Input $N$')
 xlabel('$log_{10}N\/(g\/cm^{-3})$')
-ylabel('Frequency')
+ylabel('Normalised \n Frequency')
 
 savefig('map_N_data.png', dpi=300)
 close()
@@ -106,18 +106,18 @@ close()
 # Plot the data along with a PDF
 figure()
 T_data_inp[T_data_inp == 0] = np.nan
-subplot2grid((6,6), (0,0), colspan=4,rowspan=4)
-imshow(T_data_inp,origin='lower')
-colorbar(label='$T\/(K)$')
+subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+imshow(T_data_inp,origin='lower',vmin=min(inp_T),vmax=max(inp_T))
+colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the Data Input $T$\n')
 
-subplot2grid((6,6), (5,0), colspan=4,rowspan=1)
-hist(T_data_inp,bins=50,normed=True)
+subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+hist(T_data_inp,bins=5,normed=True)
 title('PDF of Data Input $T$')
 xlabel('$T\/(K)$')
-ylabel('Frequency')
+ylabel('Normalised \n Frequency')
 
 savefig('map_T_data.png', dpi=300)
 close()
@@ -142,3 +142,13 @@ for i in range(0,len(combined)):
 
     # Write the data to a fits file with name of the data array
     hdul.writeto(str(combined_names[i])+str('.fits'))
+
+################################# Plot contours ################################
+
+figure(1)
+plot(chi_N, chi_T, 'g.', label=r'$\chi^{2}$ Recovered Values')
+xlabel(r'$N_{\chi^{2}}$')
+ylabel(r'$T_{\chi^{2}}$')
+title(r'A Plot Showing the $\chi^{2}$ Recovered Values of $T$ and $N$')
+legend(loc='best')
+savefig('contours.png')
