@@ -67,6 +67,12 @@ psw_ext = [199.4540,298.5657]
 # Plot image for first SPIRE wavelength band (PSW)
 #radmc3dPy.image.makeImage(npix=100000, sizeau=15000, incl=90., lambdarange=psw_ext, nlam=60)
 
+# Initialise the image
+imag = radmc3dPy.image.readImage('image.out', binary=False)
+
+# Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
+radmc3dPy.image.plotImage(imag, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+
 ########################### Account for transmission ###########################
 
 # Initialise the data from the ray trace

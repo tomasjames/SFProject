@@ -19,6 +19,25 @@
 
 \refsection{0}
   \sortlist{nyt}{nyt}
+    \entry{dendrogramimg}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=df9d4f879be841347a1a716fe117fe89}{{astrodendro}}{a\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \strng{namehash}{df9d4f879be841347a1a716fe117fe89}
+      \strng{fullhash}{df9d4f879be841347a1a716fe117fe89}
+      \field{sortinit}{a}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelyear}{2016}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{[Online; accessed April 21, 2016]}
+      \field{title}{Astronomical Dendrograms in Python}
+      \field{year}{2016}
+      \verb{url}
+      \verb https://dendrograms.readthedocs.org/en/latest/_images/schematic_structure_1.png
+      \endverb
+    \endentry
     \entry{b&w}{article}{}
       \name{author}{2}{}{%
         {{uniquename=0,hash=65fffaea2c39b75ccd7b9e3f44577be9}{{Bjorkman}}{B\bibinitperiod}{J.\bibnamedelimi E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -95,6 +114,32 @@
       \verb 1101.3414
       \endverb
       \keyw{hydrodynamics,stars: formation,ISM: clouds,ISM: kinematics and dynamics}
+    \endentry
+    \entry{beta}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=59ead412b098f923830e5050427832de}{{Draine}}{D\bibinitperiod}{B.\bibnamedelimi T.}{B\bibinitperiod\bibinitdelim T\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=7c87b550ef99004eabf2b0d0c7d4dfb9}{{Lee}}{L\bibinitperiod}{H.\bibnamedelimi M.}{H\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{7f84209229e2b198e39b491919f0ca16}
+      \strng{fullhash}{7f84209229e2b198e39b491919f0ca16}
+      \field{sortinit}{D}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1984}
+      \field{labelmonth}{10}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{\apj}
+      \field{month}{10}
+      \field{title}{{Optical properties of interstellar graphite and silicate grains}}
+      \field{volume}{285}
+      \field{year}{1984}
+      \field{pages}{89\bibrangedash 108}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1086/162480
+      \endverb
+      \keyw{Granular Materials,Graphite,Interstellar Matter,Optical Properties,Silicates,Absorption Cross Sections,Infrared Astronomy,Opacity,Particle Interactions,Scattering Cross Sections}
     \endentry
     \entry{RADMC-3D}{misc}{}
       \name{author}{8}{uniquelist=8}{%
@@ -502,6 +547,70 @@
       \field{version}{0.25}
       \keyw{Software}
     \endentry
+    \entry{degen}{article}{}
+      \name{author}{4}{}{%
+        {{uniquename=0,hash=9d67b76b8926ca646a54f924bc45208b}{{Keene}}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=fca70a21473f0f6c743e15fb226eb65f}{{Hildebrand}}{H\bibinitperiod}{R.\bibnamedelimi H.}{R\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=9d4dc4f27a8cc509a1b7a507b79cadeb}{{Whitcomb}}{W\bibinitperiod}{S.\bibnamedelimi E.}{S\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=4afaeb013a6cc4759b2658b0b718baa4}{{Harper}}{H\bibinitperiod}{D.\bibnamedelimi A.}{D\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{fb5cf1169f8750549f0678c6b1b22965}
+      \strng{fullhash}{e9caf384b2f1e27de88e1578f364b4de}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{1980}
+      \field{labelmonth}{08}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{\apjl}
+      \field{month}{08}
+      \field{title}{{Far-infrared observations of the globule B335}}
+      \field{volume}{240}
+      \field{year}{1980}
+      \field{pages}{L43\bibrangedash L46}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1086/183320
+      \endverb
+      \keyw{Cosmic Dust,Far Infrared Radiation,Infrared Astronomy,Interstellar Matter,Submillimeter Waves,Interstellar Radiation,Radiant Flux Density}
+    \endentry
+    \entry{kelly}{article}{}
+      \name{author}{6}{}{%
+        {{uniquename=0,hash=1779be5c40f03a4aca665792e0b0a0ee}{{Kelly}}{K\bibinitperiod}{B.\bibnamedelimi C.}{B\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=e95ee200ec4bd14b75394387d6de3507}{{Shetty}}{S\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=075bd8ad006e44cb7b75467fdc50ebdf}{{Stutz}}{S\bibinitperiod}{A.\bibnamedelimi M.}{A\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=75ee37727323e7dbb5e701ab47991819}{{Kauffmann}}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=67a93fce6b42b7da2f599c583e9128c9}{{Goodman}}{G\bibinitperiod}{A.\bibnamedelimi A.}{A\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=8e1ca5f19a5fc78f9c49524a0475bfd2}{{Launhardt}}{L\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{cfe25fe5f2a3a6944297067f67059484}
+      \strng{fullhash}{b3cf5ae7466238e5382e81c7db4fc1b8}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{2012}
+      \field{labelmonth}{06}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eid}{55}
+      \field{eprintclass}{astro-ph.IM}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\apj}
+      \field{month}{06}
+      \field{title}{{Dust Spectral Energy Distributions in the Era of Herschel and Planck: A Hierarchical Bayesian-fitting Technique}}
+      \field{volume}{752}
+      \field{year}{2012}
+      \field{pages}{55}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1088/0004-637X/752/1/55
+      \endverb
+      \verb{eprint}
+      \verb 1203.0025
+      \endverb
+      \keyw{infrared: ISM,ISM: structure,methods: data analysis,methods: statistical,stars: formation}
+    \endentry
     \entry{krumholz}{inproceedings}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=8e2d9db5e7a08fe0053e3922cbaff2da}{{Krumholz}}{K\bibinitperiod}{M.\bibnamedelimi R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
@@ -668,32 +777,85 @@
       \verb 10.1051/eas:0934004
       \endverb
     \endentry
-    \entry{pass}{online}{}
-      \name{author}{1}{}{%
-        {{uniquename=0,hash=8f5a18c360480a3bf6fde5d55734f28c}{Service}{S\bibinitperiod}{SVO\bibnamedelimb Filter\bibnamedelima Profile}{S\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+    \entry{recipes}{book}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,hash=ca56ff98ba892f070b27f9f88bd03771}{{Press}}{P\bibinitperiod}{W.\bibnamedelimi H.}{W\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=903fec84c425c443d906d94bab916687}{{Flannery}}{F\bibinitperiod}{B.\bibnamedelimi P.}{B\bibinitperiod\bibinitdelim P\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=67697fa4e8f96fea3d0c4b1f7ed40a54}{{Teukolsky}}{T\bibinitperiod}{S.\bibnamedelimi A.}{S\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{8f5a18c360480a3bf6fde5d55734f28c}
-      \strng{fullhash}{8f5a18c360480a3bf6fde5d55734f28c}
-      \field{sortinit}{S}
-      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \strng{namehash}{7f6888450c96b51474316e5f40183c4b}
+      \strng{fullhash}{7f6888450c96b51474316e5f40183c4b}
+      \field{sortinit}{P}
+      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \field{labelyear}{1986}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Cambridge: University Press, 1986}
+      \field{title}{{Numerical recipes. The art of scientific computing}}
+      \field{year}{1986}
+    \endentry
+    \entry{astrodendro}{misc}{}
+      \name{author}{5}{}{%
+        {{uniquename=0,hash=bbf37f442a082762c9bf8fb1ed598f2b}{{Robitaille}}{R\bibinitperiod}{T.}{T\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=b2ca620222319ece3054425a06272572}{{BeaumontA}}{B\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=0f40e09aec1267a37826897f795f39d2}{{Ginsburg}}{G\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=ba3e598956ad319a69bbc4c1b678ecad}{{MacDonald}}{M\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=dc002332535b76a2b722aacf680471f2}{{Rosolowsky}}{R\bibinitperiod}{E.}{E\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{772db4c56928a382a542b54fd1e409cb}
+      \strng{fullhash}{65352b601f3761147b95e9bde6f1e420}
+      \field{sortinit}{R}
+      \field{sortinithash}{c7387613477035a752d935acfc3e3ea2}
       \field{labelyear}{nodate}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{note}{Online database comprising values and data for filter profiling}
-      \field{title}{Filer Profile Service: An experiment about filter standardization in the VO}
-      \verb{url}
-      \verb http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php?mode=browse&gname=Herschel&gname2=Pacs
+      \field{title}{astrodendro: Python package for computation of astronomical dendrograms}
+      \field{version}{0.1.0}
+      \keyw{Software}
+    \endentry
+    \entry{noiseb}{article}{}
+      \name{author}{4}{uniquelist=4}{%
+        {{uniquename=0,hash=e95ee200ec4bd14b75394387d6de3507}{{Shetty}}{S\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=75ee37727323e7dbb5e701ab47991819}{{Kauffmann}}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=ffff4c2c074324f79ebf49ac959c3534}{{Schnee}}{S\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=67a93fce6b42b7da2f599c583e9128c9}{{Goodman}}{G\bibinitperiod}{A.\bibnamedelimi A.}{A\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{ab9a858c65fa7df4019e11eddf2d7731}
+      \strng{fullhash}{ab9a858c65fa7df4019e11eddf2d7731}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelyear}{2009}
+      \field{labelmonth}{05}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{astro-ph.GA}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\apj}
+      \field{month}{05}
+      \field{title}{{The Effect of Noise on the Dust Temperature-Spectral Index Correlation}}
+      \field{volume}{696}
+      \field{year}{2009}
+      \field{pages}{676\bibrangedash 680}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1088/0004-637X/696/1/676
       \endverb
+      \verb{eprint}
+      \verb 0902.0636
+      \endverb
+      \keyw{dust,extinction,infrared: ISM,methods: miscellaneous}
     \endentry
     \entry{noise}{article}{}
-      \name{author}{5}{}{%
+      \name{author}{5}{uniquelist=5}{%
         {{uniquename=0,hash=e95ee200ec4bd14b75394387d6de3507}{{Shetty}}{S\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=75ee37727323e7dbb5e701ab47991819}{{Kauffmann}}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=ffff4c2c074324f79ebf49ac959c3534}{{Schnee}}{S\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=67a93fce6b42b7da2f599c583e9128c9}{{Goodman}}{G\bibinitperiod}{A.\bibnamedelimi A.}{A\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=1033e6dccacf11e113912e83db0e72ba}{{Ercolano}}{E\bibinitperiod}{B.}{B\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{5b3318a8b94a0ded4084bcd3f9c12628}
+      \strng{namehash}{26a9e5108f20039396dc23473e9079ff}
       \strng{fullhash}{26a9e5108f20039396dc23473e9079ff}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -718,6 +880,45 @@
       \verb 0902.3477
       \endverb
       \keyw{dust,extinction,infrared: ISM,ISM: clouds,methods: miscellaneous,stars: formation}
+    \endentry
+    \entry{pass}{online}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=9794f886ff8e44a28632f1f05d2fcff8}{{SVO\bibnamedelimb Filter\bibnamedelimb Profile\bibnamedelimb Service}}{S\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \strng{namehash}{9794f886ff8e44a28632f1f05d2fcff8}
+      \strng{fullhash}{9794f886ff8e44a28632f1f05d2fcff8}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelyear}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Online database comprising values and data for filter profiling}
+      \field{title}{Filer Profile Service: An experiment about filter standardization in the VO}
+      \verb{url}
+      \verb http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php?mode=browse&gname=Herschel&gname2=Pacs
+      \endverb
+    \endentry
+    \entry{error}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=c6bd7796fa2a7308405cf2741bf9b226}{{Taylor}}{T\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {University Science Books}%
+      }
+      \strng{namehash}{c6bd7796fa2a7308405cf2741bf9b226}
+      \strng{fullhash}{c6bd7796fa2a7308405cf2741bf9b226}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labelyear}{1997}
+      \field{labelmonth}{08}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Published by University Science Books, 648 Broadway, Suite 902, New York, NY 10012, 1997.}
+      \field{chapter}{Chapter 12: The Chi-Squared Test of a Distribution}
+      \field{month}{08}
+      \field{title}{{Introduction to Error Analysis, the Study of Uncertainties in Physical Measurements, 2nd Edition}}
+      \field{year}{1997}
     \endentry
   \endsortlist
 \endrefsection
