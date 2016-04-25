@@ -89,6 +89,8 @@ for file in glob.glob('*.fits'):
         # Determine the type of structure
         if struct.is_leaf:
             leaves.append(struct)
+            indices = struct.indices(subtree=True)
+            vals = struct.indices(subtree=True)
 
             # Highlight two branches
             p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
