@@ -143,7 +143,7 @@ The molecular cloud is also colder than the surrounding ISM: the temperature is 
 Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos within the cloud, with both filamentary structure and (potentially) magnetic fields running through the cloud itself. These filaments are regions of higher density, and as \textcite{evo-mol} states \say{One fundamental characteristic of molecular clouds is that they are not, as has sometimes been assumed, isolated ‘billiard balls’ moving about independently in space, but instead are just dense condensations in more widely distributed, mostly atomic gas. Although molecular clouds may often appear to have sharp boundaries, these boundaries do not represent the edge of the matter distribution but just rapid transitions from the molecular gas to the surrounding atomic gas, which is distributed in extended envelopes that typically have comparable mass (Blitz 1988, 1991)}. These filaments act as preferential sites for star formation \parencite{filaments}.
 
 \subsection{Star forming conditions} \label{sec:conditions}
-These star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse \parencite{jeans}. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. This equilibrium state can also be regarded as a virialised state such that $2K+U=0$, where $K$ is the total kinetic energy of the system and $U$ is the total potential energy of the system. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse. The initial collapse is triggered when a region within the molecular cloud has a mass that exceedes the Jeans' mass given by Equation \ref{eq:jeans} \parencite{lecture}. This is known as the Jeans Criterion.
+These star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse \parencite{jeans}. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. This equilibrium state can also be regarded as a virialised state such that $2K+U=0$, where $K$ is the total kinetic energy of the system and $U$ is the total potential energy of the system. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse. The initial collapse is triggered when a region within the molecular cloud has a mass that exceedes the Jeans` mass given by Equation \ref{eq:jeans} \parencite{lecture}. This is known as the Jeans Criterion.
 
 \begin{equation}\label{eq:jeans}
   M_{J} = \Bigg( \frac{5kT}{GM} \Bigg )^\frac{3}{2} \Bigg( \frac{3}{4\pi\rho} \Bigg )^\frac{1}{2}
@@ -157,7 +157,9 @@ Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the
 
 Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref{eq:jeans}.
 
-Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures. The onset of gravitational binding is also not a singular process. A region of a molecular cloud may begin to collapse under the Jeans' criterion in Equation \ref{eq:jeans}, however this clump may then sub-fragment into smaller clumps that also begin collapsing in a similar manner.
+Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures. The onset of gravitational binding is also not a singular process. A region of a molecular cloud may begin to collapse under the Jeans criterion in Equation \ref{eq:jeans}, however this clump may then sub-fragment into smaller clumps that also begin collapsing in a similar manner. Whether a given clump is gravitationally bound or not is a measure of whether that clump is a prestellar core or not according to \textcite{prestellar}. \textcite{prestellar} also states that the majority of prestellar cores remain starless - even so, even fewer cores will evolve to become protostellar cores and begin the route to the Main-Sequence. Those prestellar cores that do not evolve to form protostellar cores are thought to disperse before they're ever able to form stars.
+
+The conditions that harbour these star forming regions are difficult to observe directly because of their obscuration by the enveloping dust. Gas is responsible for the collapse of the medium (via the Jeans Criterion in Equation \ref{eq:jeans}) and formation of the star itself, however dust absorbs the emission from these collapsing regions, essentially masking them. The dust itself will, however, re-radiate the absorbed radiation incident upon it at a sub-mm/IR wavelength.
 
 \begin{comment}
   \section{Star Formation}
@@ -220,7 +222,7 @@ Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passband
 \begin{table}[h]
   \parbox{.4\linewidth}{
   \centering
-  \begin{tabular}{ll}
+  \begin{tabular}{|l|l|}
   Filter & Passband ($\mu m$) \\
   PSW    &    199.4540 --	298.5657   \\
   PMW    &    281.6949 --	424.7548   \\
@@ -231,7 +233,7 @@ Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passband
   }
   \parbox{.4\linewidth}{
   \centering
-  \begin{tabular}{ll}
+  \begin{tabular}{|l|l|}
   Filter & Passband ($\mu m$) \\
   Blue   &    55.6706 -- 97.7403       \\
   Green  &    79.1026 --	135.1498       \\
@@ -481,7 +483,7 @@ A dendrogram is a graphical representation that shows the relationship between i
 
 As Figure \ref{fig:dendrogram} shows, the dendrogram highlights the relationships between areas in the image. If Figure \ref{fig:dendrogram} represents an idealised molecular cloud then the fragmented structure represents regions of consecutively greater density. The dendrogram highlights this in a tree diagram format.
 
-The initial vertical line of the dendrogram in Figure \ref{fig:dendrogram} is the trunk: the first representation of structure. From here the dendrogram probes the next level of structure, illustrated by the first vertex. A leaf respresents a structure that has no further substructure, whilst a branch represents an area that has further structure. The `taller` the dendrogram the greater the number of individual levels of substructure.
+The initial vertical line of the dendrogram in Figure \ref{fig:dendrogram} is the trunk: the first representation of structure, and the parent from which all structures within it derive. From here the dendrogram probes the next level of structure, illustrated by the first vertex. A leaf respresents a structure that has no further substructure, whilst a branch represents an area that has further structure. The `taller` the dendrogram the greater the number of individual levels of substructure.
 
 The Python software package \texttt{astrodendro} was used to produce dendrograms for this project \parencite{astrodendro}.
 
@@ -491,6 +493,42 @@ The Python software package \texttt{astrodendro} was used to produce dendrograms
 
 \chapter{Results}
 
+\section{Isothermal spherical cloud}
+Initial RADMC-3D simulations produced the image outputs shown in Figure \ref{fig:iso-output}.
+
+\begin{figure}
+\centering
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/blue.png}
+\caption{The RADMC-3D output for the PACS Blue band.}\label{fig:iso-blue}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/psw.png}
+\caption{The RADMC-3D output for the SPIRE PSW band.}\label{fig:iso-psw}
+\end{subfigure}
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/green.png}
+\caption{The RADMC-3D output for the PACS Green band.}\label{fig:iso-green}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/pmw.png}
+\caption{The RADMC-3D output for the SPIRE PMW band.}\label{fig:iso-pmw}
+\end{subfigure}
+
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/red.png}
+\caption{The RADMC-3D output for the PACS Red band.}\label{fig:iso-red}
+\end{subfigure}
+\begin{subfigure}[b]{.45\linewidth}
+\includegraphics[width=\linewidth]{../img/output/plw.png}
+\caption{The RADMC-3D output for the SPIRE PLW band.}\label{fig:iso-plw}
+\end{subfigure}
+
+\end{figure} \label{fig:iso-output}
+
+Figure \ref{fig:iso-output} shows the transmission weighted output. This is the source that 
 
 %-----------------------------------------------------------------
 % Discussion
@@ -503,6 +541,13 @@ The Python software package \texttt{astrodendro} was used to produce dendrograms
 %-----------------------------------------------------------------
 
 \chapter{Conclusion}
+
+%-----------------------------------------------------------------
+% Acknowledgements
+%-----------------------------------------------------------------
+
+\chapter*{Acknowledgements}
+I would like to thank Dr. Paul Clark for his guidance and encouragement, as well as his proof-reading, throughout this project. I would also like to thank Dr. Sarah Ragan for her Python expertise and observational advice.
 
 %-----------------------------------------------------------------
 % Appendix
