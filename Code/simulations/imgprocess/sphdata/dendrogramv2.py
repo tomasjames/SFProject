@@ -123,7 +123,7 @@ dataset = ['T_chi_indices', 'N_chi_indices', 'T_data_indices', 'N_data_indices']
 imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
 
 T_chi_T, N_chi_T, T_chi_N, N_chi_N, T_data_T, N_data_T, T_data_N, N_data_N = [],[],[],[],[],[],[],[]
-u_T_chi_T, M_chi_T, gpe_chi_T, ratio_store = [], [], [], []
+u_T_chi_T, M_chi_T, gpe_chi_T, T_chi_ratio_store = [], [], [], []
 
 # Loop through each dataset
 for i in dataset:
@@ -154,12 +154,13 @@ for i in dataset:
             # i.e. U = u*M. Dividing the 2 cancels the mass.
             gpe_chi_T.append(gpe)
             ratio = (u)/(-gpe)
-            ratio_store.append(ratio)
+            T_chi_ratio_store.append(ratio)
 
     elif dataset[1] == i:
         for j in range(0,len(N_chi_indices)):
             T_chi_N.append(T_chi_data[N_chi_indices[j]])
             N_chi_N.append(N_chi_data[N_chi_indices[j]])
+
     elif dataset[2] == i:
         for j in range(0,len(T_data_indices)):
             T_data_T.append(T_data_data[T_data_indices[j]])

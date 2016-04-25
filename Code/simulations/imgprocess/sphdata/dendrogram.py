@@ -85,14 +85,15 @@ for file in glob.glob('*.fits'):
 
         # Determine the type of structure
         if struct.is_leaf:
-            leaves.append(struct)
+            #leaves.append(struct)
 
             # Extract the indices of the core and its value
             indices = struct.indices(subtree=True)
             vals = struct.values(subtree=True)
 
             # Highlight branches
-            p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
+            #p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
+            p.plot_contour(ax1, structure=struct, lw=3)
 
     # Plot the entire tree in black
     p.plot_tree(ax2, color='black')
