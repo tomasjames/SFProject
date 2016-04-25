@@ -90,6 +90,13 @@ for file in glob.glob('*.fits'):
         if struct.is_leaf:
             leaves.append(struct)
 
+            # Extract the indices of the core and its value
+            indices = struct.indices(subtree=True)
+            vals = struct.values(subtree=True)
+
+            print indices
+            print vals
+
             # Highlight two branches
             p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
 
