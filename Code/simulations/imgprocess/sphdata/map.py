@@ -30,7 +30,7 @@ from astropy.io import fits
 
 # Read in both data types
 inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
-chi_data = np.loadtxt('../../curvefitting/sphdata/chi_fine.txt',skiprows=1)
+chi_data = np.loadtxt('../../curvefitting/sphdata/chi_coarse.txt',skiprows=1)
 
 # Split data types into plottable quantities
 inp_N = inp_data[:,1]
@@ -70,7 +70,7 @@ close()
 figure()
 subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
 imshow(T_chi_inp,origin='lower',vmin=min(inp_T),vmax=max(inp_T))
-colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
+colorbar(label='$T\/(K)$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the $\chi^{2}$ Recovered $T$\n')
@@ -108,7 +108,7 @@ figure()
 T_data_inp[T_data_inp == 0] = np.nan
 subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
 imshow(T_data_inp,origin='lower',vmin=min(inp_T),vmax=max(inp_T))
-colorbar(label='$log_{10}N\/(g\/cm^{-3})$')
+colorbar(label='$T\/(K)$')
 xlabel('X')
 ylabel('Y')
 title('A Map of the Data Input $T$\n')

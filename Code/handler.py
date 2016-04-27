@@ -63,7 +63,7 @@ if data_type == 'sim':
         os.chdir('../../../../')
 
         # Code will now go back to the top of the loop and execute over the next band
-    
+
     ############################# Run the Chi-squared #############################
 
     print '#######################################################################'
