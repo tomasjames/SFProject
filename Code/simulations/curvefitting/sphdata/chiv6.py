@@ -353,7 +353,7 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if T_index[chi_min_index] < 11:
+    if h < n:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
@@ -404,7 +404,7 @@ for h in range(0,imag.nx*imag.ny):
         close()
 
 chi_store.close()
-'''
+
 ###################### Repeat for a second time #######################
 
 # Reopen the chi-squared storage
@@ -595,8 +595,7 @@ for h in range(0,imag.nx*imag.ny):
         close()
 
 chi_fine.close()
-'''
-'''
+
 # Plot the data
 figure(1)
 errorbar(psw[0],psw[1],yerr=psw[2],fmt='co',label='SPIRE: PSW')

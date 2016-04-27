@@ -2,6 +2,8 @@ Reading/*
 Admin/*
 radmc-3d/*
 Report/Interim/*
+Code/simulations/curvefitting/sphdata/imgdump*
+Code/simulations/curvefitting/sphdata/imgdump_old*
 
 *.inp
 *.out
