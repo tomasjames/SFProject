@@ -3,14 +3,14 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}
 \contentsline {section}{\numberline {1.1}Molecular clouds}{4}{section.1.1}
-\contentsline {subsection}{\numberline {1.1.1}Molecular cloud composition}{4}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Molecular cloud composition}{5}{subsection.1.1.1}
 \contentsline {subsection}{\numberline {1.1.2}Star forming conditions}{5}{subsection.1.1.2}
 \contentsline {section}{\numberline {1.2}Dust emission}{6}{section.1.2}
 \contentsline {subsection}{\numberline {1.2.1}The $\beta $-$T$ degeneracy}{7}{subsection.1.2.1}
-\contentsline {section}{\numberline {1.3}Herchel Space Observatory}{7}{section.1.3}
+\contentsline {section}{\numberline {1.3}Herchel Space Observatory}{8}{section.1.3}
 \contentsline {section}{\numberline {1.4}RADMC-3D}{8}{section.1.4}
 \contentsline {subsection}{\numberline {1.4.1}\texttt {radmc3dPy}}{8}{subsection.1.4.1}
-\contentsline {subsection}{\numberline {1.4.2}Input files}{8}{subsection.1.4.2}
+\contentsline {subsection}{\numberline {1.4.2}Input files}{9}{subsection.1.4.2}
 \contentsline {subsection}{\numberline {1.4.3}Thermal Monte-Carlo dust emission}{10}{subsection.1.4.3}
 \contentsline {subsection}{\numberline {1.4.4}Ray tracing dust emission}{10}{subsection.1.4.4}
 \contentsline {chapter}{\numberline {2}Methodology}{12}{chapter.2}
