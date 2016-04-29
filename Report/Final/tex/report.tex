@@ -29,7 +29,7 @@
 \usepackage[english]{babel}% Recommended
 \usepackage{csquotes}% Recommended
 
-\usepackage[style=authoryear, firstinits=true, backend=biber]{biblatex}
+\usepackage[style=authoryear-icomp, firstinits=true, maxcitenames=3, uniquelist=false, backend=biber]{biblatex}
 \renewcommand*{\revsdnamepunct}{}
 \renewbibmacro{in:}{} % Remove 'in' from bibliography
 \DeclareNameAlias{sortname}{last-first} % Change ordering of name
@@ -104,7 +104,11 @@ Student ID: 1158976\endgraf\bigskip}} % author name
 %-----------------------------------------------------------------
 
 \begin{abstract}
-The focus of this project was an investigation probing the dust emission chatacteristics of molecular clouds via synthetic Herschel data. Initially a simple scenario of a spherical, isothermal molecular cloud at $T=10K$ was simulated using RADMC-3D \parencite{RADMC-3D}. This simulation was performed across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$ as well as the 3 PACS \parencite{PACS} wavebands centered on 75 $\mu m$, 110 $\mu m$ and 170 $\mu m$. This data was then `degraded` by accounting for the instrument's transmission curve to better simulate an object observed by Herschel. This data was then subsequently analysed by plotting Spectral Energy Distributions (SEDs) on a pixel by pixel basis where the goodness-of-fit was assessed using a $\chi^{2}$ test. This routine allowed recovery of the column density $N$ and temperature $T$ at each pixel. These values were then used to produce 2-dimensional maps of these regions, subsequently being compared to the 2-dimensional produces from the initial input data. of density and temperature. Finally this machinery was applied to data from the SPH simulation Arepo in order to simulate observations of molecular clouds in Herschel. It was found that the dust properties recovered using the $\chi^{2}$ test were of the correct range however the observed biases stated in \textcite{noise}, \textcite{noiseb} and \textcite{kelly} were evident such that the $\chi^{2}$ test underestimated values of $T$ at lower temperatures and overestimated values of $T$ at higher temperatures. As \textcite{noise} states this is a result of the line of sight temperature variations.
+\begin{comment}
+  We present an investigation probing whether dust emission in molecular clouds can be used as a surrogate marker of the star forming regions within these clouds. A simple scenario of a spherical, isothermal molecular cloud at $T=10K$ was simulated using RADMC-3D \parencite{RADMC-3D} across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$ as well as the 3 PACS \parencite{PACS} wavebands centered on 75 $\mu m$, 110 $\mu m$ and 170 $\mu m$. To better simulate an object observed by Herschel, this data was `degraded` by accounting for the filter's transmission curve. Subsequent analysis produced Spectral Energy Distributions (SEDs) on a pixel by pixel basis, where the goodness-of-fit is assessed using a $\chi^{2}$ test. This routine derived the best fit column density $N$ and temperature $T$ at each pixel, subsequently leading to construction of 2-dimensional maps of these regions. Finally this machinery was applied to synthetic Herschel data from the SPH simulation Arepo \parencite{arepo}. The dust properties recovered using the $\chi^{2}$ test are of the correct range however the observed biases stated in \textcite{noise}, \textcite{noiseb} and \textcite{kelly} were evident such that the $\chi^{2}$ test underestimates values of $T$ at lower temperatures and overestimates values of $T$ at higher temperatures, owing to the line of sight temperature variations as stated in \textcite{noise}.
+\end{comment}
+
+We present an investigation probing whether dust emission in molecular clouds can be used as a surrogate marker of the star forming regions within these clouds. To simulate a molecular cloud we use synthetic Herschel data from the moving-mesh SPH code Arepo \parencite{arepo}. Computing dust emission intensity via the ray-tracing code RADMC-3D \parencite{RADMC-3D} in each of the 3 SPIRE \parencite{SPIRE} wavebands (centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$) as well as the 3 PACS \parencite{PACS} wavebands (centered on 75 $\mu m$, 110 $\mu m$ and 170 $\mu m$) produces synthetic, composite observations. We `degrade` the images by accounting for the given filter`s transmission curve, in order to better simulate true Herschel data.  These observations are reduced to Spectral Energy Distributions (SEDs) on a pixel-by-pixel basis and a modified blackbody fitted to the points, estimating the best fit $N$ and $T$ at each pixel via a $\chi^{2}$ minimisation test. These parameters, along with the Arepo input parameters, are used to produce 2-dimensional maps of both $N$ and $T$. We also analyse these maps using dendrograms to probe levels of structure, giving another measure of comparison. We compare both maps with each other (as well as their accompanying dendrograms) and determine that the whilst the $\chi^{2}$ minimised maps retain their structure, the observed biases stated in \textcite{noise, noiseb} and \textcite{kelly} are evident such that the $\chi^{2}$ test underestimates values of $T$ at lower temperatures and overestimates values of $T$ at higher temperatures. We observe the same effects as \textcite{noise} in that the single fit $T$ used here is an inaccurate assumption, given the line of sight temperature variations.
 \end{abstract}
 
 %-----------------------------------------------------------------
@@ -125,31 +129,55 @@ The focus of this project was an investigation probing the dust emission chatact
 \chapter{Introduction}
 
 \section{Molecular clouds}
-A molecular cloud is a dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}, however despite this minimal presense dust remains a crucial component in the evolution of the cloud and the subsequent star forming process.
+A molecular cloud is a dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}. Whilst the larger molecular gas component within the cloud constitutes the material responsible for star formation, the small dust mass component remains a crucial component in the evolution of the cloud and the star forming process.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
     \includegraphics[width=0.4\textwidth]{../img/rho.jpg}
-    \caption[An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.]{An IRAS image showing the Rho Opiuchi cloud complex \parencite{rho}.}
+    \caption[An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite{rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.]{An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite{rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.}
   \end{center}
 \end{wrapfigure} \label{fig:rho}
 
-Figure \ref{fig:rho} shows the Rho Ophiuchi cloud complex as imaged by the Infra-red Astronomical Satellite (IRAS). Rho Opiuchi is the nearest active star forming molecular cloud complex to the Milky Way\footnote{\textcite{rho-dist} estimates the range of distances as being between 125pc-165pc - a range of almost 40\%.}. As a result of this, Rho Ophiuchi provides an unprecedented oppurtunity to study the sites of early star formation at high resolution. This is in spite of the large uncertainty in estimates of the distance to Rho Ophiuchi \parencite{rho-dist}.
+An example of a molecular cloud is shown in Figure \ref{fig:rho}. The subject of Figure \ref{fig:rho} is the Rho Ophiuchi cloud complex as imaged by the Infra-red Astronomical Satellite (IRAS). Rho Opiuchi is the nearest active star forming molecular cloud complex to the Solar System\footnote{\textcite{rho-dist} estimates the range of distances as being between 125pc-165pc - a range of almost 40\%.}. Crucially, Rho Ophiuchi is an example of a `stellar nursery`: a molecular cloud that is actively forming stars. As a result of this, Rho Ophiuchi provides an unprecedented oppurtunity to study these sites of early star formation at high resolution. This is in spite of the large uncertainty in estimates of the distance to Rho Ophiuchi \parencite{rho-dist}. Figure \ref{fig:rho} does illustrate, however, that the early stages of star formation aren't directly observable owing to their occlusion by dust in the molecular cloud. This means that the star forming process prior to the pre-Main Sequence phase has yet to be directly observed, merely theorised \parencite{hayashi}. Consequently, the initial conditions for star formation to occur have yet to be constrained. Furthermore the only measure of mass distribution in the stellar environment is the Initial Mass Function \parencite{imf}, which describes the mass at which a star enters the Main-Sequence - a measure of the mass distribution prior to the Main-Sequence (the Core Mass Function) when the stellar object remains unobserved is hampered by lack of emperical evidence. Therefore, an alternative method of observing pre-Main Sequence objects, along with investigating the conditions within a molecular cloud at these points, is required to begin constraining both the initial conditions and the CMF. Given that dust occludes these sites, could the dust itself prove a useful tracer of the activity that it enshroudes?
 
-Much like the ISM, molecular clouds are composed of gas and cosmic dust, however a molecular cloud differs from the ISM in that significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is thought to be around $10^{5}\,g\,cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $10^{2}\,g\,cm^{-3}$.
+\subsection{Molecular cloud composition}
+Much like the ISM, molecular clouds are composed of gas and cosmic dust. Whilst the constituents of both the ISM and a molecular cloud are fairly simple in characterisation, the exact composition of both remains unknown. Gas in the ISM is thought to be in a number of `phases`, with each phase being a different chemical composition as well as a different density and temperature. The different gaseous phases of the ISM, along with estimates of their temperature $T$ and number density $n$ are shown in Table \ref{table:ism}.
 
-The molecular cloud is also colder than the surrounding ISM: the temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM bathes the cooler cloud, resulting in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance from the centre of the cloud.
+\begin{table}[h]
+  \centering
+   \begin{tabular}{||c c c||}
+   \hline
+   Component & $T\/(K)$ & $n\/(cm^{-3})$ \\ [0.5ex]
+   \hline\hline
+   Molecular    & $10-20$      & $10^{2}-10^{6}$ \\
+   \hline
+   Cold atomic  & $50-100$     & $20-50$ \\
+   \hline
+   Warm atomic  & $6000-10000$ & $0.2-0.5$ \\
+   \hline
+   Warm ionized & $\sim8000$    & $0.2-0.5$ \\
+   \hline
+   Hot ionised  & $\sim10^{6}$  & $\sim0.0065$ \\ [1ex]
+   \hline
+   \end{tabular}
+   \caption{A table showing the different phases of the ISM, along with estimates of that phase`s temperature, $T$ and number density, $n$ \parencite{ism}.}
+   \label{table:ism}
+\end{table}
 
-Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos within the cloud, with both filamentary structure and (potentially) magnetic fields running through the cloud itself. These filaments are regions of higher density, and as \textcite{evo-mol} states \say{One fundamental characteristic of molecular clouds is that they are not, as has sometimes been assumed, isolated ‘billiard balls’ moving about independently in space, but instead are just dense condensations in more widely distributed, mostly atomic gas. Although molecular clouds may often appear to have sharp boundaries, these boundaries do not represent the edge of the matter distribution but just rapid transitions from the molecular gas to the surrounding atomic gas, which is distributed in extended envelopes that typically have comparable mass (Blitz 1988, 1991)}. These filaments act as preferential sites for star formation \parencite{filaments}.
+Much like gas in the interstellar medium, interstellar dust`s chemical composition varies, with theories predicting both silicate and carbonaceous species co-existing; this project assumed all dust to be of one species, and to be silicate based. As a molecular cloud is a condensation of the ISM, the compisition of both remain similar, however a molecular cloud differs from the ISM in a number of key ways. Significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in a molecular cloud is thought to be around $10^{5}\/cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $1\/cm^{-3}$ as Table \ref{table:ism} shows, assuming the dust mass to be 1\% that of the gas mass.
+
+The dust densities may be greater in a molecular cloud than the ISM, but the temperature is observed to obey a different paradigm. The temperature is approximately 15 $K$ in the ISM whilst the temperature in the molecular cloud is approximately 10 $K$. The warmer ISM results in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance from the centre of the cloud.
+
+Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos within the cloud, with both filamentary structure and (potentially) magnetic fields running throughout the cloud itself. These filaments are regions of higher density, but as \textcite{evo-mol} highlights, the `edges` and transitions in molecular clouds are not strict boundaries as they may appear, but are rather molecular gas transitioning into the surrounding atomic gas. This poses an interesting question: if filaments are dense condensations of gas and dust, then do they act as preferential star formation sites? To answer this question, it is useful to review the conditions within the cloud itself that could instigate the star forming process.
 
 \subsection{Star forming conditions} \label{sec:conditions}
-These star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse \parencite{jeans}. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. This equilibrium state can also be regarded as a virialised state such that $2K+U=0$, where $K$ is the total kinetic energy of the system and $U$ is the total potential energy of the system. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse. The initial collapse is triggered when a region within the molecular cloud has a mass that exceedes the Jeans` mass given by Equation \ref{eq:jeans} \parencite{lecture}. This is known as the Jeans Criterion.
+\textcite{jeans} first demonstrated that a gas of given density and mass will begin to collapse if the gas pressure is overwhelmed by the gravitational force of the gas. This is applicable to star formation, given that 99\% of a molecular cloud, by mass, is gas. As a result, star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. This equilibrium state can also be regarded as a virialised state such that $2K+U=0$, where $K$ is the total kinetic energy of the system and $U$ is the total potential energy of the system. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse. The initial collapse is triggered when a region within the molecular cloud has a mass that exceedes the Jeans` mass given by Equation \ref{eq:jeans} \parencite{lecture}. This is known as the Jeans Criterion.
 
 \begin{equation}\label{eq:jeans}
   M_{J} = \Bigg( \frac{5kT}{GM} \Bigg )^\frac{3}{2} \Bigg( \frac{3}{4\pi\rho} \Bigg )^\frac{1}{2}
 \end{equation}
 
-Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the temperature of the region, $G$ is the Universal Gravitational Constant, $M$ is the mass of Hydrogen in the region and $\rho$ is the density of the region prior to collapse. The collapse of an $M_{J}$ mass region occurs according to the free-fall time, $t_{ff}$ described in Equation \ref{eq:tff} \parencite{krumholz}.
+Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the temperature of the region, $G$ is the Universal Gravitational Constant, $M$ is the mass of Hydrogen in the region and $\rho$ is the density of the region prior to collapse. The collapse of an $M_{J}$ mass region occurs according to the free-fall time, $t_{ff}$ described in Equation \ref{eq:tff} \parencite{jeans}.
 
 \begin{equation}\label{eq:tff}
   t_{ff} = \sqrt{\frac{3\pi}{32G\rho}}
@@ -157,7 +185,7 @@ Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the
 
 Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref{eq:jeans}.
 
-Interestingly the onset of collapse is also the onset of gravitational binding. According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures. The onset of gravitational binding is also not a singular process. A region of a molecular cloud may begin to collapse under the Jeans criterion in Equation \ref{eq:jeans}, however this clump may then sub-fragment into smaller clumps that also begin collapsing in a similar manner. Whether a given clump is gravitationally bound or not is a measure of whether that clump is a prestellar core or not according to \textcite{prestellar}. \textcite{prestellar} also states that the majority of prestellar cores remain starless - even so, even fewer cores will evolve to become protostellar cores and begin the route to the Main-Sequence. Those prestellar cores that do not evolve to form protostellar cores are thought to disperse before they're ever able to form stars.
+According to \textcite{bound}, the majority of a molecular cloud remains gravitationally unbound, further reinforcing the idea stated in \textcite{evo-mol} that molecular clouds are diffuse, transiest structures. The onset of gravitational binding is also not a singular process. A region of a molecular cloud may begin to collapse under the Jeans criterion in Equation \ref{eq:jeans}, however this clump may then sub-fragment into smaller clumps that also begin collapsing in a similar manner. Whether a given clump is gravitationally bound or not is a measure of whether that clump is a prestellar core or not, according to \textcite{prestellar}. \textcite{prestellar} also states that the majority of prestellar cores remain starless - even so, even fewer cores will evolve to become protostellar cores and begin the route to the Main-Sequence. Those prestellar cores that do not evolve to form protostellar cores are thought to disperse before they're ever able to form stars.
 
 The conditions that harbour these star forming regions are difficult to observe directly because of their obscuration by the enveloping dust. Gas is responsible for the collapse of the medium (via the Jeans Criterion in Equation \ref{eq:jeans}) and formation of the star itself, however dust absorbs the emission from these collapsing regions, essentially masking them. The dust itself will, however, re-radiate the absorbed radiation incident upon it at a sub-mm/IR wavelength.
 
@@ -182,7 +210,7 @@ The conditions that harbour these star forming regions are difficult to observe 
 \section{Dust emission}
 Dust is a relatively small fraction of the total ISM mass, estimated as being only 1\% according to \textcite{noise}. Whilst the dust mass accounts for such a small mass component, it still presents an important role in forming stars. The sources of flux embedded deep within the cloud radiate across a wide range of wavelengths, however the dust surrounding the source has the effect of absorbing and then re-radiating photons at a different wavelength. As such, these sources of flux (be they prestellar cores, protostars or pre-main sequence stars) are occluded by the dust enveloping them.
 
-According to \textcite{noise}, dust radiates as a modified black body in the far infra-red regime (i.e. from $\lambda=\SI{60}{\micro\meter}$) that can approximated using Equation \ref{eq:mbb}.
+According to \textcite{hildebrand}, dust radiates as a modified black body in the far infra-red regime (i.e. from $\lambda=\SI{60}{\micro\meter}$) that can approximated using Equation \ref{eq:mbb}.
 
 \begin{equation} \label{eq:mbb}
   S_{\nu} = N \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
@@ -210,7 +238,7 @@ rely on a $\chi^{2}$ SED fitting routine. This routine does, however, suffer fro
 \subsection{The $\beta$-$T$ degeneracy}
 As Equation \ref{eq:mbb-int} shows, dust does not radiate as a perfect blackbody. This is accounted for by multiplying the Planck function (i.e. the function that describes a body that radiates as a perfect blackbody) by the dust opacity term $\kappa = \kappa_{0}(\frac{\nu}{\nu_{0}})^{\beta}$. Two key variables here are the dust spectral index $\beta$ and the dust temperature $T$. These two properties suffer from a degeneracy \parencite{degen} such that any $\chi^{2}$ test applied to determining the values of $\beta$ and $T$ may understimate one parameter whilst overestimating another.
 
-As \textcite{noise} states, a fitting routine for $\beta$ and $T$ is prone to overestimates owing to the assumption that temperature is constant along the line of sight. For an isothermal source this assumption may be well placed however in the case of a complex structure such as a molecular cloud shown in Figure \ref{fig:rho} this assumption is inaccurate. Equations \ref{eq:mbb} and \ref{eq:mbb-int} describe dust emission from an isothermal source, i.e. one in which the dust is at one discrete temperature. Molecular clouds are not isothermal and have a range of temperatures along the line of sight, and as \textcite{noise} highlights, the SEDs describing the dust emission in these instances are actually combinations of the individual SEDs from each individual temperature source.
+As \textcite{noise} states, a fitting routine for $\beta$ and $T$ is prone to overestimates owing to the assumption that temperature is constant along the line of sight. For an isothermal source this assumption may be well placed however in the case of a complex structure such as a molecular cloud shown in Figure \ref{fig:rho} this assumption is inaccurate. Equations \ref{eq:mbb} and \ref{eq:mbb-int} describe dust emission from an isothermal source, i.e. one in which the dust is at one discrete temperature. Molecular clouds are not isothermal and have a range of temperatures along the line of sight, and as \textcite{noise} highlights, the SEDs describing the dust emission in these instances are actually combinations of the individual SEDs from each individual temperature source. Observing these sources directly accounts for this, and one such way to observe a molecular cloud is via the Herschel Space Observatory.
 
 \section{Herchel Space Observatory}
 The Herschel Space Observatory was an ESA mission launched in 2009 with the primary objective of imaging cold regions of the Universe \parencite{herschel} and \parencite{fact}. Herschel had a number of objectives. As \textcite{fact} states, these objectives included ``targeted observations of star formation and both young and old stars, to reveal the physical and chemical processes in the early and later phases of a star’s life.'' To achieve this, Herschel was launched with 3 different instruments onboard: Photodetector Array Camera and Spectrometer: PACS \parencite{PACS}, Spectral and Photometric Imaging Receiver: SPIRE \parencite{SPIRE} and Heterodyne Instrument for the Far Infrared: HiFi \parencite{HiFi}. One of these instruments, SPIRE, was designed to probe the sites of early star formation deep within molecular clouds. This was achieved by imaging solely in the infra-red and sub-mm regimes. Herschel itself, across all instruments and functional modes, is sensitive to a range of wavelengths quoted by \textcite{herschel} as $\sim \SI{55}{\micro\meter}$ to $\sim \SI{672}{\micro\meter}$. Both PACS and SPIRE were capable of being run in ``Parallel mode'' - effective simultaneous operation according to \textcite{herschel}. SPIRE itself had an photometry wavelength range
@@ -222,22 +250,32 @@ Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passband
 \begin{table}[h]
   \parbox{.4\linewidth}{
   \centering
-  \begin{tabular}{|l|l|}
-  Filter & Passband ($\mu m$) \\
+  \begin{tabular}{||l l||}
+  \hline
+  Filter & Passband ($\mu m$) \\ [0.5ex]
+  \hline\hline
   PSW    &    199.4540 --	298.5657   \\
+  \hline
   PMW    &    281.6949 --	424.7548   \\
-  PLW    &    391.4346 --	690.8139
+  \hline
+  PLW    &    391.4346 --	690.8139   \\ [1ex]
+  \hline
   \end{tabular}
   \caption{The passbands (for extended source) for the SPIRE instrument \parencite{pass}.}
   \label{table:SPIRE-pass}
   }
   \parbox{.4\linewidth}{
   \centering
-  \begin{tabular}{|l|l|}
-  Filter & Passband ($\mu m$) \\
+  \begin{tabular}{||l l||}
+  \hline
+  Filter & Passband ($\mu m$) \\ [0.5ex]
+  \hline\hline
   Blue   &    55.6706 -- 97.7403       \\
-  Green  &    79.1026 --	135.1498       \\
-  Red    &    117.7762 --	243.6431
+  \hline
+  Green  &    79.1026 --	135.1498     \\
+  \hline
+  Red    &    117.7762 --	243.6431     \\ [1ex]
+  \hline
   \end{tabular}
   \caption{The passbands for the PACS instrument \parencite{pass}.}
   \label{table:PACS-pass}

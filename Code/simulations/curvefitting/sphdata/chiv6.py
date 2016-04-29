@@ -353,7 +353,7 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if h < n:
+    if h == n:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
@@ -370,7 +370,7 @@ for h in range(0,imag.nx*imag.ny):
         grid(True,which='both')
         legend(loc='best',prop={'size':8})
         title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n for T < 11K at the ')+str(h)+str('th Pixel\n'))
-        savefig(str('imgdump/averages_coarse')+str(h)+str('.png'),dpi=300)
+        savefig(str('imgdump/coarse/averages_coarse')+str(h)+str('.png'),dpi=300)
         close()
 
     # Also plot probability contour
@@ -383,7 +383,7 @@ for h in range(0,imag.nx*imag.ny):
         ylabel(r'$T\/(K)$')
         title(r'$\chi^{2} Contours$')
         legend(loc='best',prop={'size':8})
-        savefig(str('imgdump/contours_')+str(h)+str('.png'),dpi=300)
+        savefig(str('imgdump/coarse/contours_')+str(h)+str('.png'),dpi=300)
         close()
 
     # And the chi-squared landscape
@@ -400,7 +400,7 @@ for h in range(0,imag.nx*imag.ny):
         xlabel(r'$N\/(g\/cm^{-2})$')
         ylabel(r'$\chi^{2}$')
 
-        savefig(str('imgdump/landscape_')+str(h)+str('.png'),dpi=300)
+        savefig(str('imgdump/coarse/landscape_')+str(h)+str('.png'),dpi=300)
         close()
 
 chi_store.close()
@@ -411,18 +411,21 @@ chi_store.close()
 chi_coarse = np.loadtxt('chi_coarse.txt', skiprows=1)
 
 # Determine the minimum and maximum column densities and temperatures
-min_N_loc, max_N_loc = np.where(chi_coarse[:,1] == chi_coarse[:,1].min())[0][0], np.where(chi_coarse[:,1] == chi_coarse[:,1].max())[0][0]
-min_T_loc, max_T_loc = np.where(chi_coarse[:,2] == chi_coarse[:,2].min())[0][0], np.where(chi_coarse[:,2] == chi_coarse[:,2].max())[0][0]
+#min_N_loc, max_N_loc = np.where(chi_coarse[:,1] == chi_coarse[:,1].min())[0][0], np.where(chi_coarse[:,1] == chi_coarse[:,1].max())[0][0]
+#min_T_loc, max_T_loc = np.where(chi_coarse[:,2] == chi_coarse[:,2].min())[0][0], np.where(chi_coarse[:,2] == chi_coarse[:,2].max())[0][0]
 
-min_N, max_N = chi_coarse[:,1][min_N_loc], chi_coarse[:,1][max_N_loc]
-min_T, max_T = chi_coarse[:,2][min_T_loc], chi_coarse[:,2][max_T_loc]
+#min_N, max_N = chi_coarse[:,1][min_N_loc], chi_coarse[:,1][max_N_loc]
+#min_T, max_T = chi_coarse[:,2][min_T_loc], chi_coarse[:,2][max_T_loc]
+
+min_N, max_N = np.min(chi_coarse[:,1]), np.max(chi_coarse[:,1])
+min_T, max_T = np.min(chi_coarse[:,2]), np.max(chi_coarse[:,2])
 
 print 'Now determining the (new) modified blackbody curves.\n'
 
 # Define the new N and T
-N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 80)
+N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+max_N/4), 100)
 #T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
-T = np.linspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
+T = np.linspace(min_T-min_T/4, max_T+max_T/4, 100)
 
 # Create 2 2D arrays of the data to track the progress of the loop
 T_mesh, N_mesh = np.meshgrid(T,N)
@@ -473,12 +476,14 @@ for h in range(0,imag.nx*imag.ny):
             to_fit_red = blackbody[red_index[0]]
 
             # Put the fitting fluxes into an array
-            to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
-            #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
+            #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+            to_fit = np.array([to_fit_plw,to_fit_pmw,to_fit_psw])
 
             # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-            points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
-            points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
+            points = np.array([flux[2][h],flux[1][h],flux[0][h]])
+            points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
+            #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+            #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
             # Append the chi squared value
             chisquared = chi(to_fit,points,sigma=points_error)
@@ -523,7 +528,7 @@ for h in range(0,imag.nx*imag.ny):
     ############## Error analysis begins here #############
 
     # Reshape the chivals to fit the format of N_mesh and T_mesh
-    chivals_mesh = np.reshape(chivals, (len(N),len(T)))
+    chivals_mesh = np.reshape(chivals, (len(T),len(N)))
 
     # Determine error in the value by finding location of points that lie within 3 sigma
     # Start by finding the location in the mesh of the minimum chi-squared value
@@ -561,24 +566,24 @@ for h in range(0,imag.nx*imag.ny):
     cs.writerow(cs_towrite)
     #print 'Writing row to datafile...\n'
 
-    if h == 4000:
+    if h == n:
     # Plot the data
         figure(1)
         errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
         errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
         errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
-        errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bo',label='PACS: Blue')
-        errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='go',label='PACS: Green')
-        errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='ro',label='PACS: Red')
+        errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
+        errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='gx',label='PACS: Green')
+        errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='rx',label='PACS: Red')
         plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[2]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[2]/2)+str('$\/K$'))
         xlabel(r'$\nu \/(Hz)$')
         ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
         xscale("log", nonposx='clip')
         yscale("log", nonposx='clip')
         grid(True,which='both')
-        legend(loc='best')
-        title('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands for the (0,0) Pixel\n')
-        savefig('averages_coarse.png',dpi=300)
+        legend(loc='best',prop={'size':8})
+        title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n for T < 11K at the ')+str(h)+str('th Pixel\n'))
+        savefig(str('imgdump/fine/averages_coarse')+str(h)+str('.png'),dpi=300)
         close()
 
     # Also plot probability contour
@@ -590,12 +595,29 @@ for h in range(0,imag.nx*imag.ny):
         xlabel(r'$N\/(g\/cm^{-3})$')
         ylabel(r'$T\/(K)$')
         title(r'$\chi^{2} Contours$')
-        legend(loc='best')
-        savefig('contours_fine.png',dpi=300)
+        legend(loc='best',prop={'size':8})
+        savefig(str('imgdump/fine/contours_')+str(h)+str('.png'),dpi=300)
+        close()
+
+    # And the chi-squared landscape
+        figure(3)
+        subplot(2,1,1)
+        plot(T_index, chivals, 'bo')
+        plot(T_index[chi_min_index], chivals[chi_min_index], 'r.')
+        xlabel(r'$T\/(K)$')
+        ylabel(r'$\chi^{2}$')
+
+        subplot(2,1,2)
+        plot(N_index, chivals, 'bo')
+        plot(N_index[chi_min_index], chivals[chi_min_index], 'r.')
+        xlabel(r'$N\/(g\/cm^{-2})$')
+        ylabel(r'$\chi^{2}$')
+
+        savefig(str('imgdump/fine/landscape_')+str(h)+str('.png'),dpi=300)
         close()
 
 chi_fine.close()
-
+'''
 # Plot the data
 figure(1)
 errorbar(psw[0],psw[1],yerr=psw[2],fmt='co',label='SPIRE: PSW')

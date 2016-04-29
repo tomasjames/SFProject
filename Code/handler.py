@@ -254,10 +254,10 @@ elif data_type == 'sph':
     execfile(str('map.py'))
 
     # Another print statement
-    print(str('Executing:')+str(' dendrogram.py'))
+    print(str('Executing:')+str(' dendrogramv2.py'))
 
     # Execute the script
-    execfile(str('dendrogram.py'))
+    execfile(str('dendrogramv2.py'))
 
     print '#######################################################################'
     print 'handler.py has now finished running all necessary files. The results '

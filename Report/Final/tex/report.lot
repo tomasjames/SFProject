@@ -2,10 +2,11 @@
 \defcounter {refsection}{0}\relax 
 \select@language {english}
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {1.1}{\ignorespaces The passbands (for extended source) for the SPIRE instrument \parencite {pass}.\relax }}{7}{table.caption.6}
-\contentsline {table}{\numberline {1.2}{\ignorespaces The passbands for the PACS instrument \parencite {pass}.\relax }}{7}{table.caption.6}
+\contentsline {table}{\numberline {1.1}{\ignorespaces A table showing the different phases of the ISM, along with estimates of that phase`s temperature, $T$ and number density, $n$ \parencite {ism}.\relax }}{5}{table.caption.5}
+\contentsline {table}{\numberline {1.2}{\ignorespaces The passbands (for extended source) for the SPIRE instrument \parencite {pass}.\relax }}{8}{table.caption.7}
+\contentsline {table}{\numberline {1.3}{\ignorespaces The passbands for the PACS instrument \parencite {pass}.\relax }}{8}{table.caption.7}
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces A table showing the values of $\Delta \chi ^{2}$ for fit parameters in varying $M$ dimensions. Bold parameters are those used in this study \parencite {recipes}\relax }}{16}{table.caption.13}
+\contentsline {table}{\numberline {2.1}{\ignorespaces A table showing the values of $\Delta \chi ^{2}$ for fit parameters in varying $M$ dimensions. Bold parameters are those used in this study \parencite {recipes}\relax }}{17}{table.caption.14}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
