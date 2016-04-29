@@ -38,7 +38,7 @@ import random
 
 # Read in both data types
 inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
-chi_data = np.loadtxt('../../curvefitting/sphdata/chi_coarse.txt',skiprows=1)
+chi_data = np.loadtxt('../../curvefitting/sphdata/chi_fine.txt',skiprows=1)
 
 # Split data types into plottable quantities
 inp_N = inp_data[:,1]
