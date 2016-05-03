@@ -102,8 +102,9 @@ with open('image_trans.out', 'w') as f:
     image_trans.writerow([imag.sizepix_x, imag.sizepix_y])
 
     # Because the image is a composite of all wavelengths, only write the average of the wavelength points
-    avwav = np.mean(imag.wav)
-    image_trans.writerow(["%.15f" % avwav])
+    #avwav = np.mean(imag.wav)
+    cenwav = 97.903608
+    image_trans.writerow(["%.15f" % cenwav])
     # Writes a blank line to seperate the wavelength points from the intensity points
     image_trans.writerow([])
 
@@ -148,7 +149,7 @@ if p == 'yes':
     imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
     # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=True, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'

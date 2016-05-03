@@ -50,7 +50,7 @@ def mbb(N,dust_mass,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/100
+    return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))
 
 ################### Read the average data determined earlier ###################
 
@@ -162,7 +162,8 @@ D = np.float64(d)*pc # Convert to cm
 dust_mass = muh2*mp*d2g
 
 # Determine solid angle of the pixel
-sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
+#sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
+sigma_pix = sigma_beam
 
 # Instantiate a counter and a number of lists to store values (and for diagnostics)
 count = 0
@@ -181,8 +182,8 @@ for i in range(0,len(xpix)*len(ypix)):
     store_density.append(sum(dust_density[loc]))
     store_loc.append(loc)
 
-    # The dust density is dust_density_line and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
-    dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(dust_density[loc])*imag.sizepix_y)
+    # The dust density is dust_density along the line of sight and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
+    #dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(dust_density[loc])*imag.sizepix_y)
 
     # Account for the column-weighted temperature
     col_T = np.sum((dust_temperature[loc]*dust_density[loc]))/(np.sum(dust_density[loc]))
@@ -191,10 +192,12 @@ for i in range(0,len(xpix)*len(ypix)):
     store_temp.append(col_T)
 
     # Determine the number of dust grains in the pixel
-    N_d = (dust_mass_pixel/(dust_mass*len(dust_density[loc])))
+    #N_d = (dust_mass_pixel/(dust_mass*len(dust_density[loc])))
+    #N_d = dust_mass_pixel/dust_mass
 
     # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
-    col = N_d/((D**2)*(sigma_pix))
+    #col = N_d/((D**2)*(sigma_pix))
+    col = sum((dust_density[loc])/(muh2*mp)*imag.sizepix_y)
 
     # Assign all of the writable items to a variable for easier write
     df_towrite = [i, col, col_T]
@@ -206,7 +209,7 @@ for i in range(0,len(xpix)*len(ypix)):
     T_full.append(col_T)
 
 #N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
-N = np.linspace(20, 24, 40)
+N = np.linspace(18, 24, 40)
 
 # T is independent of the column density in determination so this remains unchanged
 #T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
@@ -423,9 +426,9 @@ min_T, max_T = np.min(chi_coarse[:,2]), np.max(chi_coarse[:,2])
 print 'Now determining the (new) modified blackbody curves.\n'
 
 # Define the new N and T
-N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+max_N/4), 100)
+N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 100)
 #T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
-T = np.linspace(min_T-min_T/4, max_T+max_T/4, 100)
+T = np.linspace(min_T-min_T/4, max_T+min_T/4, 100)
 
 # Create 2 2D arrays of the data to track the progress of the loop
 T_mesh, N_mesh = np.meshgrid(T,N)
@@ -617,6 +620,7 @@ for h in range(0,imag.nx*imag.ny):
         close()
 
 chi_fine.close()
+
 '''
 # Plot the data
 figure(1)

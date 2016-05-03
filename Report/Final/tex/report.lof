@@ -2,17 +2,39 @@
 \defcounter {refsection}{0}\relax 
 \select@language {english}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite {rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.}}{4}{figure.caption.4}
-\contentsline {figure}{\numberline {1.2}{\ignorespaces A plot illustrating how the dust spectral index $\beta $ varies the emergent dust SED whilst both $N$ and $T$ remain fixed. This is based off of a plot found in \textcite {noise}.}}{7}{figure.caption.6}
-\contentsline {figure}{\numberline {1.3}{\ignorespaces A schematic representation of the RADMC-3D workflow.}}{9}{figure.caption.8}
-\contentsline {figure}{\numberline {1.4}{\ignorespaces A pictorial representation of the structure of \texttt {amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt {amr\_grid.inp}. This image is based off of an image in \textcite {manual}.}}{9}{figure.caption.9}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite {rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.}}{5}{figure.caption.4}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces A plot illustrating how the dust spectral index $\beta $ varies the emergent dust SED whilst both $N$ and $T$ remain fixed. This is based off of a plot found in \textcite {noise}.}}{8}{figure.caption.6}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces A figure illustrating a basic molecular cloud, with regions of higher density denoyed by darker red regions. Solid black lines indicate an incoming photon, whilst a dashed line indicates the line of sight.}}{9}{figure.caption.7}
+\contentsline {figure}{\numberline {1.4}{\ignorespaces A schematic representation of the RADMC-3D workflow.}}{11}{figure.caption.9}
+\contentsline {figure}{\numberline {1.5}{\ignorespaces A pictorial representation of the structure of \texttt {amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt {amr\_grid.inp}. This image is based off of an image in \textcite {manual}.}}{11}{figure.caption.10}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 1D.\relax }}{12}{figure.caption.10}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces The RADMC-3D output for dust emission intensity computed using thermal Monte-Carlo simulation in 2D.\relax }}{12}{figure.caption.10}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces The emergent image (before transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.\relax }}{16}{figure.caption.12}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces The emergent image (after transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.\relax }}{16}{figure.caption.12}
-\contentsline {figure}{\numberline {2.6}{\ignorespaces A figure showing the continuous SED sampled from \texttt {image\_trans.out}, along with the SED after convolving with the transmission curve (right hand panel). Also illustrated is the discrete point that Herschel would see were it to be observe this source in its PSW band.}}{17}{figure.caption.13}
-\contentsline {figure}{\numberline {2.7}{\ignorespaces An idealised molecular cloud containing some substructure defined by sequentially darker regions. Below, the dendrogramic representation of the cloud \parencite {dendrogramimg}.}}{19}{figure.caption.15}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces The transmission curves for each of the SPIRE PSW, PMW and PLW bands along with the PACS Blue, Red and Green bands.\relax }}{15}{figure.caption.11}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces The emergent image (before transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.\relax }}{16}{figure.caption.12}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces The emergent image (after transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.\relax }}{16}{figure.caption.12}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces A figure showing the continuous SED sampled from \texttt {image\_trans.out}, along with the SED after convolving with the transmission curve (right hand panel). Also illustrated is the discrete point that Herschel would see were it to be observe this source in its PSW band.}}{17}{figure.caption.13}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces An idealised molecular cloud containing some substructure defined by sequentially darker regions. Below, the dendrogramic representation of the cloud \parencite {dendrogramimg}.}}{19}{figure.caption.15}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The recovered values of $N$ from the $\chi ^{2}$ minimisation routine.\relax }}{21}{figure.caption.16}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces The reconstructed values of $N$ from the initial input data.\relax }}{21}{figure.caption.16}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces The recovered values of $T$ from the $\chi ^{2}$ minimisation routine.\relax }}{21}{figure.caption.16}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces The reconstructed values of $T$ from the initial input data.\relax }}{21}{figure.caption.16}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces A representation of how the $\chi ^{2}$ derived $N$ values compare to the initial data input $N$.\relax }}{22}{figure.caption.17}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces A representation of how the $\chi ^{2}$ derived $T$ values compare to the initial data input $T$.\relax }}{22}{figure.caption.17}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces A plot showing how the ratio of $T_{input}/T_{\chi ^{2}}$ varies with the input $T$.\relax }}{23}{figure.caption.18}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces The recovered values of $N$ from the $\chi ^{2}$ minimisation routine.\relax }}{23}{figure.caption.19}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces The reconstructed values of $N$ from the initial input data.\relax }}{23}{figure.caption.19}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces The recovered values of $T$ from the $\chi ^{2}$ minimisation routine.\relax }}{23}{figure.caption.19}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces The reconstructed values of $T$ from the initial input data.\relax }}{23}{figure.caption.19}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces A representation of how the $\chi ^{2}$ derived $N$ values compare to the initial data input $N$.\relax }}{24}{figure.caption.20}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces A representation of how the $\chi ^{2}$ derived $T$ values compare to the initial data input $T$.\relax }}{24}{figure.caption.20}
+\contentsline {figure}{\numberline {3.14}{\ignorespaces A plot showing how the ratio of $T_{input}/T_{\chi ^{2}}$ varies with the input $T$.\relax }}{24}{figure.caption.21}
+\contentsline {figure}{\numberline {3.15}{\ignorespaces A plot showing the relationship between the $\chi ^{2}$ recovered values of $N$ and $T$.\relax }}{25}{figure.caption.22}
+\contentsline {figure}{\numberline {3.16}{\ignorespaces The line of sight temperature variations in the isothermal sphere case as a function of the data derived $T$.\relax }}{26}{figure.caption.23}
+\contentsline {figure}{\numberline {3.17}{\ignorespaces The line of sight temperature variations in the Arepo simulation case as a function of the data derived $T$.\relax }}{26}{figure.caption.23}
+\contentsline {figure}{\numberline {3.18}{\ignorespaces The $\chi ^{2}$ recovered $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{27}{figure.caption.24}
+\contentsline {figure}{\numberline {3.19}{\ignorespaces The data derived $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{27}{figure.caption.24}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces The RADMC-3D intensity outputs for the isothermal source at $T=10\/K$ imaged in all 6 passbands considered.\relax }}{34}{figure.caption.28}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces The RADMC-3D intensity outputs for the Arepo data imaged in all 6 passbands considered.\relax }}{35}{figure.caption.29}

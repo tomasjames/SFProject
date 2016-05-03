@@ -1,32 +1,34 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \defcounter {refsection}{0}\relax 
 \select@language {english}
-\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}
-\contentsline {section}{\numberline {1.1}Molecular clouds}{4}{section.1.1}
-\contentsline {subsection}{\numberline {1.1.1}Molecular cloud composition}{5}{subsection.1.1.1}
-\contentsline {subsection}{\numberline {1.1.2}Star forming conditions}{5}{subsection.1.1.2}
-\contentsline {section}{\numberline {1.2}Dust emission}{6}{section.1.2}
-\contentsline {subsection}{\numberline {1.2.1}The $\beta $-$T$ degeneracy}{7}{subsection.1.2.1}
-\contentsline {section}{\numberline {1.3}Herchel Space Observatory}{8}{section.1.3}
-\contentsline {section}{\numberline {1.4}RADMC-3D}{8}{section.1.4}
-\contentsline {subsection}{\numberline {1.4.1}\texttt {radmc3dPy}}{8}{subsection.1.4.1}
-\contentsline {subsection}{\numberline {1.4.2}Input files}{9}{subsection.1.4.2}
-\contentsline {subsection}{\numberline {1.4.3}Thermal Monte-Carlo dust emission}{10}{subsection.1.4.3}
-\contentsline {subsection}{\numberline {1.4.4}Ray tracing dust emission}{10}{subsection.1.4.4}
-\contentsline {chapter}{\numberline {2}Methodology}{12}{chapter.2}
-\contentsline {section}{\numberline {2.1}Model setup}{12}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Example scripts}{12}{subsection.2.1.1}
-\contentsline {subsection}{\numberline {2.1.2}Modelling a cloud}{13}{subsection.2.1.2}
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}
+\contentsline {section}{\numberline {1.1}Molecular clouds}{5}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Molecular cloud composition}{6}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Star forming conditions}{6}{subsection.1.1.2}
+\contentsline {section}{\numberline {1.2}Dust emission}{7}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}The $\beta $-$T$ degeneracy}{9}{subsection.1.2.1}
+\contentsline {section}{\numberline {1.3}Herchel Space Observatory}{9}{section.1.3}
+\contentsline {section}{\numberline {1.4}RADMC-3D}{10}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}Input files}{10}{subsection.1.4.1}
+\contentsline {subsection}{\numberline {1.4.2}Ray tracing dust emission}{12}{subsection.1.4.2}
+\contentsline {chapter}{\numberline {2}Methodology}{13}{chapter.2}
+\contentsline {section}{\numberline {2.1}Modelling routine}{13}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Modelling a cloud}{13}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Building dust intensities}{13}{subsection.2.1.2}
 \contentsline {subsection}{\numberline {2.1.3}Simulating Herschel}{13}{subsection.2.1.3}
-\contentsline {subsection}{\numberline {2.1.4}Transmission}{13}{subsection.2.1.4}
-\contentsline {subsection}{\numberline {2.1.5}Composite imaging}{15}{subsection.2.1.5}
-\contentsline {section}{\numberline {2.2}Analysis routine}{15}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Spectral energy distributions (SEDs)}{15}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Parameter estimation}{16}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.1.4}Transmission}{14}{subsection.2.1.4}
+\contentsline {subsection}{\numberline {2.1.5}Composite imaging}{14}{subsection.2.1.5}
+\contentsline {section}{\numberline {2.2}Analysis routine}{16}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Spectral energy distributions (SEDs)}{16}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Parameter estimation}{17}{subsection.2.2.2}
 \contentsline {section}{\numberline {2.3}Image construction}{18}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}2D Maps of $N$ and $T$}{18}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}Dendrogram analysis}{18}{subsection.2.3.2}
-\contentsline {chapter}{\numberline {3}Results}{20}{chapter.3}
-\contentsline {section}{\numberline {3.1}Isothermal spherical cloud}{20}{section.3.1}
-\contentsline {chapter}{\numberline {4}Discussion}{22}{chapter.4}
-\contentsline {chapter}{\numberline {5}Conclusion}{23}{chapter.5}
+\contentsline {subsection}{\numberline {2.3.2}Dendrogram analysis}{19}{subsection.2.3.2}
+\contentsline {chapter}{\numberline {3}Results}{21}{chapter.3}
+\contentsline {section}{\numberline {3.1}Isothermal spherical cloud}{21}{section.3.1}
+\contentsline {section}{\numberline {3.2}Arepo data}{23}{section.3.2}
+\contentsline {section}{\numberline {3.3}Line of sight temperature variations}{25}{section.3.3}
+\contentsline {section}{\numberline {3.4}Core extraction}{26}{section.3.4}
+\contentsline {chapter}{\numberline {4}Discussion}{29}{chapter.4}
+\contentsline {chapter}{\numberline {5}Conclusion}{30}{chapter.5}
+\contentsline {chapter}{\numberline {6}Future work}{31}{chapter.6}

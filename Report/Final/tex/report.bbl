@@ -66,34 +66,34 @@
       \verb https://dendrograms.readthedocs.org/en/latest/_images/schematic_structure_1.png
       \endverb
     \endentry
-    \entry{b&w}{article}{}
-      \name{author}{2}{}{%
-        {{uniquename=0,hash=65fffaea2c39b75ccd7b9e3f44577be9}{{Bjorkman}}{B\bibinitperiod}{J.\bibnamedelimi E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=3db98d47f7086a3493a01b2da50f0be5}{{Wood}}{W\bibinitperiod}{K.}{K\bibinitperiod}{}{}{}{}}%
+    \entry{tail}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=7d17d041d045c223766fb51af7d1729d}{{Brunt}}{B\bibinitperiod}{C.\bibnamedelimi M.}{C\bibinitperiod\bibinitdelim M\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{c94136861a2e350855ab6d3e34b473fa}
-      \strng{fullhash}{c94136861a2e350855ab6d3e34b473fa}
+      \strng{namehash}{7d17d041d045c223766fb51af7d1729d}
+      \strng{fullhash}{7d17d041d045c223766fb51af7d1729d}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
-      \field{labelyear}{2001}
+      \field{labelyear}{2015}
       \field{labelmonth}{06}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{\apj}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\mnras}
       \field{month}{06}
-      \field{title}{{Radiative Equilibrium and Temperature Correction in Monte Carlo Radiation Transfer}}
-      \field{volume}{554}
-      \field{year}{2001}
-      \field{pages}{615\bibrangedash 623}
-      \range{pages}{9}
+      \field{title}{{Power-law tails in probability density functions of molecular cloud column density}}
+      \field{volume}{449}
+      \field{year}{2015}
+      \field{pages}{4465\bibrangedash 4475}
+      \range{pages}{11}
       \verb{doi}
-      \verb 10.1086/321336
+      \verb 10.1093/mnras/stv471
       \endverb
       \verb{eprint}
-      \verb astro-ph/0103249
+      \verb 1503.01306
       \endverb
-      \keyw{Stars: Circumstellar Matter,ISM: Dust,Extinction,Radiative Transfer,Scattering}
+      \keyw{methods: statistical,ISM: clouds}
     \endentry
     \entry{rho}{online}{}
       \name{author}{1}{}{%
@@ -111,6 +111,36 @@
       \verb{url}
       \verb http://coolcosmos.ipac.caltech.edu/image_galleries/IRAS/roph.html
       \endverb
+    \endentry
+    \entry{coldensity}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=331c4f6081c93200dfce2a5205e70d34}{{Clark}}{C\bibinitperiod}{P.\bibnamedelimi C.}{P\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=c2d836dcb3026e9884ee497a8d7e7a66}{{Glover}}{G\bibinitperiod}{S.\bibnamedelimi C.\bibnamedelimi O.}{S\bibinitperiod\bibinitdelim C\bibinitperiod\bibinitdelim O\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{03d1743f94c5468b09df7354211a69d2}
+      \strng{fullhash}{03d1743f94c5468b09df7354211a69d2}
+      \field{sortinit}{C}
+      \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \field{labelyear}{2014}
+      \field{labelmonth}{11}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\mnras}
+      \field{month}{11}
+      \field{title}{{On column density thresholds and the star formation rate}}
+      \field{volume}{444}
+      \field{year}{2014}
+      \field{pages}{2396\bibrangedash 2414}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1093/mnras/stu1589
+      \endverb
+      \verb{eprint}
+      \verb 1306.5714
+      \endverb
+      \keyw{stars: formation,ISM: clouds,ISM: molecules,galaxies: ISM}
     \endentry
     \entry{bound}{article}{}
       \name{author}{3}{}{%
@@ -611,20 +641,37 @@
       \verb http://rsta.royalsocietypublishing.org/content/199/312-320/1
       \endverb
     \endentry
-    \entry{radmc3dPy}{misc}{}
-      \name{author}{1}{}{%
-        {{uniquename=0,hash=0e840c61820e27680ab41b92ba5dea88}{{Juhasz}}{J\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+    \entry{powerlaw}{article}{}
+      \name{author}{4}{}{%
+        {{uniquename=0,hash=51081f14e077d1862053debfb7eaf3f9}{{Kainulainen}}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=120bc6696cb3774ec2c373db4de5866d}{{Beuther}}{B\bibinitperiod}{H.}{H\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=b8b6e17f3ff4babcb43252650ba51cb4}{{Henning}}{H\bibinitperiod}{T.}{T\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=0c0920d278c5eeb9c216a526d3d243bf}{{Plume}}{P\bibinitperiod}{R.}{R\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{0e840c61820e27680ab41b92ba5dea88}
-      \strng{fullhash}{0e840c61820e27680ab41b92ba5dea88}
-      \field{sortinit}{J}
-      \field{sortinithash}{ec3950a647c092421b9fcca6d819504a}
-      \field{labelyear}{nodate}
+      \strng{namehash}{1f29c8e892041f1681ae7667d9d2fc25}
+      \strng{fullhash}{50d5dcaf0ad4ce15005fd4627276518d}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{2009}
+      \field{labelmonth}{12}
+      \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{radmc3dPy}
-      \field{version}{0.25}
-      \keyw{Software}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\aap}
+      \field{month}{12}
+      \field{title}{{Probing the evolution of molecular cloud structure. From quiescence to birth}}
+      \field{volume}{508}
+      \field{year}{2009}
+      \field{pages}{L35\bibrangedash L38}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1051/0004-6361/200913605
+      \endverb
+      \verb{eprint}
+      \verb 0911.5648
+      \endverb
+      \keyw{ISM: clouds,ISM: structure,stars: formation,dust,extinction,evolution}
     \endentry
     \entry{degen}{article}{}
       \name{author}{4}{}{%
@@ -1000,7 +1047,6 @@
       \field{year}{1997}
     \endentry
   \endsortlist
-  \missing{hildebrand}
 \endrefsection
 \endinput
 

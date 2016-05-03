@@ -104,8 +104,9 @@ with open('image_trans.out', 'w') as f:
     image_trans.writerow([imag.sizepix_x, imag.sizepix_y])
 
     # Because the image is a composite of all wavelengths, only write the average of the wavelength points
-    avwav = np.mean(imag.wav)
-    image_trans.writerow(["%.15f" % avwav])
+    #avwav = np.mean(imag.wav)
+    cenwav = 68.924739
+    image_trans.writerow(["%.15f" % cenwav])
     # Writes a blank line to seperate the wavelength points from the intensity points
     image_trans.writerow([])
 

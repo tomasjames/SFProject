@@ -54,6 +54,19 @@ T_chi_inp, T_chierror_inp = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(le
 N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
+########################### Determine expected column density ######################
+
+# Define the density and temperature expected of a core
+rho_0 = (10**4)*mp*muh2
+T_0 = 15
+
+# Determine the Jeans mass and radius and use these to define the column density
+#M_j_SI = (((5*k*T_0)/(G*muh2*mh))**(3./2)*(3./(4*np.pi*rho_0))**(1./2))*1000
+M_j = (((5*kk*T_0)/(gg*muh2*mp))**(3./2))*(3./(4*np.pi*rho_0))**(1./2)
+#R_j = (np.sqrt((15*k*(T_0))/(4*np.pi*G*muh2*mh*rho_0)))*100
+R_j = ((15*kk*(T_0))/(4*np.pi*gg*muh2*mp*rho_0))**(1./2)
+N_j = (M_j/(muh2*mp*(R_j)**2))
+
 ######################## Analyse data with dendrograms ############################
 
 # Define naive tracking lists
@@ -72,18 +85,18 @@ condition = 4.
 
 # Loop through all fits files
 for file in glob.glob('*.fits'):
+    print 'File is...', file
+
     count += 1
 
     # Read in using astropy and then append the data to a list for use later
     contents = fits.open(str(file))[1]
 
-    # Define a dendrogram instance
-    d = Dendrogram.compute(contents.data, verbose=True)
+    if 'N_chi_inp' in file:
 
-    # Let the dendrogram become an interactive plot
-    #p = d.plotter()
+        # Define a dendrogram instance
+        d = Dendrogram.compute(contents.data, min_value=N_j/100, min_npix=4, verbose=True)
 
-    if 'N_chi' in file:
         N_chi_indices, N_chi_vals = [], []
 
         N_chi_data = contents.data
@@ -93,11 +106,11 @@ for file in glob.glob('*.fits'):
         cs = csv.writer(N_chi_mass, delimiter=' ')
 
         # Save a line to allow better understanding of the columns
-        cs_towrite = ['Index', 'U', 'GPE', 'Mass/ms', 'Ratio']
+        cs_towrite = ['First x Pixel', 'First y Pixel', 'U', 'GPE', 'Mass/ms', 'Ratio']
         cs.writerow(cs_towrite)
 
         # Open the temperature file and extract the numerical data
-        T_chi = fits.open(str('T_chi_inp.fits'))[1].data
+        T_data = fits.open(str('T_chi_inp.fits'))[1].data
 
         # Add the data to a figure
         fig = figure()
@@ -111,7 +124,7 @@ for file in glob.glob('*.fits'):
 
         ax1.imshow(contents.data, origin='lower', interpolation='nearest')
 
-        p.plot_contour(ax1, color='black')
+        #p.plot_contour(ax1, color='black')
 
         # Find the structure within the data
         for i in range(0,len(d)):
@@ -126,41 +139,46 @@ for file in glob.glob('*.fits'):
             # Determine the type of structure
             if struct.is_leaf:
 
-                # Determine whether the number of pixels in the leaf is likely to be a core
-                if np.float64(len(struct.indices(subtree=True)[0])) >= np.float64(condition) and np.sum(N_chi_inp[struct.indices(subtree=True)]/N_chierror_inp[struct.indices(subtree=True)]) >= np.float64(2.):
-                #if np.sum(N_chi_inp[struct.indices(subtree=True)]/N_chierror_inp[struct.indices(subtree=True)]) >= np.float64(3.):
-                    N = struct.values(subtree=True)
-                    ind_N = struct.indices(subtree=True)
+                # Extract the numerical values at the leaf
+                N = struct.values(subtree=True)
+                ind_N = struct.indices(subtree=True)
 
-                    # Extract the indices of the core and its value
-                    N_chi_indices.append(ind_N)
-                    N_chi_vals.append(N)
+                # Determine the number density of the leaf
+                num_pix = len(struct.indices(subtree=True)[0]) # Determine the number of pixels in the leaf
+                tot_area = num_pix*(imag.sizepix_x*imag.sizepix_y) # Determine the total area (area of one pixel multiplied by the number of pixels)
+                R_core = np.sqrt(tot_area/np.pi) # If those pixels in the leaf are spherical then they would have an area piR**2 = area, so R = (area/pi)**0.5
+                M = np.mean(N*100)*(muh2*mp)*(np.pi*(R_core)**2) # Determine the mass
 
-                    # Determine the mass of the gas (assuming each core is a sphere as the area is pi*r**2) at these points
-                    M = np.sum(N*(muh2*mp)*(np.pi*(imag.sizepix_x/2)**2))
-                    M_chi_list.append(M)
+                # Pull temperature at the given indices
+                T_weight = T_data[ind_N]
+                T = np.sum(T_weight*N*100)/np.sum(N*100)
 
-                    # Extract the chi-squared recovered temperatures at these points
-                    T_weight = T_chi[ind_N]
-                    T = np.sum(T_weight*N)/np.sum(N)
+                # Extract the indices of the core and its value
+                N_chi_indices.append(ind_N)
+                N_chi_vals.append(N*100)
 
-                    # Determine the gpe (GMm/r). Neglect the second M term (the term coming from infinity) as this cancels when determining the virial ratio later
-                    gpe = (-gg)*M/((imag.sizepix_x/2))
-                    gpe_chi.append(gpe)
+                # Append the earlier determined mass to the list
+                M_chi_list.append(M)
 
-                    # Determine the internal energy per unit mass
-                    u = (3./2)*((kk*T)/(muh2*mp))
+                # Determine the gpe (GMm/r). Neglect the second M term (the term coming from infinity) as this cancels when determining the virial ratio later
+                gpe = (3./5)*(-gg)*M/((R_core))
+                gpe_chi.append(gpe)
 
-                    # Virial theorem: 2K+U=0, -U/2K=1. U is the internal energy of the overall mass, i.e. U=u*M.
-                    ratio = (u)/(-gpe)
-                    ratio_chi.append(ratio)
+                # Determine the internal energy per unit mass
+                u = (3./2)*((kk*T)/(muh2*mp))
 
-                    if ratio < 1:
-                        p.plot_contour(ax1, structure=struct, lw=2, colors='red')
-                    elif ratio > 1:
-                        p.plot_contour(ax1, structure=struct, lw=2, colors='green')
+                # Virial theorem: 2K+U=0, -U/2K=1. U is the internal energy of the overall mass, i.e. U=u*M.
+                ratio = (u)/(-gpe)
+                ratio_chi.append(ratio)
 
-                    cs_towrite = [struct.indices(subtree=True), gpe, u, M/ms, ratio]
+                if ratio > 1:
+                    p.plot_contour(ax1, structure=struct, lw=2, colors='red')
+                    bound_store = 'Unbound'
+                elif ratio <= 1:
+                    p.plot_contour(ax1, structure=struct, lw=2, colors='green')
+                    bound_store = 'Bound'
+
+                    cs_towrite = [ind_N[0][0], ind_N[1][0], gpe, u, M/ms, ratio]
 
                     # Write to file
                     cs.writerow(cs_towrite)
@@ -168,21 +186,32 @@ for file in glob.glob('*.fits'):
         # Plot the entire tree in black
         p.plot_tree(ax2, color='black')
 
+        print 'Evaluated leaves...'
+
         ax1.set_xlabel('X')
         ax1.set_ylabel('Y')
         ax1.set_title('A Map Showing the Structure\n of $N$ for the $\chi^{2}$ Recovered Values')
 
         ax2.set_xlabel('Structure')
-        ax2.set_ylabel('$N\/(g\/cm^{-3})$')
+        ax2.set_ylabel('$N_{dust}\/(cm^{-2})$')
         ax2.set_title('A Dendrogram Showing the Structure\n of $N$ for the $\chi^{2}$ Recovered Values')
+
+        print 'Saving...'
 
         # Save the image and then close to save memory and allow the next image to take its place
         fig.savefig(str(file)+str('.jpg'), dpi=300)
         close()
 
+        print 'Saved!'
+
         N_chi_mass.close()
 
-    elif 'N_data' in file:
+        print 'Closed...'
+
+    if 'N_data_inp' in file:
+
+        # Define a dendrogram instance
+        d = Dendrogram.compute(contents.data, min_value=N_j/100, min_delta=3, min_npix=4, verbose=True)
 
         N_data_indices, N_data_vals = [], []
 
@@ -193,7 +222,7 @@ for file in glob.glob('*.fits'):
         cs = csv.writer(N_data_mass, delimiter=' ')
 
         # Save a line to allow better understanding of the columns
-        cs_towrite = ['Index', 'U', 'GPE', 'Mass/ms', 'Ratio']
+        cs_towrite = ['First x Pixel', 'First y Pixel','U', 'GPE', 'Mass/ms', 'Ratio']
         cs.writerow(cs_towrite)
 
         # Open the temperature file and extract the numerical data
@@ -211,7 +240,7 @@ for file in glob.glob('*.fits'):
 
         ax1.imshow(contents.data, origin='lower', interpolation='nearest')
 
-        p.plot_contour(ax1, color='black')
+        #p.plot_contour(ax1, color='black')
 
         # Find the structure within the data
         for i in range(0,len(d)):
@@ -226,40 +255,46 @@ for file in glob.glob('*.fits'):
             # Determine the type of structure
             if struct.is_leaf:
 
-                # Determine whether the number of pixels in the leaf is likely to be a core
-                if np.float64(len(struct.indices(subtree=True)[0])) >= np.float64(condition):
-                    N = struct.values(subtree=True)
-                    ind_N = struct.indices(subtree=True)
+                # Extract the numerical values at the leaf
+                N = struct.values(subtree=True)
+                ind_N = struct.indices(subtree=True)
 
-                    # Extract the indices of the core and its value
-                    N_data_indices.append(ind_N)
-                    N_data_vals.append(N)
+                # Determine the number density of the leaf
+                num_pix = len(struct.indices(subtree=True)[0]) # Determine the number of pixels in the leaf
+                tot_area = num_pix*(imag.sizepix_x*imag.sizepix_y) # Determine the total area (area of one pixel multiplied by the number of pixels)
+                R_core = np.sqrt(tot_area/np.pi) # If those pixels in the leaf are spherical then they would have an area piR**2 = area, so R = (area/pi)**0.5
+                M = np.mean(N*100)*(muh2*mp)*(np.pi*(R_core)**2) # Determine the mass
 
-                    # Determine the mass of the gas (assuming each core is a sphere as the area is pi*r**2) at these points
-                    M = np.sum(N*(muh2*mp)*(np.pi*(imag.sizepix_x/2)**2))
-                    M_data_list.append(M)
+                # Pull temperature at the given indices
+                T_weight = T_data[ind_N]
+                T = np.sum(T_weight*N*100)/np.sum(N*100)
 
-                    # Extract the chi-squared recovered temperatures at these points
-                    T_weight = T_data[ind_N]
-                    T = np.sum(T_weight*N)/np.sum(N)
+                # Extract the indices of the core and its value
+                N_data_indices.append(ind_N)
+                N_data_vals.append(N*100)
 
-                    # Determine the gpe
-                    gpe = (-gg)*M/((imag.sizepix_x/2))
-                    gpe_data.append(gpe)
+                # Append the earlier determined mass to the list
+                M_data_list.append(M)
 
-                    # Determine the internal energy per unit mass
-                    u = (3./2)*((kk*T)/(muh2*mp))
+                # Determine the gpe (GMm/r). Neglect the second M term (the term coming from infinity) as this cancels when determining the virial ratio later
+                gpe = (3./5)*(-gg)*M/((R_core))
+                gpe_chi.append(gpe)
 
-                    # Virial theorem: 2K+U=0, -U/2K=1. U is the internal energy of the overall mass, i.e. U=u*M.
-                    ratio = (u)/(-gpe)
-                    ratio_data.append(ratio)
+                # Determine the internal energy per unit mass
+                u = (3./2)*((kk*T)/(muh2*mp))
 
-                    if ratio < 1:
-                        p.plot_contour(ax1, structure=struct, lw=2, colors='red')
-                    elif ratio > 1:
-                        p.plot_contour(ax1, structure=struct, lw=2, colors='green')
+                # Virial theorem: 2K+U=0, -U/2K=1. U is the internal energy of the overall mass, i.e. U=u*M.
+                ratio = (u)/(-gpe)
+                ratio_chi.append(ratio)
 
-                    cs_towrite = [struct.indices(subtree=True), gpe, u, M/ms, ratio]
+                if ratio > 1:
+                    p.plot_contour(ax1, structure=struct, lw=2, colors='red')
+                    bound_store = 'Unbound'
+                elif ratio <= 1:
+                    p.plot_contour(ax1, structure=struct, lw=2, colors='green')
+                    bound_store = 'Bound'
+
+                    cs_towrite = [ind_N[0][0], ind_N[1][0], gpe, u, M/ms, ratio]
 
                     # Write to file
                     cs.writerow(cs_towrite)
@@ -269,11 +304,11 @@ for file in glob.glob('*.fits'):
 
         ax1.set_xlabel('X')
         ax1.set_ylabel('Y')
-        ax1.set_title('A Map Showing the Structure\n of $N$ for the $\chi^{2}$ Recovered Values')
+        ax1.set_title('A Map Showing the Structure\n of $N$ for the Data Derived Values')
 
         ax2.set_xlabel('Structure')
-        ax2.set_ylabel('$N\/(g\/cm^{-3})$')
-        ax2.set_title('A Dendrogram Showing the Structure\n of $N$ for the $\chi^{2}$ Recovered Values')
+        ax2.set_ylabel('$N_{dust}\/(cm^{-2})$')
+        ax2.set_title('A Dendrogram Showing the Structure\n of $N$ for the Data Derived Values')
 
         # Save the image and then close to save memory and allow the next image to take its place
         fig.savefig(str(file)+str('.jpg'), dpi=300)
@@ -282,6 +317,9 @@ for file in glob.glob('*.fits'):
         N_data_mass.close()
 
     else:
+        # Define a dendrogram instance
+        d = Dendrogram.compute(contents.data, verbose=True)
+
         # Let the dendrogram become an interactive plot
         p = d.plotter()
 
@@ -295,6 +333,7 @@ for file in glob.glob('*.fits'):
         #ax14 = subplot2grid((3, 3), (1, 2), rowspan=2)
 
         ax1.imshow(contents.data, origin='lower', interpolation='nearest')
+
         '''
         # Find the structure within the data
         for i in range(0,len(d)):
@@ -354,3 +393,35 @@ for file in glob.glob('*.fits'):
         # Save the image and then close to save memory and allow the next image to take its place
         fig.savefig(str(file)+str('.jpg'), dpi=300)
         close()
+
+######################## Plot recovered masses ##########################
+
+# Read in the data
+chi = np.loadtxt('N_chi_mass.txt',skiprows=1)
+data = np.loadtxt('N_data_mass.txt',skiprows=1)
+
+psw_raw = np.loadtxt('../../data/psw/dust_project/image_trans.out',skiprows=6)
+eff = 247.12451
+
+psw = np.reshape(psw_raw, (np.sqrt(len(psw_raw)),np.sqrt(len(psw_raw))))
+
+# Pull out the pixel locations
+xpix_chi, ypix_chi = chi[:,0], chi[:,1]
+xpix_data, ypix_data = data[:,0], data[:,1]
+
+# Pull out the masses
+mass_chi = chi[:,4]
+mass_data = data[:,4]
+
+figure(1)
+imshow(psw,origin='left')
+colorbar()
+plot(xpix_chi, ypix_chi, 'c.', label=r'$\chi^{2}$')
+plot(xpix_data, ypix_data, 'm.', label=r'$Data$')
+xlim(0,200)
+ylim(0,200)
+xlabel('X (Pixels)')
+ylabel('Y (Pixels)')
+
+savefig('masses.png',dpi=300)
+close()

@@ -52,7 +52,8 @@ trans = trans_data[:,1]
 
 # Determine parameters
 wav = imag.wav
-w_cen = 71.330763
+#w_cen = 71.330763
+w_cen = 68.92474
 #flux = middle_flux_trans
 
 v = cc/(wav*10**-4)
