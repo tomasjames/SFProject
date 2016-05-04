@@ -26,9 +26,9 @@
 \contentsline {subsection}{\numberline {2.3.2}Dendrogram analysis}{19}{subsection.2.3.2}
 \contentsline {chapter}{\numberline {3}Results}{21}{chapter.3}
 \contentsline {section}{\numberline {3.1}Isothermal spherical cloud}{21}{section.3.1}
-\contentsline {section}{\numberline {3.2}Arepo data}{23}{section.3.2}
-\contentsline {section}{\numberline {3.3}Line of sight temperature variations}{25}{section.3.3}
-\contentsline {section}{\numberline {3.4}Core extraction}{26}{section.3.4}
-\contentsline {chapter}{\numberline {4}Discussion}{29}{chapter.4}
-\contentsline {chapter}{\numberline {5}Conclusion}{30}{chapter.5}
-\contentsline {chapter}{\numberline {6}Future work}{31}{chapter.6}
+\contentsline {section}{\numberline {3.2}Arepo data}{24}{section.3.2}
+\contentsline {section}{\numberline {3.3}Line of sight temperature variations}{26}{section.3.3}
+\contentsline {section}{\numberline {3.4}Core extraction}{27}{section.3.4}
+\contentsline {chapter}{\numberline {4}Discussion}{30}{chapter.4}
+\contentsline {chapter}{\numberline {5}Conclusion}{31}{chapter.5}
+\contentsline {chapter}{\numberline {6}Future work}{32}{chapter.6}

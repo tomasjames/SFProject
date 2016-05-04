@@ -48,8 +48,8 @@ chi_N, chi_N_error = chi_data[:,1], chi_data[:,-2]
 chi_T, chi_T_error = chi_data[:,2], chi_data[:,-1]
 
 # Reshape the data such that x and y pixels correspond
-N_chi_inp, N_chierror_inp = np.reshape(chi_N, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_N_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
-T_chi_inp, T_chierror_inp = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_T_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
+N_chi_inp, N_chi_inp_error = np.reshape(chi_N, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_N_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
+T_chi_inp, T_chi_inp_error = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_T_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
 
 N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
@@ -106,7 +106,7 @@ for file in glob.glob('*.fits'):
         cs = csv.writer(N_chi_mass, delimiter=' ')
 
         # Save a line to allow better understanding of the columns
-        cs_towrite = ['First x Pixel', 'First y Pixel', 'U', 'GPE', 'Mass/ms', 'Ratio']
+        cs_towrite = ['First x Pixel', 'First y Pixel', 'U', 'GPE', 'Mass/ms', 'Sigma M/ms', 'Ratio']
         cs.writerow(cs_towrite)
 
         # Open the temperature file and extract the numerical data
@@ -143,11 +143,18 @@ for file in glob.glob('*.fits'):
                 N = struct.values(subtree=True)
                 ind_N = struct.indices(subtree=True)
 
+                # Determine the error in N
+                #sigma_N = np.std(N_chi_inp_error[ind_N]*100)/np.sqrt(len(ind_N[0])) # i.e. standard deviation of the quantities divided by the root of the number of quantities
+                sigma_N = np.sqrt(np.sum((N_chi_inp_error[ind_N]*100)**2)/len(ind_N[0]))
+
                 # Determine the number density of the leaf
                 num_pix = len(struct.indices(subtree=True)[0]) # Determine the number of pixels in the leaf
                 tot_area = num_pix*(imag.sizepix_x*imag.sizepix_y) # Determine the total area (area of one pixel multiplied by the number of pixels)
                 R_core = np.sqrt(tot_area/np.pi) # If those pixels in the leaf are spherical then they would have an area piR**2 = area, so R = (area/pi)**0.5
                 M = np.mean(N*100)*(muh2*mp)*(np.pi*(R_core)**2) # Determine the mass
+
+                # Find the error in M
+                sigma_M = M*(sigma_N/np.mean(N*100))
 
                 # Pull temperature at the given indices
                 T_weight = T_data[ind_N]
@@ -178,7 +185,7 @@ for file in glob.glob('*.fits'):
                     p.plot_contour(ax1, structure=struct, lw=2, colors='green')
                     bound_store = 'Bound'
 
-                    cs_towrite = [ind_N[0][0], ind_N[1][0], gpe, u, M/ms, ratio]
+                    cs_towrite = [ind_N[0][0], ind_N[1][0], gpe, u, M/ms, sigma_M/ms, ratio]
 
                     # Write to file
                     cs.writerow(cs_towrite)
@@ -207,7 +214,7 @@ for file in glob.glob('*.fits'):
         N_chi_mass.close()
 
         print 'Closed...'
-
+'''
     if 'N_data_inp' in file:
 
         # Define a dendrogram instance
@@ -222,7 +229,7 @@ for file in glob.glob('*.fits'):
         cs = csv.writer(N_data_mass, delimiter=' ')
 
         # Save a line to allow better understanding of the columns
-        cs_towrite = ['First x Pixel', 'First y Pixel','U', 'GPE', 'Mass/ms', 'Ratio']
+        cs_towrite = ['First x Pixel', 'First y Pixel', 'U', 'GPE', 'Mass/ms', 'Ratio']
         cs.writerow(cs_towrite)
 
         # Open the temperature file and extract the numerical data
@@ -259,11 +266,17 @@ for file in glob.glob('*.fits'):
                 N = struct.values(subtree=True)
                 ind_N = struct.indices(subtree=True)
 
+                # Determine the error in N
+                #sigma_N = np.sqrt(np.sum((N_chi_inp_error[ind_N]*100)**2)) # i.e. sqrt(sigma_N1**2 + sigma_N2**2 + ...)
+
                 # Determine the number density of the leaf
                 num_pix = len(struct.indices(subtree=True)[0]) # Determine the number of pixels in the leaf
                 tot_area = num_pix*(imag.sizepix_x*imag.sizepix_y) # Determine the total area (area of one pixel multiplied by the number of pixels)
                 R_core = np.sqrt(tot_area/np.pi) # If those pixels in the leaf are spherical then they would have an area piR**2 = area, so R = (area/pi)**0.5
                 M = np.mean(N*100)*(muh2*mp)*(np.pi*(R_core)**2) # Determine the mass
+
+                # Find the error in M
+                #sigma_M = M*np.sqrt((sigma_N)/(np.mean(N)*100))
 
                 # Pull temperature at the given indices
                 T_weight = T_data[ind_N]
@@ -333,8 +346,8 @@ for file in glob.glob('*.fits'):
         #ax14 = subplot2grid((3, 3), (1, 2), rowspan=2)
 
         ax1.imshow(contents.data, origin='lower', interpolation='nearest')
-
-        '''
+'''
+'''
         # Find the structure within the data
         for i in range(0,len(d)):
             struct = d[i]
@@ -361,7 +374,7 @@ for file in glob.glob('*.fits'):
                 # Highlight branches
                 #p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))
                 p.plot_contour(ax1, structure=struct, lw=3)
-        '''
+
         # Plot the entire tree in black
         p.plot_tree(ax2, color='black')
 
@@ -425,3 +438,4 @@ ylabel('Y (Pixels)')
 
 savefig('masses.png',dpi=300)
 close()
+'''

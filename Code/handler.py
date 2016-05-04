@@ -113,7 +113,7 @@ if data_type == 'sim':
     print '######################################################################\n'
 
 elif data_type == 'filament':
-    
+    '''
     # Run through the files
     for suffix in band:
 
@@ -139,7 +139,7 @@ elif data_type == 'filament':
         os.chdir('../../../../')
 
         # Code will now go back to the top of the loop and execute over the next band
-
+    '''
     ############################# Run the Chi-squared #############################
 
     print '#######################################################################'
