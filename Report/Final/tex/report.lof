@@ -21,20 +21,20 @@
 \contentsline {figure}{\numberline {3.5}{\ignorespaces A representation of how the $\chi ^{2}$ derived $N$ values compare to the initial data input $N$.\relax }}{23}{figure.caption.17}
 \contentsline {figure}{\numberline {3.6}{\ignorespaces A representation of how the $\chi ^{2}$ derived $T$ values compare to the initial data input $T$.\relax }}{23}{figure.caption.17}
 \contentsline {figure}{\numberline {3.7}{\ignorespaces A plot showing how the ratio of $T_{input}/T_{\chi ^{2}}$ varies with the input $T$.\relax }}{24}{figure.caption.18}
-\contentsline {figure}{\numberline {3.8}{\ignorespaces The recovered values of $N$ from the $\chi ^{2}$ minimisation routine.\relax }}{24}{figure.caption.19}
-\contentsline {figure}{\numberline {3.9}{\ignorespaces The reconstructed values of $N$ from the initial input data.\relax }}{24}{figure.caption.19}
-\contentsline {figure}{\numberline {3.10}{\ignorespaces The recovered values of $T$ from the $\chi ^{2}$ minimisation routine.\relax }}{24}{figure.caption.19}
-\contentsline {figure}{\numberline {3.11}{\ignorespaces The reconstructed values of $T$ from the initial input data.\relax }}{24}{figure.caption.19}
-\contentsline {figure}{\numberline {3.12}{\ignorespaces A representation of how the $\chi ^{2}$ derived $N$ values compare to the initial data input $N$.\relax }}{25}{figure.caption.20}
-\contentsline {figure}{\numberline {3.13}{\ignorespaces A representation of how the $\chi ^{2}$ derived $T$ values compare to the initial data input $T$.\relax }}{25}{figure.caption.20}
-\contentsline {figure}{\numberline {3.14}{\ignorespaces A plot showing how the ratio of $T_{input}/T_{\chi ^{2}}$ varies with the input $T$.\relax }}{25}{figure.caption.21}
-\contentsline {figure}{\numberline {3.15}{\ignorespaces A plot showing the relationship between the $\chi ^{2}$ recovered values of $N$ and $T$.\relax }}{26}{figure.caption.22}
-\contentsline {figure}{\numberline {3.16}{\ignorespaces The line of sight temperature variations in the isothermal sphere case as a function of the data derived $T$.\relax }}{27}{figure.caption.23}
-\contentsline {figure}{\numberline {3.17}{\ignorespaces The line of sight temperature variations in the Arepo simulation case as a function of the data derived $T$.\relax }}{27}{figure.caption.23}
-\contentsline {figure}{\numberline {3.18}{\ignorespaces The $\chi ^{2}$ recovered $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{28}{figure.caption.24}
-\contentsline {figure}{\numberline {3.19}{\ignorespaces The data derived $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{28}{figure.caption.24}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces The recovered values of $N$ from the $\chi ^{2}$ minimisation routine.\relax }}{25}{figure.caption.19}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces The reconstructed values of $N$ from the initial input data.\relax }}{25}{figure.caption.19}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces The recovered values of $T$ from the $\chi ^{2}$ minimisation routine.\relax }}{25}{figure.caption.19}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces The reconstructed values of $T$ from the initial input data.\relax }}{25}{figure.caption.19}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces A representation of how the $\chi ^{2}$ derived $N$ values compare to the initial data input $N$.\relax }}{26}{figure.caption.20}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces A representation of how the $\chi ^{2}$ derived $T$ values compare to the initial data input $T$.\relax }}{26}{figure.caption.20}
+\contentsline {figure}{\numberline {3.14}{\ignorespaces A plot showing how the ratio of $T_{input}/T_{\chi ^{2}}$ varies with the input $T$.\relax }}{27}{figure.caption.21}
+\contentsline {figure}{\numberline {3.15}{\ignorespaces A plot showing the relationship between the $\chi ^{2}$ recovered values of $N$ and $T$.\relax }}{28}{figure.caption.22}
+\contentsline {figure}{\numberline {3.16}{\ignorespaces The line of sight temperature variations in the isothermal sphere case as a function of the data derived $T$.\relax }}{28}{figure.caption.23}
+\contentsline {figure}{\numberline {3.17}{\ignorespaces The line of sight temperature variations in the Arepo simulation case as a function of the data derived $T$.\relax }}{28}{figure.caption.23}
+\contentsline {figure}{\numberline {3.18}{\ignorespaces The $\chi ^{2}$ recovered $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{30}{figure.caption.24}
+\contentsline {figure}{\numberline {3.19}{\ignorespaces The data derived $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).\relax }}{30}{figure.caption.24}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces The RADMC-3D intensity outputs for the isothermal source at $T=10\/K$ imaged in all 6 passbands considered.\relax }}{35}{figure.caption.28}
-\contentsline {figure}{\numberline {6.2}{\ignorespaces The RADMC-3D intensity outputs for the Arepo data imaged in all 6 passbands considered.\relax }}{36}{figure.caption.29}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces The RADMC-3D intensity outputs for the isothermal source at $T=10\/K$ imaged in all 6 passbands considered.\relax }}{37}{figure.caption.28}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces The RADMC-3D intensity outputs for the Arepo data imaged in all 6 passbands considered.\relax }}{38}{figure.caption.29}

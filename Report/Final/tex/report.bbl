@@ -142,6 +142,37 @@
       \endverb
       \keyw{stars: formation,ISM: clouds,ISM: molecules,galaxies: ISM}
     \endentry
+    \entry{treecol}{article}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,hash=331c4f6081c93200dfce2a5205e70d34}{{Clark}}{C\bibinitperiod}{P.\bibnamedelimi C.}{P\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=c2d836dcb3026e9884ee497a8d7e7a66}{{Glover}}{G\bibinitperiod}{S.\bibnamedelimi C.\bibnamedelimi O.}{S\bibinitperiod\bibinitdelim C\bibinitperiod\bibinitdelim O\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=469329f8acd9d182ba3dbdb12ee1663a}{{Klessen}}{K\bibinitperiod}{R.\bibnamedelimi S.}{R\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d9fb5f7a6c74d2f7765405c798c51243}
+      \strng{fullhash}{d9fb5f7a6c74d2f7765405c798c51243}
+      \field{sortinit}{C}
+      \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \field{labelyear}{2012}
+      \field{labelmonth}{02}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\mnras}
+      \field{month}{02}
+      \field{title}{{TreeCol: a novel approach to estimating column densities in astrophysical simulations}}
+      \field{volume}{420}
+      \field{year}{2012}
+      \field{pages}{745\bibrangedash 756}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1111/j.1365-2966.2011.20087.x
+      \endverb
+      \verb{eprint}
+      \verb 1109.3861
+      \endverb
+      \keyw{radiative transfer,methods: numerical}
+    \endentry
     \entry{bound}{article}{}
       \name{author}{3}{}{%
         {{uniquename=0,hash=3075fde874b287ce2420d6aba75eac67}{{Dobbs}}{D\bibinitperiod}{C.\bibnamedelimi L.}{C\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
@@ -324,6 +355,36 @@
       \field{title}{Herschel Observer's Manual}
       \field{version}{Version 5.0.3}
       \warn{\item Datamodel: Entry 'herschel' (../refs/refs.bib): Invalid format 'March 7, 2014' of date field 'date' - ignoring}
+    \endentry
+    \entry{decouple}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=c2d836dcb3026e9884ee497a8d7e7a66}{{Glover}}{G\bibinitperiod}{S.\bibnamedelimi C.\bibnamedelimi O.}{S\bibinitperiod\bibinitdelim C\bibinitperiod\bibinitdelim O\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=331c4f6081c93200dfce2a5205e70d34}{{Clark}}{C\bibinitperiod}{P.\bibnamedelimi C.}{P\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{1a230e65604084f781bfdd18d92293b9}
+      \strng{fullhash}{1a230e65604084f781bfdd18d92293b9}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelyear}{2012}
+      \field{labelmonth}{03}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\mnras}
+      \field{month}{03}
+      \field{title}{{Is molecular gas necessary for star formation?}}
+      \field{volume}{421}
+      \field{year}{2012}
+      \field{pages}{9\bibrangedash 19}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1111/j.1365-2966.2011.19648.x
+      \endverb
+      \verb{eprint}
+      \verb 1105.3073
+      \endverb
+      \keyw{stars: formation,ISM: clouds,ISM: molecules,galaxies: ISM}
     \endentry
     \entry{SPIRE}{article}{}
       \name{author}{179}{}{%
@@ -760,7 +821,7 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{chapter}{The evolution of molecular clouds}
-      \field{isbn}{978-3-540-49035-7}
+      \field{isbn}{9783540490357}
       \field{title}{The Structure and Content of Molecular Clouds 25 Years of Molecular Radioastronomy: Proceedings of a Conference Held at Schloss Ringberg, Tegernsee, Germany 14--16 April 1993}
       \field{year}{1994}
       \field{pages}{13\bibrangedash 28}
