@@ -104,10 +104,6 @@ Student ID: 1158976\endgraf\bigskip}} % author name
 %-----------------------------------------------------------------
 
 \begin{abstract}
-\begin{comment}
-  We present an investigation probing whether dust emission in molecular clouds can be used as a surrogate marker of the star forming regions within these clouds. A simple scenario of a spherical, isothermal molecular cloud at $T=10K$ was simulated using RADMC-3D \parencite{RADMC-3D} across the 3 SPIRE \parencite{SPIRE} wavebands centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$ as well as the 3 PACS \parencite{PACS} wavebands centered on 75 $\mu m$, 110 $\mu m$ and 170 $\mu m$. To better simulate an object observed by Herschel, this data was `degraded` by accounting for the filter's transmission curve. Subsequent analysis produced Spectral Energy Distributions (SEDs) on a pixel by pixel basis, where the goodness-of-fit is assessed using a $\chi^{2}$ test. This routine derived the best fit column density $N$ and temperature $T$ at each pixel, subsequently leading to construction of 2-dimensional maps of these regions. Finally this machinery was applied to synthetic Herschel data from the SPH simulation Arepo \parencite{arepo}. The dust properties recovered using the $\chi^{2}$ test are of the correct range however the observed biases stated in \textcite{noise}, \textcite{noiseb} and \textcite{kelly} were evident such that the $\chi^{2}$ test underestimates values of $T$ at lower temperatures and overestimates values of $T$ at higher temperatures, owing to the line of sight temperature variations as stated in \textcite{noise}.
-\end{comment}
-
 We present an investigation probing whether dust emission in molecular clouds can be used as a surrogate marker of the star forming regions within these clouds. To simulate a molecular cloud we use synthetic Herschel data from the moving-mesh SPH code Arepo \parencite{arepo}. Computing dust emission intensity via the ray-tracing code RADMC-3D \parencite{RADMC-3D} in each of the 3 SPIRE \parencite{SPIRE} wavebands (centered on 250 $\mu m$, 350 $\mu m$ and 500 $\mu m$) as well as the 3 PACS \parencite{PACS} wavebands (centered on 75 $\mu m$, 110 $\mu m$ and 170 $\mu m$) produces synthetic, composite observations. We `degrade` the images by accounting for the given filter`s transmission curve, in order to better simulate true Herschel data.  These observations are reduced to Spectral Energy Distributions (SEDs) on a pixel-by-pixel basis and a modified blackbody fitted to the points, estimating the best fit $N$ and $T$ at each pixel via a $\chi^{2}$ minimisation test. These parameters, along with the Arepo input parameters, are used to produce 2-dimensional maps of both $N$ and $T$. We also analyse these maps using dendrograms to probe levels of structure, giving another measure of comparison. We compare both maps with each other (as well as their accompanying dendrograms) and determine that the whilst the $\chi^{2}$ minimised maps retain their structure, the observed biases stated in \textcite{noise, noiseb} and \textcite{kelly} are evident such that the $\chi^{2}$ test results in underestimates of $N$ and overestimates of $T$. We observe the same effects as \textcite{noise} in that the single fit $T$ used here is an inaccurate assumption, given the line of sight temperature variations. We also observe that 3 gravitationally bound cores are recovered from the $\chi^{2}$ $N$ data, whilst 25 gravitationally bound cores are recovered from the data derived $N$. The 3 bound cores from the $\chi^{2}$ routine are contained within the data derived $N$ cores. We observe that the core masses from the $\chi^{2}$ map are significantly lower than the core masses from the data derived $N$, as is expected given the underestimate of $N$ in the $\chi^{2}$ minimisation.
 \end{abstract}
 
@@ -129,14 +125,14 @@ We present an investigation probing whether dust emission in molecular clouds ca
 \chapter{Introduction}
 
 \section{Molecular clouds}
-A molecular cloud is a dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$) at temperatures $<$ 20 $K$ \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}. Whilst the larger molecular gas component within the cloud constitutes the material responsible for star formation, the small dust mass component remains a crucial component in the evolution of the cloud and the star forming process.
+A molecular cloud is a cold ($<20\/K$) and dense region of the Interstellar Medium (ISM), composed primarily of molecular Hydrogren ($H_{2}$). \parencite{dustopacity}. Despite the cloud being primarily a gas of $H_{2}$, a small (by mass) dust component is also present. This dust mass component is approximately 1\% the gas mass according to \textcite{noise}. Whilst the larger molecular gas component within the cloud constitutes the material responsible for star formation, the small dust mass component remains a crucial element in the evolution of the cloud and the star forming process.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \begin{center}
     \includegraphics[width=0.4\textwidth]{../img/rho.jpg}
     \caption[An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite{rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.]{An IRAS image showing the Rho Opiuchi cloud complex, the closest cloud complex to the Solar System \parencite{rho}. Rho Opiuchi is an example of a molecular cloud that is actively forming stars.}
   \end{center}
-\end{wrapfigure} \label{fig:rho}
+\end{wrapfigure}  \label{fig:rho}
 
 An example of a molecular cloud is shown in Figure \ref{fig:rho}. The subject of Figure \ref{fig:rho} is the Rho Ophiuchi cloud complex as imaged by the Infra-red Astronomical Satellite (IRAS). Rho Opiuchi is the nearest active star forming molecular cloud complex to the Solar System\footnote{\textcite{rho-dist} estimates the range of distances as being between 125pc-165pc - a range of almost 40\%.}. Crucially, Rho Ophiuchi is an example of a `stellar nursery`: a molecular cloud that is actively forming stars. As a result of this, Rho Ophiuchi provides an unprecedented oppurtunity to study these sites of early star formation at high resolution. This is in spite of the large uncertainty in estimates of the distance to Rho Ophiuchi \parencite{rho-dist}. Figure \ref{fig:rho} does illustrate, however, that the early stages of star formation aren't directly observable owing to their occlusion by dust in the molecular cloud. This means that the star forming process prior to the pre-Main Sequence phase - where the star blows away its surroundings material - has yet to be directly observed, merely theorised \parencite{hayashi}. Consequently, the initial conditions for star formation to occur have yet to be constrained. Furthermore the only measure of mass distribution in the stellar environment is the Initial Mass Function \parencite{imf}, which describes the mass at which a star enters the Main-Sequence - a measure of the mass distribution prior to the Main-Sequence (the Core Mass Function) when the stellar object remains unobserved is hampered by lack of emperical evidence. Therefore, an alternative method of observing pre-Main Sequence objects, along with investigating the conditions within a molecular cloud at these points, is required to begin constraining both the initial conditions and the CMF. Given that dust occludes these sites, could the dust itself prove a useful tracer of the activity that it enshroudes?
 
@@ -164,30 +160,33 @@ Much like the ISM, molecular clouds are composed of gas and cosmic dust. Whilst 
    \label{table:ism}
 \end{table}
 
-Much like gas in the interstellar medium, interstellar dust`s chemical composition varies, with theories predicting both silicate and carbonaceous species co-existing; this project assumed all dust to be of one species, and to be silicate based. As a molecular cloud is a condensation of the ISM, the compisition of both remain similar, however a molecular cloud differs from the ISM in a number of key ways. Significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in the core of a molecular cloud is thought to be around $10^{5}\/cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $1\/cm^{-3}$ as Table \ref{table:ism} shows, assuming the dust mass to be 1\% that of the gas mass.
+Much like gas in the interstellar medium, interstellar dust`s chemical composition varies, with theories predicting both silicate and carbonaceous species co-existing; this project assumed all dust to be of one species, and to be silicate based. As a molecular cloud is a condensation of the ISM, the composition of both remain similar, however a molecular cloud differs from the ISM in a number of key ways. Significantly greater densities are found within a molecular cloud than that of the ISM. The dust density in the core of a molecular cloud is thought to be around $10^{5}\/cm^{-3}$, whilst the dust density in the surrounding ISM is thought to be around $1\/cm^{-3}$ as Table \ref{table:ism} shows, assuming the dust mass to be 1\% that of the gas mass.
 
-The dust densities may be greater in a molecular cloud than the ISM, but the temperature is observed to obey a different paradigm. \textcite{dustopacity} estimates that a molecular cloud has a temperature $<$ $20\/(K)$, significantly cooler than the surrounding ISM as shown by Table \ref{table:ism}. The warmer ISM results in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance from the centre of the cloud.
+The dust densities may be greater in a molecular cloud than the ISM, but the temperature is observed to obey a different paradigm. \textcite{dustopacity} estimates that a molecular cloud has a temperature $<$ $20\/K$, significantly cooler than the surrounding ISM as shown by Table \ref{table:ism}. The warmer ISM results in a temperature gradient; the ISM heats the cloud from the outside in, resulting in a temperature that increases with distance from the centre of the cloud.
 
 Figure \ref{fig:rho} illustrates the intense infra-red emission within molecular clouds owing to the active star forming occurring within them. It also illustrates the turbulence and chaos within the cloud, with both filamentary structure and (potentially) magnetic fields running throughout the cloud itself. These filaments are regions of higher density, but as \textcite{evo-mol} highlights, the `edges` and transitions in molecular clouds are not strict boundaries as they may appear, but are rather molecular gas transitioning into the surrounding atomic gas. This poses an interesting question: if filaments are dense condensations of gas and dust, then do they act as preferential star formation sites? To answer this question, it is useful to review the conditions within the cloud itself that could instigate the star forming process.
 
 \subsection{Star forming conditions} \label{sec:conditions}
 \textcite{jeans} first demonstrated that a gas of given density and mass will begin to collapse if the gas pressure is overwhelmed by the gravitational force of the gas. This is applicable to star formation, given that 99\% of a molecular cloud, by mass, is gas. As a result, star forming regions within molecular clouds originate from locations of gravitational instability that lead to subsequent collapse. A stable cloud (or portion of a cloud) is in hydrostatic equilibrium, such that the force due to gravity is balanced by the force due to gaseous pressure from the gas within the cloud. This equilibrium state can also be regarded as a virialised state such that $2T+\Omega=0$, where $T$ is the total thermal energy of the system and $\Omega$ is the total gravitational potential energy of the system. The cloud begins to collapse when the gravitational force is greater than the force due to the hydrostatic pressure. This collapse continues unimpinged until such a time that another opposing force can halt the collapse. The initial collapse is triggered when a region within the molecular cloud has a mass that exceedes the Jeans` mass given by Equation \ref{eq:jeans} \parencite{lecture}. This is known as the Jeans Criterion.
 
-\begin{equation}\label{eq:jeans}
+\begin{equation}
   M_{J} = \Bigg( \frac{5kT}{GM} \Bigg )^\frac{3}{2} \Bigg( \frac{3}{4\pi\rho} \Bigg )^\frac{1}{2}
+  \label{eq:jeans}
 \end{equation}
 
-Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the temperature of the region, $G$ is the Universal Gravitational Constant, $M$ is the mass of Hydrogen in the region and $\rho$ is the density of the region prior to collapse. The collapse of an $M_{J}$ mass region occurs according to the free-fall time, $t_{ff}$ described in Equation \ref{eq:tff} \parencite{jeans}.
+Within Equation \ref{eq:jeans}, $k$ is the Stefan-Boltzmann constant, $T$ is the temperature of the region, $G$ is the Universal Gravitational Constant, $M$ is the mass of gas (in this case $H_{2}$) in the region and $\rho$ is the density of the region prior to collapse. The collapse of an $M_{J}$ mass region occurs according to the free-fall time, $t_{ff}$ described in Equation \ref{eq:tff} \parencite{jeans}.
 
-\begin{equation}\label{eq:tff}
+\begin{equation}
   t_{ff} = \sqrt{\frac{3\pi}{32G\rho}}
+  \label{eq:tff}
 \end{equation}
 
 Variables within Equation \ref{eq:tff} are as they were defined in Equation \ref{eq:jeans}. As Equation \ref{eq:jeans} illustrates, the larger the temperature $T$ and the lower the gas density $\rho_{0}$, then the greater the Jeans` mass becomes, making it harder for the region to begin collapse. The temperature within the cloud itself exists as both a gas temperature and a dust temperature. \textcite{decouple} estimates that the gas within the cloud does not heat the dust within the cloud until the number density $n$ exceedes $~2\times10^{4}\/cm^{-3}$. This is defined as `temperature coupling`. The dust itself reaches thermal equilibrium when the dust heating rate per unit volume $\Gamma_{ext}$ equals the radiative cooling rate $\Lambda_{dust}$ \parencite{treecol}:
 
 \begin{equation}
   \Gamma_{ext} - \Lambda_{dust} = 0
-\end{equation} \label{eq:heat}
+  \label{eq:heat}
+\end{equation}
 
 The heating mechanism of the dust is primarily through absorption of radiation, either from the Interstellar Radiation Field (a field of electomagentic radiation in the interstellar medium) or from sources of radiation within the cloud (a protostar, for example). A mathematical treatment as defined in \textcite{treecol} can be found in the Appendix. This study did not incorporate an ISRF into its simulations, but it did assume that the dust grains in the cloud were in thermal equilibrium such that Equation \ref{eq:heat} was satisfied.
 
@@ -200,36 +199,38 @@ Dust is a relatively small fraction of the total ISM mass, estimated as being on
 
 According to \textcite{dustopacity}, dust radiates as a modified black body in the far infra-red regime (i.e. from $\lambda=\SI{60}{\micro\meter}$) that can approximated using Equation \ref{eq:mbb}.
 
-\begin{equation} \label{eq:mbb}
+\begin{equation}
   S_{\nu} = N_{H_{2}} \Omega \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
+   \label{eq:mbb}
 \end{equation}
 
 In Equation \ref{eq:mbb} $S_{\nu}$ is the flux density, $N_{H_{2}}$ is the column density of molecular Hydrogen, $\Omega$ is the solid angle subtended by the beam, $\kappa_{0}$ is a reference dust opacity, $\nu$ is the frequency of the image, $\nu_{0}$ is a reference frequency at which the reference opacity $\kappa_{0}$ was evaluated at, $\beta$ is the dust spectral index (for siliciate and carbonaceous grains, \textcite{beta} approximates $\beta \sim 2$) and $B_{\nu}(T)$ is the frequency dependent Planck function. An assumption made here, as stated by \textcite{kelly}, is that the dust is optically thin such that
 $\tau_{\nu} = N\kappa_{\nu} \ll 1$. The term $\kappa_{0}(\frac{\nu}{\nu_{0}})^{\beta}$ is the Hildebrand dust opacity law $\kappa_{\nu}$ given in \textcite{dustopacity}. In terms of intensity this equation becomes:
 
-\begin{equation} \label{eq:mbb-int}
+\begin{equation}
   I_{\nu} = \frac{N_{H_{2}}}{R_{dust-gas}} \mu m_{p} \kappa_{0} \Big(\frac{\nu}{\nu_{0}}\Big)^{\beta} B_{\nu}(T)
+   \label{eq:mbb-int}
 \end{equation}
 
 All variables in Equation \ref{eq:mbb-int} are as defined in Equation \ref{eq:mbb}, with the addition of $R_{dust-gas}$. $R_{dust-gas}$ is the dust-to-gas ratio, here approximated as being $100$. We observe that $\frac{N_{H_{2}}}{R_{dust-gas}}$ is the column density of dust along the line of sight, $N$. It is this parameter (along with $T$ along the line of sight) that are the focii of this project. Furthermore throughout this project dust emission was quantified in terms of intensity rather than flux density, as intensity is independent of distance to the source of emission.
 
-\begin{figure}[h]
-  \begin{center}
-    \includegraphics[width=0.6\textwidth]{../img/flux_density_combined.png}
+\begin{wrapfigure}{l}{0.4\textwidth}
+    \includegraphics[width=0.4\textwidth]{../img/flux_density_combined.png}
     \caption[A plot illustrating how the dust spectral index $\beta$ varies the emergent dust SED whilst both $N$ and $T$ remain fixed. This is based off of a plot found in \textcite{noise}.]{A plot illustrating how the dust spectral index $\beta$ varies the emergent dust SED whilst both $N$ and $T$ remain fixed. This is based off of a plot found in \textcite{noise}.}
-  \end{center}
-\end{figure} \label{fig:beta-ex}
+     \label{fig:beta-ex}
+\end{wrapfigure}
 
-Dust properties such as the spectral index $\beta$, temperature $T$ and column density $N$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. Importantly, both Equations \ref{eq:mbb} and \ref{eq:mbb-int} describe dust emission at a single temperature $T$. Two emergent SEDs described by Equation \ref{eq:mbb} at fixed single $N$ and $T$ are shown in Figure \ref{fig:beta-ex}. These properties, however, are experimentally difficult to measure and \textcite{kelly} states that most observational attempts to determine $T$ and $\beta$ rely on a $\chi^{2}$ SED fitting routine. This routine does, however, suffer from drawbacks when fitting for a single temperature $T$. To illustrate, consider Figure \ref{fig:column}.
+Dust properties such as the spectral index $\beta$, temperature $T$ and column density $N$ clearly have an effect on dust emission according to Equations \ref{eq:mbb} and \ref{eq:mbb-int}. Importantly, both Equations \ref{eq:mbb} and \ref{eq:mbb-int} describe dust emission at a single temperature $T$. Two emergent SEDs described by Equation \ref{eq:mbb} at fixed single $N$ and $T$ are shown in Figure \ref{fig:beta-ex}. These properties, however, are experimentally difficult to measure and
+\textcite{kelly} states that most observational attempts to determine $T$ and $\beta$ rely on a $\chi^{2}$ SED fitting routine. This routine does, however, suffer from drawbacks when fitting for a single temperature $T$. To illustrate, consider Figure \ref{fig:col}.
 
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=0.3\textwidth]{../img/column.png}
-    \caption[A figure illustrating a basic molecular cloud, with regions of higher density denoyed by darker red regions. Solid black lines indicate an incoming photon, whilst a dashed line indicates the line of sight.]{A figure illustrating a basic molecular cloud, with regions of higher density denoyed by darker red regions. Solid black lines indicate an incoming photon, whilst a dashed line indicates the line of sight.}
-  \end{center}
-\end{figure} \label{fig:col}
+    \caption[A figure illustrating a basic molecular cloud, with regions of higher density denoted by darker red regions. Solid black lines indicate an incoming photon, whilst a dashed line indicates the line of sight.]{A figure illustrating a basic molecular cloud, with regions of higher density denoyed by darker red regions. Solid black lines indicate an incoming photon, whilst a dashed line indicates the line of sight.}
+  \end{center}\label{fig:col}
+\end{figure}
 
-Figure \ref{fig:col} shows a basic molecular cloud with sub-structure illustrated by the consecutively darker shades of red. A circle indicates the point at which a photon, or indeed the line of sight, passes from a region of one density to a region of different density. By using the line of sight through the centre of the cloud, it is observed that this line of sight intersects a larger number of boundaries than the line of sight on the right that only passes through one region. This means that a larger $N$ is observed through the line of sight in the middle of the cloud than the line of sight on the right. Furthermore, the greater number of boundaries present greater opprtununity for the photon to reflect/scatter. This means that the photon is not absorbed by the dust grain and therefore does not heat it. The larger number of boundaries through the central line of sight means that the material in regions of higher density are not heated as much as the material at lower density, for example the region intersected by the right hand line of sight. This has the effect of introducing more temperature variations along the line of sight when $N$ is large in comparison to low $N$. Therefore, single $T$ fits (in the case of a $\chi^{2}$ fit) in regions of low $N$ recover accurate $T$, whereas single $T$ fits in regions of high $N$ are overestimated owing to the line of sight temperature variations. This effect is observed in studies by \textcite{noise,noiseb} and \textcite{kelly} by fitting for $\beta$-$T$.
+Figure \ref{fig:col} shows a basic molecular cloud with sub-structure (and therefore increasing density) illustrated by the consecutively darker shades of red. A circle indicates the point at which a photon, or indeed the line of sight, passes from a region of one density to a region of different density. By using the line of sight through the centre of the cloud, it is observed that this line of sight intersects a larger number of boundaries than the line of sight on the right that only passes through one region. This means that a larger $N$ is observed through the line of sight in the middle of the cloud than the line of sight on the right. Furthermore, the greater number of boundaries present greater opportunity for the photon to reflect/scatter. This means that the photon is not absorbed by the dust grain and therefore does not heat it. The larger number of boundaries through the central line of sight means that the material in regions of higher density are not heated as much as the material at lower density, for example the region intersected by the right hand line of sight. This has the effect of introducing more temperature variations along the line of sight when $N$ is large in comparison to low $N$. Therefore, single $T$ fits (in the case of a $\chi^{2}$ fit) in regions of low $N$ recover accurate $T$, whereas single $T$ fits in regions of high $N$ are overestimated owing to the line of sight temperature variations. This effect is observed in studies by \textcite{noise,noiseb} and \textcite{kelly} by fitting for $\beta$-$T$.
 
 \subsection{The $\beta$-$T$ degeneracy} \label{sec:degen}
 As Equation \ref{eq:mbb-int} shows, dust does not radiate as a perfect blackbody. This is accounted for by multiplying the Planck function (i.e. the function that describes a body that radiates as a perfect blackbody) by the dust opacity term $\kappa = \kappa_{0}(\frac{\nu}{\nu_{0}})^{\beta}$. Two key variables here are the dust spectral index $\beta$ and the dust temperature $T$. These two properties suffer from a degeneracy \parencite{degen} such that any $\chi^{2}$ test applied to determining the values of $\beta$ and $T$ may understimate one parameter whilst overestimating another.
@@ -279,15 +280,15 @@ Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass} illustrates the passband
   }
 \end{table}
 
-In order to achieve the effective wavelength range described in Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass}, both SPIRE and PACS detectors required extensive cooling to a temperature of $0.3 K$ via $^{3}{He}$ sorption coolers \parencite{herschel}. Again according to \textcite{herschel} the image focal plane required cooling to $1.7 K$, again achieved using 2160 litres of Helium cryogen. To minimise any thermal radiation from the observatory itself, the spacecraft was radiatively cooled to a temperature of $85 K$ \parencite{herschel}. These temperatures allowed effective detection (via a bolometric detector in the case of SPIRE and a photometer in the case of PACS) of infra-red and sub-mm photons.
+In order to achieve the effective wavelength range described in Tables \ref{table:SPIRE-pass} and \ref{table:PACS-pass}, both SPIRE and PACS detectors required extensive cooling to a temperature of $0.3 K$ via $^{3}{He}$ sorption coolers \parencite{herschel}. Again according to \textcite{herschel} the image focal plane required cooling to $1.7 K$, again achieved using 2160 litres of Helium cryogen. To minimise any thermal radiation from the observatory itself, the spacecraft was radiatively cooled to a temperature of $85 K$ \parencite{herschel}. These temperatures allowed effective detection (via a bolometric detector in the case of SPIRE and a photometer in the case of PACS) of infra-red and sub-mm photons. As this project did not use real Herschel data, a method of not only simulating dust emission intensity but also generating realistic images was required. This was achieved by using RADMC-3D.
 
 \section{RADMC-3D} \label{radmc}
 RADMC-3D is a 3-dimensional Monte-Carlo radiative transfer and ray tracing code developed by Cornelis Dullemond for radiative transfer and emission astrophysics in dusty environments \parencite{RADMC-3D}.
 
-RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas. The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations require input files for RADMC-3D to read and use in its simulations.
+RADMC-3D is able to compute dust emission intensity as well as Spectral Energy Distributions (SED) and spectra for a number of different continua. This project focussed only on dust continuum, neglecting gas (as the dust and gas temperatures remain uncoupled at the densities considered in this project). The dust emission intensity can be computed using 2 different methods: the thermal Monte-Carlo simulation, or an image ray trace. All computations, regardless of whether a Monte Carlo simulation or raytrace, require input files for RADMC-3D to read and use in its simulations.
 
 \subsection{Input files} \label{inp}
-As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined input files in order to operate. These input files act as parameter spaces, defining boundary conditions along with step sizes for each given input file. Figure \ref{radmc3d-workflow} shows the workflow of RADMC-3D's operation, including all files used in this project that are required in order to operate RADMC-3D.
+As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined input files in order to operate. These input files act as parameter spaces, defining boundary conditions along with step sizes for each given input file. Figure \ref{fig:radmc3d-workflow} shows the workflow used in this project, including all files that are required in order to operate RADMC-3D.
 
 \begin{figure}[h]
   \centering
@@ -298,19 +299,20 @@ As stated in Section \ref{radmc}, RADMC-3D requires a number of user defined inp
 
 As Figure \ref{fig:radmc3d-workflow} illustrates, all input files to RADMC-3D have extension \texttt{.inp} whilst all output files have extension \texttt{.out}. Any intermediate files, such as those directly calculated by RADMC-3D, have extension \texttt{.dat}. \textit{Most} input files' initial lines - the header information - contain quantitative information regarding the number of pixels/cells in the file, the pixel/cell width along with other identifiers that inform RADMC-3D whether to look for binary files, the number of dust species being considered as well as the number of datapoints in the file.
 
-\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{wrapfigure}{r}{0.4\textwidth}
   \centering
   \includegraphics[scale=0.3]{../img/amr_grid_structure}
   \caption[A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}. This image is based off of an image in \textcite{manual}.]{A pictorial representation of the structure of \texttt{amr\_grid.inp} for a 4x4x3 grid. The index of a cell, denoted by the number contained within it, is the position of that cell in \texttt{amr\_grid.inp}. This image is based off of an image in \textcite{manual}.}
-\end{wrapfigure}\label{fig:amr_grid_structure}
+  \label{fig:amr_grid_structure}
+\end{wrapfigure}
 
-\texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}. They essentially \textquotesingle insert \textquotesingle a value of a physical quantity into each cell, therefore producing another parameter space. This structure is illustrated in Figure \ref{fig:amr_grid_structure}.
+\texttt{amr\_grid.inp} is the file used in order to create a spatial domain within the model. It does this by defining the start and end points of pixels in 3 dimensions: x, y and z. These definitions produce pixels, each of fixed width defined by the distance between pixel start and end points. RADMC-3D also has the ability to perform Adaptive Mesh Refinement, such that regions of interest can be split into more pixels (and have a smaller pixel width and therefore simulated higher resolutions) than, for example, regions of the ISM that do not require a higher resolution. Any further files that setup physical quantities draw directly from the structure of \texttt{amr\_grid.inp}. They essentially \textquotesingle insert\textquotesingle a value of a physical quantity into each cell, therefore producing another parameter space. This structure is illustrated in Figure \ref{fig:amr_grid_structure}.
 
 The index of each cell in Figure \ref{fig:amr_grid_structure} is that cell's position in \texttt{amr\_grid.inp}. For example,
 
 \texttt{dust\_density.inp} is the file that gives RADMC-3D its density information. It has the same structure as \texttt{amr\_grid.inp}, however in place of the start and end pixel points that are found in \texttt{amr\_grid.inp}, \texttt{dust\_density.inp} defines the dust density (in $cgs$ units) at each pixel. This therefore creates a density parameter space with which to work from. Similarly, \texttt{dust\_temperature.dat} draws upon the same idea, however instead of defining dust densities, \texttt{dust\_temperature.dat} defines the dust temperature (in $K$) at each pixel point. These 3 files therefore create 3 parameter spaces: spatial, density and temperature.
 
-Another crucial file is the \texttt{wavelength\_micron.inp} file. This input file defines the wavelengths over which RADMC-3D should compute. By default, \texttt{wavelength\_micron.inp} runs from $\SI{0.1}{\micro\meter}$ to $\SI{1000}{\micro\meter}$ with $150$ points. Dust emission intensity can then be determined at any wavelength between these two bounds. In reality however, computing dust emission intensity over such a wide wavelength range is not always necessary (or practical). RADMc-3D thus allows the user to define a \texttt{camera\_wavelength\_micron.inp} file. This file is designed to constrict the range of wavelengths over which RADMC-3D computes, thus emulating the wavelengths available to a given telescope or filter. In this project \texttt{camera\_wavelength\_micron.inp} was used in order to allow RADMC-3D to compute dust emission intensity in wavelength bands corresponding to those found on both SPIRE \parencite{SPIRE} and PACS \parencite{PACS}.
+Another crucial file is the \texttt{wavelength\_micron.inp} file. This input file defines the wavelengths over which RADMC-3D should determine dust emission intensity. By default, \texttt{wavelength\_micron.inp} runs from $\SI{0.1}{\micro\meter}$ to $\SI{1000}{\micro\meter}$ with $150$ points. Dust emission intensity can then be determined at any wavelength between these two bounds. In reality however, computing dust emission intensity over such a wide wavelength range is not always necessary (or practical). RADMC-3D thus allows the user to define a \texttt{camera\_wavelength\_micron.inp} file. This file is designed to constrict the range of wavelengths over which RADMC-3D computes, thus emulating the wavelengths available to a given telescope or filter. In this project \texttt{camera\_wavelength\_micron.inp} was used in order to allow RADMC-3D to compute dust emission intensity in wavelength bands corresponding to those found on both SPIRE \parencite{SPIRE} and PACS \parencite{PACS}.
 
 \begin{comment}
   \subsection{Thermal Monte-Carlo dust emission} \ref{mctherm}
@@ -319,16 +321,17 @@ Another crucial file is the \texttt{wavelength\_micron.inp} file. This input fil
   Naturally the more pixels an image space comprises then the longer the simulation takes to compute owing to the large number of pixels and therefore collisions encountered. Likewise the greater the dust density at a given point the longer the simulation takes to run owing to a similar effect. Normally, RADMC-3D would write the calculated dust temperatures to \texttt{dust\_temperature.dat} however as the thermal Monte-Carlo simulation was not used in this project, RADMC-3D was supplied with idealised dust temperatures in the form of a pre-determined \texttt{dust\_temperature.dat} file.
 \end{comment}
 
-\subsection{Ray tracing dust emission} \ref{rt_des}
+\subsection{Ray tracing dust emission} \label{sec:rt_des}
 Whilst RADMC-3D is capable of performing a full thermal Monte-Carlo simulation to determine dust temperature, it is also capable of an image ray trace that reads in both user-defined dust temperatures and dust densities, thus bypassing the computation of the dust temperatures. This project made use of the image raytrace rather than the Monte-Carlo simulation. According to \textcite{manual}, the ray-trace follows, by default, a first-order integration where the source function, $S = j_{\nu}/\alpha$ and opacity (and therefore extinction $\alpha$) are constant across the ray. This is described by Equation \ref{eq:raytrace}.
 
 \begin{equation}
   I_{result} = I_{start}e^{-\tau}+(1+e^{-\tau})S
-\end{equation}\label{eq:raytrace}
+  \label{eq:raytrace}
+\end{equation}
 
 $I_{result}$ is the dust emission intensity of the cell, $I_{start}$ is the dust emission intensity of the cell prior to the ray entering it and $\tau$ is the optical depth along the path of the ray through the cell. The optical depth $\tau$ is defined as $\tau = \alpha s$ where $\alpha$ is as defined earlier and $s$ is the distance the ray travels through the cell. The option to perform second-order integration is also made possible by varying the source function $S$ and extinction across the ray. Specifically $S$ and $\alpha$ are fixed at the ingress and egress points of the ray. These points act as boundary conditions such that the variation in $S$ amd $\alpha$ can then be linearly interpolated across the path of the ray through the cell.
 
-The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane. RADMc-3D is also capable of accounting for scattering of photons off of dust grains however this project focussed solely upon absorption and re-emission only.
+The result, however, is the same in both Thermal Monte-Carlo simulation and ray-trace: an \texttt{image.out} file that contains the dust emission intensity at each cell in the image plane. RADMC-3D is also capable of accounting for scattering of photons off of dust grains however this project focussed solely upon absorption and re-emission only.
 
 %-----------------------------------------------------------------
 % Methodology
@@ -372,7 +375,7 @@ Modelling an isothermal cloud can be split into 3 distinct stages:
 \end{comment}
 
 \subsection{Building dust intensities}
-Bu suppling RADMC-3D with initial input files to build parameter spaces, the code can then perform its raytrace using the method discussed in Section \ref{rt_des}. The output, \texttt{image.out}, is a 2D image with image dimensions in the x-y plane corresponding to the initial x and y image dimensions supplied to RADMC-3D. This file contains the dust emission intensity values at each pixel within that plane. This intensity is, however, an idealised intensity that does not account for any ineffeciences. It was necessary however in order to simulate data as imaged by Herschel to account for the frequency dependent transmission of Herschel's filters.
+Bu suppling RADMC-3D with initial input files to build parameter spaces, the code can then perform its raytrace using the method discussed in Section \ref{sec:rt_des}. The output, \texttt{image.out}, is a 2D image with image dimensions in the x-y plane corresponding to the initial x and y image dimensions supplied to RADMC-3D. This file contains the dust emission intensity values at each pixel within that plane. This intensity is, however, an idealised intensity that does not account for any ineffeciences. It was necessary therefore in order to simulate data as imaged by Herschel to account for the frequency dependent transmission of Herschel's filters.
 
 \subsection{Simulating Herschel}
 No telescope or observatory can produce perfect images or data; components within the telescope, the observatory or the surroundings all degrade the data quality. In real world applications maximising the SNR is crucial to data quality, but the principles of this will not be touched on here. Furthermore SNR (and therefore integration time) is not accounted for in the simulations or data analysis - images are plotted as if the source is integrated for sufficient time such that the fictional `detector` responds and detects all photons from the source incident upon it as they were emitted from the dust. It was also assumed that the source is imaged in the absence of any occluding material along the line of sight between the observer and the source, and thus exctinction was neglected.
@@ -419,18 +422,19 @@ Figure \ref{fig:transmission} illustrates this. The red $+$ datapoints indicate 
 To account for the transmission coefficients across the filter, multiplying each datapoint at a given frequency/wavelength by the transmission coefficient at that frequency/wavelength obtains the intensity of the photon after transmission. However the transmission data downloaded from \textcite{pass} is not linearly spaced, resulting in the transmission coefficients and freqencies not matching with those used in the simulation (specifically the data in \texttt{camera\_wavelength\_micron.inp} file). To account for this, cubic interpolation was used\footnote{Other routines to interpolate were available, however the cubic routine provided accurate results so alternatives were not explorered.} to produce a reconstruction of the original data with a user-defined number of points between upper and lower bounds. By choosing these upper and lower bounds to match the upper and lower bounds of \texttt{camera\_wavelength\_micron.inp} (with the same number of wavelength points) the transmission curve can be reconstructed to match the temporal data supplied to the simulation.
 
 \subsection{Composite imaging} \label{comp}
-In reality images are not taken at one discrete wavelength. Instead, images are a composite of wavelengths across a broad range defined by the telescope's filter. To illustrate, consider the SPIRE PSW band. As Table \ref{table:SPIRE-pass} illustrates, the PSW band is sensitive to wavelengths in the range $\SI{199.4540}{\micro\meter} --	\SI{298.5657}{\micro\meter}$. This means that an image using the PSW band is actually a composite image comprising a weighted average of the wavelengths imaged across such that the emergent image is effectively an image taken at the central band wavelength. As a result of this, any transmission effects had to be accounted for in the image composition, such that Equation \ref{eq:trans} was used to construct the image intensities at each pixel.
+In reality images are not taken at one discrete wavelength. Instead, images are a composite of wavelengths across a broad range defined by the telescope's filter. To illustrate, consider the SPIRE PSW band. As Table \ref{table:SPIRE-pass} illustrates, the PSW band is sensitive to wavelengths in the range $\SI{199.4540}{\micro\meter} --	\SI{298.5657}{\micro\meter}$. This means that an image using the PSW band is actually a composite image comprising a weighted average of the wavelengths imaged across such that the emergent image is effectively an image taken at the effective band wavelength. As a result of this, any transmission effects had to be accounted for in the image composition, such that Equation \ref{eq:trans} was used to construct the image intensities at each pixel.
 
 \begin{equation}
   I_{pix} = \frac{\sum_{i,j=0}^{xpix,ypix} I_{\nu_i} T_{\nu_i}}{\sum_{i=0}^{npix} T_{\nu_i}}
-\end{equation}\label{eq:trans}
+  \label{eq:trans}
+\end{equation}
 
 $I_{pix}$ is the pixel intensity whilst $I_{\nu_i}$ and $T_{\nu_i}$ are the intensity and transmission coefficient at frequency $\nu_i$ respectively.  By performing the product of the intensity across all considered frequencies (i.e. $\nu_i$) at pixel $(xpix,ypix)$ with the transmission coefficent across all considered frequencies and normalising by dividing by the sum of all of the transmission coefficients in the dataset, the transmission weighted intensity can be computed at each pixel. Figure \ref{fig:no-trans} illustrates the output for a 3-dimensional isothermal cloud in RADMC-3D with perfect transmission (i.e. no transmission convolution). Figure \ref{fig:trans} illustrates the same image but with transmission being accounted for according to Equation \ref{eq:trans}. These images are computed in the Herschel PSW band.
 
 \begin{figure}[!htb]
 \minipage{0.48\textwidth}
   \includegraphics[width=\linewidth]{../img/figure_1_no_trans.png}
-  \caption{The emergent image (before transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.}\label{fig:np-trans}
+  \caption{The emergent image (before transmission effects) of a raytrace on a $1\/M_{Sun}$ spherical, 3D, isothermal ($T=10\/K$) cloud.}\label{fig:no-trans}
 \endminipage\hfill
 \minipage{0.48\textwidth}
   \includegraphics[width=\linewidth]{../img/figure_1.png}
@@ -439,11 +443,11 @@ $I_{pix}$ is the pixel intensity whilst $I_{\nu_i}$ and $T_{\nu_i}$ are the inte
 \end{figure}
 
 \section{Analysis routine}
-The analysis routine devised can be split into 4 distinct stages:
+The analysis routine used in the project can be split into 4 distinct stages:
 
 \begin{enumerate}
-  \item Use the discrete data to produce SEDs
-  \item Fit a modified blackbody to the SED on a pixel by pixel basis and utilise $\chi^{2}$ minimisation to to derive the best fit $N$ and $T$
+  \item Use the discrete data from RADMC-3D images to produce SEDs
+  \item Fit a modified blackbody to the SED on a pixel by pixel basis and utilise $\chi^{2}$ minimisation to derive the best fit $N$ and $T$
   \item Construct maps of $N$ and $T$ from both the $\chi^{2}$ derived values as well as the initial input values
   \item Extract prestellar core locations and masses from these maps using dendrogramic analysis
 \end{enumerate}
@@ -455,13 +459,15 @@ Each individual source of flux has an energy distrubtion; that is, a function of
   \centering
   \includegraphics[scale=0.5]{../img/spectrum_psw_unweighted_v2}
   \caption[A figure showing the continuous SED sampled from \texttt{image\_trans.out}, along with the SED after convolving with the transmission curve (right hand panel). Also illustrated is the discrete point that Herschel would see were it to be observe this source in its PSW band.]{A figure showing the continuous SED sampled from \texttt{image\_trans.out}, along with the SED after convolving with the transmission curve (right hand panel). Also illustrated is the discrete point that Herschel would see were it to be observe this source in its PSW band.}
-\end{figure}\label{fig:SED_ex}
+  \label{fig:SED_ex}
+\end{figure}
 
-Figure \ref{fig:SED_ex} shows the SED for the central pixel (0,0) of Figure \ref{fig:trans} imaged in the PSW band. This SED is sampled directly from \texttt{image\_trans.out} by taking the intensity of the pixel (in this case the (0,0) pixel) at each discrete frequency/wavelength considered. Plotting the intensity as a function of frequency produces the red continua in the left hand panel. Convolving the theoretical SED with the transmission curve for the band imaged in produces the SED that falls on to Herschel's filter. This is displayed as the blue curve in the left hand panel. The green point represents the intensity `seen` by Herschel, as determined by Equation \ref{eq:seen}.
+Figure \ref{fig:SED_ex} shows the SED for the central pixel (0,0) of Figure \ref{fig:trans} imaged in the PSW band. This SED is sampled directly from \texttt{image\_trans.out} by taking the intensity of the pixel (in this case the (0,0) pixel) at each discrete frequency/wavelength considered. Plotting the intensity as a function of frequency produces the red continua in the left hand panel. Convolving the theoretical SED with the transmission curve for the band imaged in produces the SED that falls on to Herschel's filter. This is displayed as the blue curve in the left hand panel. The green point represents the intensity incident upon the detector, as determined by Equation \ref{eq:seen}.
 
 \begin{equation}
   I_{s} = \frac{\sum_{\nu} I_{pix,\nu}}{\sum_{\nu} T_{\nu}}
-\end{equation} \label{eq:seen}
+  \label{eq:seen}
+\end{equation}
 
 $I_{s}$ is the averaged Intensity as measured by Herschel, whilst $I_{pix,\nu}$ is the image intensity at frequency $\nu$ and $T_{\nu}$ is the transmission coefficient at frequency $\nu$.
 
@@ -472,7 +478,8 @@ A $\chi^{2}$ minimisation test is a statistical test to assess the `goodness-of-
 
 \begin{equation}
   \chi^{2} = \sum_{i}\Bigg (\frac{O_{i}-E_{i}}{\sigma_{i}} \Bigg )^{2}
-\end{equation} \label{eq:chi}
+   \label{eq:chi}
+\end{equation}
 
 $O_{i}$ is an observed point, and $E_{i}$ is the expected point. $\sigma_{i}$ is the standard deviation of $O_{i}$. If $O_{i}$ is a given dataset and $E_{i}$ is the model that is expected to fit that dataset, then $\chi^{2}$ is therefore a measure of how close that model fits the data within one standard deviation.
 
@@ -520,7 +527,8 @@ The temperature variation along the line of sight, $\sigma_{T_{N}}^{2}$ can also
 
 \begin{equation}
   \sigma_{T_{N}}^{2} = \frac{\sum{(T_{inp}-T_{\chi^{2}})^{2}}N_{inp}}{\sum{N_{inp}}}
-\end{equation} \label{eq:los}
+   \label{eq:los}
+\end{equation}
 
 $T_{inp}$ is the data derived temperature, $T_{\chi^{2}}$ is the temperature recovered using the $\chi^{2}$ minimisation routine whilst $N_{inp}$ is the data derived $N$.
 
@@ -547,13 +555,15 @@ The initial vertical line of the dendrogram in Figure \ref{fig:dendrogram} is th
 
 \begin{equation}
   M_{core} = N_{H_{2}}\mu m_{p} \pi R_{core}^{2}
-\end{equation} \label{eq:mass_dendro}
+  \label{eq:mass_dendro}
+\end{equation}
 
 $R_{core}^{2}$ is the radius of the core. In reality, this core would be spherical, presenting to the observer as a circle. As such, $R_{core} = \sqrt{\frac{A_{tot}}{\pi}}$. $A_{tot}$ is the total area of the pixels that make up the core. To discriminate between regions of high $N$ and those that form a gravitationally bound core, the Jeans' mass and radius of a typical core ($n = 10^{4}\/cm^{-2}$ and $T=15\/K$) can be used to determine a column density that the given leaves should have if they form a core. This was determined using Equation \ref{eq:core_cond}.
 
 \begin{equation}
   N_{core} = \frac{M_{j}}{\mu m_{p} R_{j}^{2}}
-\end{equation} \label{eq:core_cond}
+   \label{eq:core_cond}
+\end{equation}
 
 A measure of whether a core is gravitationally bound or not can be observed in the Virial Ratio: $Q = T/-\Omega$. If $\Omega < 1$ then the core is bound, as the gravitational potential energy is greater than the thermal energy (the condition for collapse to occur).
 
@@ -597,7 +607,7 @@ A measure of whether a core is gravitationally bound or not can be observed in t
   \end{minipage}}
 \end{figure}
 
-Figure \ref{fig:iso-output} shows the transmission weighted intensities for the isothermal source of $T=10\/K$ and $n=10^{5}\/cm^{-3}$ in a $T=15\/K$ and $n=10^{2}\/cm^{-3}$ background. The intensities vary depending on the filter used. This is to be expected, as each filter`s passband allow photons of given frequency - and therefore photons of given energy - to be detected. As the transmission curves in Figure \ref{fig:transmission} illustrates however, the intensities observed here are not the intensities that the source emits at owing the transmission coefficients. By comparing Figures \ref{fig:isoblue} through to see \ref{fig:isoplw}, we observe the expected behaviour: the higher the frequency, the greater the intensity owing to the greater photon energy observed.
+Figure \ref{fig:iso-output} (see Appendix) shows the transmission weighted intensities for the isothermal source of $T=10\/K$ and $n=10^{5}\/cm^{-3}$ in a $T=15\/K$ and $n=10^{2}\/cm^{-3}$ background. The intensities vary depending on the filter used. This is to be expected, as each filter`s passband allow photons of given frequency - and therefore photons of given energy - to be detected. As the transmission curves in Figure \ref{fig:transmission} illustrates however, the intensities observed here are not the intensities that the source emits at owing the transmission coefficients. By comparing Figures \ref{fig:isoblue} through to see \ref{fig:isoplw}, we observe the expected behaviour: the higher the frequency, the greater the intensity owing to the greater photon energy observed.
 
 Figure \ref{fig:iso-output} is an isothermal sphere, meaning that very few line of sight temperature variations are present. As such, a single $T$ assumption along the line of sight is accurate, implying that the modified blackbody in Equation \ref{eq:mbb-int} is a good fit to the data. The $\chi^{2}$ recovered values of $N$ and $T$ (by fitting Equation \ref{eq:mbb-int}), along with the data derived values, are shown in Figures \ref{fig:map_N_chi}, \ref{fig:map_N_data},
 \ref{fig:map_T_chi} and \ref{fig:map_T_data}. The $\chi^{2}$ recovered values were derived from fitting to the SPIRE bands \textit{only}, as the PACS bands were found to be inaccurate descriptors of dust emission intensity at the temperatures considered.
@@ -605,16 +615,16 @@ Figure \ref{fig:iso-output} is an isothermal sphere, meaning that very few line 
 By direct comparison of Figure \ref{fig:map_N_chi} with Figure \ref{fig:map_N_data} it is observed that the $\chi^{2}$ recovered $N$ values match the derived $N$ values well (though the $\chi^{2}$ values are understimated at low $N$). This is also shown in Figure \ref{fig:iso_N}, which compares the $\chi^{2}$ $N$ to the data input $N$. It clearly shows a wide degree of scatter across both input
 $N$ and $\chi^{2}$ $N$. Figure \ref{fig:iso_N} shows that $\chi^{2}$ minimisation produces one estimate of $N$ for a large degree of input $N$, especially at lower values of $N$. Of note here is the fact that this is especially true of high $N$, where the values differ by a smaller degree relative to the low $N$ regime where the spread is greater. This is also illustrated in the ratios shown in Figures \ref{fig:T_ratio}.
 
-Comparing Figure \ref{fig:map_T_chi} with Figure \ref{fig:map_T_data} we see that $\chi^{2}$ largely overestimates $T$ relative to the data derived $T$. It also finds that the temperature decreases radially from the centre of the sphere, whereas Figure \ref{fig:map_T_data} shows $T$ to be constant. This is also evident in the PDFs in both figures: Figure \ref{map_T_data} shows 2 discrete bins at $10\/K$ and
+Comparing Figure \ref{fig:map_T_chi} with Figure \ref{fig:map_T_data} we see that $\chi^{2}$ largely overestimates $T$ relative to the data derived $T$. It also finds that the temperature decreases radially from the centre of the sphere, whereas Figure \ref{fig:map_T_data} shows $T$ to be constant. This is also evident in the PDFs in both figures: Figure \ref{fig:map_T_data} shows 2 discrete bins at $10\/K$ and
 $15\/K$, whereas Figure \ref{fig:map_T_chi} displays a peak above $10\/K$ that decreases at $11\/K$, as well as another peak above $15\/K$. The overestimate of $T$ is evident here, though the shape of PDFs in Figures \ref{fig:map_N_chi} and \ref{fig:map_N_data} show similar shapes even with the underestimate evident. Likewise, the PDFs in Figures
-\ref{fig:map_T_chi} and \ref{map_T_data} exhibit the same behaviour. Whilst the shape of the PDF themselves remain similar, the $\chi^{2}$ recovered quanitites suffer from the dicretisation of the values used to generate them, as evidenced by the discrete peaks in the PDFs. This is not evident in the data derived quantities, which show a smoother PDF. Furthermore, the spheres themselves are generated with discrete pixels, resulting in the column density (and temperature along the line of sight) increasing in steps rather than smoothly. This effect is exaggerated in the $\chi^{2}$ recovery, as both $N$ and $T$ show banding.
+\ref{fig:map_T_chi} and \ref{fig:map_T_data} exhibit the same behaviour. Whilst the shape of the PDF themselves remain similar, the $\chi^{2}$ recovered quanitites suffer from the dicretisation of the values used to generate them, as evidenced by the discrete peaks in the PDFs. This is not evident in the data derived quantities, which show a smoother PDF. Furthermore, the spheres themselves are generated with discrete pixels, resulting in the column density (and temperature along the line of sight) increasing in steps rather than transitioning smoothly. This effect is exaggerated in the $\chi^{2}$ recovery, as both $N$ and $T$ show banding.
 
 \begin{figure}[H]
-\minipage{0.44\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sim/N.png}
   \caption{A representation of how the $\chi^{2}$ derived $N$ values compare to the initial data input $N$.}\label{fig:iso_T}
 \endminipage\hfill
-\minipage{0.44\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sim/T.png}
   \caption{A representation of how the $\chi^{2}$ derived $T$ values compare to the initial data input $T$.}\label{fig:iso_N}
 \endminipage
@@ -623,7 +633,7 @@ $15\/K$, whereas Figure \ref{fig:map_T_chi} displays a peak above $10\/K$ that d
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.44\linewidth]{../img/sim/T_ratio_inp.png}
+  \includegraphics[width=0.4\linewidth]{../img/sim/T_ratio_inp.png}
   \caption{A plot showing how the ratio of $T_{input}/T_{\chi^{2}}$ varies with the input $T$.}\label{fig:T_ratio}
 %\caption{A figure comparing recovered and derived values of $N$ and $T$ and how they compare. Figure \ref{fig:iso_T} shows an overestimate of the $\chi^{2}$ recovered T whilst Figure \ref{fig:iso_N} shows an underestimate the $\chi^{2}$ recovered $N$.}
 \end{figure}
@@ -668,11 +678,11 @@ We notice here, owing to the more intricate structure within the image, that $\c
 Figures \ref{fig:map_T_chi_sph} and \ref{fig:map_T_data_sph} illustrate that, again like the isothermal case, $\chi^{2}$ $T$ is overestimated relative to the data derived $T$. Also apparent is the fact that the $\chi^{2}$ minimisation fails to recover a lot of the colder material in the image, as evidenced from the minimum of the $\chi^{2}$ $T$ PDF beginning above that of the data derived $T$ PDF. Similar to the isothermal case, the shape of the PDFs remains consistent between $\chi^{2}$ and data derived.
 
 \begin{figure}[H]
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sph/N.png}
   \caption{A representation of how the $\chi^{2}$ derived $N$ values compare to the initial data input $N$.}\label{fig:sph_T}
 \endminipage\hfill
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sph/T.png}
   \caption{A representation of how the $\chi^{2}$ derived $T$ values compare to the initial data input $T$.}\label{fig:sph_N}
 \endminipage
@@ -681,16 +691,16 @@ Figures \ref{fig:map_T_chi_sph} and \ref{fig:map_T_data_sph} illustrate that, ag
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\linewidth]{../img/sph/T_ratio_inp.png}
+  \includegraphics[width=0.4\linewidth]{../img/sph/T_ratio_inp.png}
   \caption{A plot showing how the ratio of $T_{input}/T_{\chi^{2}}$ varies with the input $T$.}\label{fig:T_ratio_sph}
 %\caption{A figure comparing recovered and derived values of $N$ and $T$ and how they compare. Figure \ref{fig:iso_T} shows an overestimate of the $\chi^{2}$ recovered T whilst Figure \ref{fig:iso_N} shows an underestimate the $\chi^{2}$ recovered $N$.}
 \end{figure}
 
-Figures \ref{fig:sph_N} and \ref{fig:sph_T} show how data derived quantities varies with the $chi^{2}$ recovered quantity. Figure \ref{fig:sph_N} shows that the $\chi^{2}$ recovered $N$ is now consistently underestimated with respect to the data derived $N$, though this behaviour is linear in log space. This disparity increases at higher data derived $N$, though the scatter in data derived $N$ that produces the same value of $\chi^{2}$ $N$ increases towards the middle of the data. Interestingly, this linear relationship is departed from at high $N$ as evidenced by the data points falling away from the main grouping. Figure \ref{sph_T} shows the inverse relationship in
+Figures \ref{fig:sph_N} and \ref{fig:sph_T} show how data derived quantities varies with the $chi^{2}$ recovered quantity. Figure \ref{fig:sph_N} shows that the $\chi^{2}$ recovered $N$ is now consistently underestimated with respect to the data derived $N$, though this behaviour is linear in log space. This disparity increases at higher data derived $N$, though the scatter in data derived $N$ that produces the same value of $\chi^{2}$ $N$ increases towards the middle of the data. Interestingly, this linear relationship is departed from at high $N$ as evidenced by the data points falling away from the main grouping. Figure \ref{fig:sph_T} shows the inverse relationship in
 $T$: the $chi^{2}$ $T$ is now largely overestimated relative to the data derived $T$, though this overestimate is much larger at low data derived $T$. The same departure in datapoints is observed at low data derived $T$ in this case (as opposed to high data derived quantity as was the case in Figure \ref{fig:sph_N}).
 
 Figure \ref{fig:T_ratio_sph} displays how the ratio of the determined temperatures $T_{input}/T_{chi^{2}}$ varies with the data derived $N$. It clearly shows that as the data derived $N$ increases the $\chi^{2}$ recovered $T$ is increasingly overestimated. Of note here is the fact that even in the low $N$ regime, the $\chi^{2}$ recovered $N$ remains overestimated. This relationship continues into the high $N$ regime, culiminating in a sharp drop off that shows the $\chi^{2}$ recovered $T$ is almost 3 times the data derived $T$.
-Figure \ref{fig:T_raio_sph} also shows a large degree of scatter that increases with $N$, implying that not only can multiple different $N$ values produce the same estimate of $T_{\chi^{2}}$ but also that this scatter increases as $N$ increases. To further illustrate this, Figure \ref{fig:contours} shows how the $\chi^{2}$ recovered values of $N$ and $T$ compare.
+Figure \ref{fig:T_ratio_sph} also shows a large degree of scatter that increases with $N$, implying that not only can multiple different $N$ values produce the same estimate of $T_{\chi^{2}}$ but also that this scatter increases as $N$ increases. To further illustrate this, Figure \ref{fig:contours} shows how the $\chi^{2}$ recovered values of $N$ and $T$ compare.
 
 \begin{figure}[H]
   \centering
@@ -699,20 +709,20 @@ Figure \ref{fig:T_raio_sph} also shows a large degree of scatter that increases 
 %\caption{A figure comparing recovered and derived values of $N$ and $T$ and how they compare. Figure \ref{fig:iso_T} shows an overestimate of the $\chi^{2}$ recovered T whilst Figure \ref{fig:iso_N} shows an underestimate the $\chi^{2}$ recovered $N$.}
 \end{figure}
 
-Figure \ref{fig:contours} exhibits an elliptical shape, such that minimal scatter is observed in the minima and maxima of $T$ and $N$. The largest scatter occurs in the centre of the data, where single $T$ provides multiple differing values of $N$. Likewise, Single $N$ can provide multiple different values of $T$. A similar relationship is observed in \textcite{noise,noiseb} for $\beta$ and $T$, who attribute the elliptical data to be a result of noise in the observations.
+Figure \ref{fig:contours} exhibits an elliptical shape, such that minimal scatter is observed in the minima and maxima of $T$ and $N$. The largest scatter occurs in the centre of the data, where single $T$ provides multiple differing values of $N$. Likewise, single $N$ can provide multiple different values of $T$. A similar relationship is observed in \textcite{noise,noiseb} for $\beta$ and $T$, who attribute the elliptical data to be a result of noise in the observations.
 
 \section{Line of sight temperature variations}
 Figures \ref{fig:iso_N}, \ref{fig:iso_T},  \ref{fig:sph_T}, \ref{fig:sph_N} as well as Figure \ref{fig:contours} highlight underestimates of $N$ and overestimates of $T$ in the $\chi^{2}$ minimisation test. Figures \ref{fig:iso_los} and
 \ref{fig:iso_sph} show the line of sight temperature variations $\sigma^{2}$ as a function of the data derived $T$. The line of sight temperature variation is expressed as the standard deviation of the weighted mean temperature expressed in Equation \ref{eq:los}.
 
 \begin{figure}[H]
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sim/sigma_T_inp.png}
-  \caption{The line of sight temperature variations in the isothermal sphere case as a function of the data derived $T$.}\label{fig:sigma_T_iso}
+  \caption{The line of sight temperature variations in the isothermal sphere case as a function of the data derived $T$.}\label{fig:iso_los}
 \endminipage\hfill
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/sph/sigma_T_inp.png}
-  \caption{The line of sight temperature variations in the Arepo simulation case as a function of the data derived $T$.}\label{fig:sigma_T_sph}
+  \caption{The line of sight temperature variations in the Arepo simulation case as a function of the data derived $T$.}\label{fig:sph_sph}
 \endminipage
 %\caption{A figure comparing recovered and derived values of $N$ and $T$ and how they compare. Figure \ref{fig:iso_T} shows an overestimate of the $\chi^{2}$ recovered T whilst Figure \ref{fig:iso_N} shows an underestimate the $\chi^{2}$ recovered $N$.}
 \end{figure}
@@ -726,11 +736,11 @@ $\sigma_{T_{N}}^{2}$ in $T$ is far greater. This is to be expected, as the input
 Applying \texttt{astrodendro} to the column density maps in Figures \ref{fig:map_N_chi_sph} and \ref{fig:map_N_data_sph} produces Figures \ref{fig:chi_dendro} and \ref{fig:data_dendro}.
 
 \begin{figure}[H]
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/N_chi_inp.jpg}
   \caption{The $\chi^{2}$ recovered $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).}\label{fig:chi_dendro}
 \endminipage\hfill
-\minipage{0.48\textwidth}
+\minipage{0.4\textwidth}
   \includegraphics[width=\linewidth]{../img/N_data_inp.jpg}
   \caption{The data derived $N$. The contours represent leaves of the dendrogram: a red contour represents an unbound core, whilst a green contour represents a bound core. The lower graph shows the dendrogram. In this case, it displays the structure of the leaves (cores).}\label{fig:data_dendro}
 \endminipage
@@ -746,11 +756,11 @@ The conditions to extract these cores are discussed in Section \ref{sec:conditio
    \hline
    $M_{chi^{2}}/M_{Sun}$ & $M_{data^{2}}/M_{Sun}$ \\ [0.5ex]
    \hline\hline
-   0.3403    & 0.7016     \\
+   $0.3403+/-0.3616$    & $0.7016$     \\
    \hline
-   0.2799  & 0.6241 \\
+   $0.2799+/-0.3269$  & $0.6241$ \\
    \hline
-   0.1041  & 0.7974 \\ [1ex]
+   $0.1041+/-0.07105$  & $0.7974$ \\
    \end{tabular}
    \caption{A table showing the masses of cores extracting from the $\chi^{2}$ $N$ map and the data derived $N$ map.}
    \label{table:mass}
@@ -792,14 +802,14 @@ Future work would also focus on adding further variables to the simulation. This
 % Acknowledgements
 %-----------------------------------------------------------------
 
-\chapter*{Acknowledgements}
+\chapter{Acknowledgements}
 I would like to thank Dr. Paul Clark for his guidance and encouragement as well as his proof-reading and advice (relating to both this project and matters external) throughout this academic year. I would also like to thank Dr. Sarah Ragan for her Python assistance and observational advice throughout the project. This project made heavy use of the Python programming language, RADMC-3D and astrodendro.
 
 %-----------------------------------------------------------------
 % Appendix
 %-----------------------------------------------------------------
 
-\chapter*{Appendix}
+\chapter{Appendix}
 
 \section*{Version control}
 All code was version controlled using GitHub and stored in a private repository throughout development. The repository containing all code can be found at \href{http://www.github.com/tomasjames/ZiggyStarDust}{http://www.github.com/tomasjames/ZiggyStarDust}.
@@ -869,7 +879,7 @@ All code was version controlled using GitHub and stored in a private repository 
 \caption{The RADMC-3D intensity outputs for the Arepo data imaged in all 6 passbands considered.} \label{fig:sph-output}
 \end{figure}
 
-\section{Dust heating}
+\section*{Dust heating}
 \textcite{treecol} defines $\Gamma_{ext}$ due to the ISRF alone to be:
 
 \begin{equation}
