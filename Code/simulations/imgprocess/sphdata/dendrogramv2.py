@@ -214,7 +214,7 @@ for file in glob.glob('*.fits'):
         N_chi_mass.close()
 
         print 'Closed...'
-'''
+
     if 'N_data_inp' in file:
 
         # Define a dendrogram instance
@@ -346,8 +346,7 @@ for file in glob.glob('*.fits'):
         #ax14 = subplot2grid((3, 3), (1, 2), rowspan=2)
 
         ax1.imshow(contents.data, origin='lower', interpolation='nearest')
-'''
-'''
+
         # Find the structure within the data
         for i in range(0,len(d)):
             struct = d[i]
@@ -438,4 +437,3 @@ ylabel('Y (Pixels)')
 
 savefig('masses.png',dpi=300)
 close()
-'''

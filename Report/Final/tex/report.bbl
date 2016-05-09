@@ -821,7 +821,7 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{chapter}{The evolution of molecular clouds}
-      \field{isbn}{9783540490357}
+      \field{isbn}{978-3-540-49035-7}
       \field{title}{The Structure and Content of Molecular Clouds 25 Years of Molecular Radioastronomy: Proceedings of a Conference Held at Schloss Ringberg, Tegernsee, Germany 14--16 April 1993}
       \field{year}{1994}
       \field{pages}{13\bibrangedash 28}
@@ -862,24 +862,41 @@
       \endverb
       \keyw{astrometry,ISM: kinematics and dynamics,ISM: clouds,reflection nebulae,open clusters and associations: individual (Sco OB2,Ophiuchus)}
     \endentry
-    \entry{lecture}{unpublished}{}
-      \name{author}{1}{}{%
-        {{uniquename=0,hash=8220a01a6a391f37ea50defa3b4f5035}{{Pettini}}{P\bibinitperiod}{Max}{M\bibinitperiod}{}{}{}{}}%
+    \entry{density}{article}{}
+      \name{author}{7}{}{%
+        {{uniquename=0,hash=1bdf46c0f055f05b453a9cea2f0c2215}{{Pineda}}{P\bibinitperiod}{J.\bibnamedelimi L.}{J\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=eb680709ff8b18a6d230e30afd7f9680}{{Goldsmith}}{G\bibinitperiod}{P.\bibnamedelimi F.}{P\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=d050c16c9c1d43e87fac8d76c7225fc3}{{Chapman}}{C\bibinitperiod}{N.}{N\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=4e922d396288bf51894e927fc1ddef87}{{Snell}}{S\bibinitperiod}{R.\bibnamedelimi L.}{R\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f500b28664aeb848c9f9a86092e9e379}{{Li}}{L\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=a3b678dbf20438724faf291009797fdd}{{Cambr\'{e}sy}}{C\bibinitperiod}{L.}{L\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=b15ec734790bd91e06d358ebccb021ad}{{Brunt}}{B\bibinitperiod}{C.}{C\bibinitperiod}{}{}{}{}}%
       }
-      \list{institution}{1}{%
-        {Cambridge University}%
-      }
-      \strng{namehash}{8220a01a6a391f37ea50defa3b4f5035}
-      \strng{fullhash}{8220a01a6a391f37ea50defa3b4f5035}
+      \strng{namehash}{b7b6e8fdfbf1008ba2de1a250ae9aa99}
+      \strng{fullhash}{536b55394fa79aa8b82cfc00309bd095}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
-      \field{labelyear}{2011}
+      \field{labelyear}{2010}
+      \field{labelmonth}{09}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{University Lecture}
-      \field{title}{Structure and Evolution of Stars}
-      \field{year}{2011}
+      \field{eprintclass}{astro-ph.GA}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{\apj}
+      \field{month}{09}
+      \field{title}{{The Relation Between Gas and Dust in the Taurus Molecular Cloud}}
+      \field{volume}{721}
+      \field{year}{2010}
+      \field{pages}{686\bibrangedash 708}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1088/0004-637X/721/1/686
+      \endverb
+      \verb{eprint}
+      \verb 1007.5060
+      \endverb
+      \keyw{dust,extinction,ISM: molecules,ISM: structure}
     \endentry
     \entry{PACS}{inproceedings}{}
       \name{author}{2}{}{%

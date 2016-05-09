@@ -31,6 +31,8 @@ The primary (simplified) aims of this project are:
 Project Progress
 ----------------
 
+09/05/16: Final commit prior to signing off on development. All code has now been written, including the supplementary dissertation. To run code, simply use run the `handler.py` file. This will ask for the simulation to be run: working simulations include the `sim` and `sph` responses (filament still non-functional). If the user wishes, an `inputs.txt` file can be directed to the code such the user inputs from the code will come directly from this file, e.g. to run the basic isothermal simulation one would run `python handler.py < inputs_sim.txt` - this would run the code from start to finish. 
+
 20/03/16: The machinery to analyse data is now *all* in place and functioning. All SEDs produced are the correct form, and the chi-squared routine, that now successfully loops over each pixel, works correctly. The next step in producing further results is to:
 - write a brief script to plot maps of the recovered column density and temperature
   - plot contour plots should time allow

@@ -5,7 +5,7 @@
 \contentsline {section}{\numberline {1.1}Molecular clouds}{5}{section.1.1}
 \contentsline {subsection}{\numberline {1.1.1}Molecular cloud composition}{6}{subsection.1.1.1}
 \contentsline {subsection}{\numberline {1.1.2}Star forming conditions}{6}{subsection.1.1.2}
-\contentsline {section}{\numberline {1.2}Dust emission}{7}{section.1.2}
+\contentsline {section}{\numberline {1.2}Dust emission}{8}{section.1.2}
 \contentsline {subsection}{\numberline {1.2.1}The $\beta $-$T$ degeneracy}{9}{subsection.1.2.1}
 \contentsline {section}{\numberline {1.3}Herchel Space Observatory}{9}{section.1.3}
 \contentsline {section}{\numberline {1.4}RADMC-3D}{10}{section.1.4}
@@ -16,7 +16,7 @@
 \contentsline {subsection}{\numberline {2.1.1}Modelling a cloud}{13}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}Building dust intensities}{13}{subsection.2.1.2}
 \contentsline {subsection}{\numberline {2.1.3}Simulating Herschel}{13}{subsection.2.1.3}
-\contentsline {subsection}{\numberline {2.1.4}Transmission}{14}{subsection.2.1.4}
+\contentsline {subsection}{\numberline {2.1.4}Accounting for filter transmission}{14}{subsection.2.1.4}
 \contentsline {subsection}{\numberline {2.1.5}Composite imaging}{14}{subsection.2.1.5}
 \contentsline {section}{\numberline {2.2}Analysis routine}{16}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}Spectral energy distributions (SEDs)}{16}{subsection.2.2.1}
@@ -25,12 +25,12 @@
 \contentsline {subsection}{\numberline {2.3.1}2D Maps of $N$ and $T$}{18}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Dendrogram analysis}{19}{subsection.2.3.2}
 \contentsline {chapter}{\numberline {3}Results}{21}{chapter.3}
-\contentsline {section}{\numberline {3.1}Isothermal spherical cloud}{22}{section.3.1}
+\contentsline {section}{\numberline {3.1}Isothermal spherical cloud}{21}{section.3.1}
 \contentsline {section}{\numberline {3.2}Arepo data}{25}{section.3.2}
-\contentsline {section}{\numberline {3.3}Line of sight temperature variations}{27}{section.3.3}
-\contentsline {section}{\numberline {3.4}Core extraction}{28}{section.3.4}
-\contentsline {chapter}{\numberline {4}Discussion}{30}{chapter.4}
-\contentsline {chapter}{\numberline {5}Conclusion}{31}{chapter.5}
-\contentsline {chapter}{\numberline {6}Future work}{32}{chapter.6}
-\contentsline {chapter}{\numberline {7}Acknowledgements}{33}{chapter.7}
-\contentsline {chapter}{\numberline {8}Appendix}{34}{chapter.8}
+\contentsline {section}{\numberline {3.3}Line of sight temperature variations}{29}{section.3.3}
+\contentsline {section}{\numberline {3.4}Core extraction}{30}{section.3.4}
+\contentsline {chapter}{\numberline {4}Discussion}{32}{chapter.4}
+\contentsline {chapter}{\numberline {5}Conclusion}{33}{chapter.5}
+\contentsline {chapter}{\numberline {6}Future work}{34}{chapter.6}
+\contentsline {chapter}{\numberline {7}Acknowledgements}{35}{chapter.7}
+\contentsline {chapter}{\numberline {8}Appendix}{36}{chapter.8}
