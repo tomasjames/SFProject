@@ -8,28 +8,35 @@
 Project Overview
 ----------------
 
-This project probes the structure of star forming regions in molecular clouds
-by using dust emission as a tracer.
+This project probes the structure of star forming molecular clouds by using dust emission as a tracer. The ‘formal’ assessment section of the project was completed on 24th May 2016 with a presentation (found in this repo) to peers on the work completed. 
 
-This repository contains all code (written exclusively in Python) pertaining to
-the project. At present, the only specialist package used is RADMC-3D, a raytracing
-radiative transfer code (http://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/).
+**The project has also been extended beyond this assessment period to encompass 8 weeks of the Summer. This work involves contributions from Dr. Paul Clark, Prof. Anthony Whitworth and Dr. Ken Marsh.
+
+This repository contains all code (written exclusively in Python) pertaining to the project. At present, the only specialist package used is RADMC-3D, a raytracing radiative transfer code (http://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/).
 
 Project Aims
 ------------
 
-The primary (simplified) aims of this project are:
+The (non-exhaustive) aims of the Summer extension are:
 
-- to simulate a molecular cloud containing x amount of pre-stellar cores (i.e. generate synthetic data)
-- recover the values of column density, N and temperature, T for each pixel in the resulting data
-- apply this machinery to 'real' data
-- to produce a dendogram (https://dendrograms.readthedocs.org/en/latest/) of the
-  resulting simulation to probe the structure of the simulated cloud
-    - also apply the denrogram to 'real' data
-- compare with other simulations (should time allow)
+- better simulate real data by:
+    - convolving the data with a PSF for the filters considered
+    - simulating some form of photon shot noise
+- run PPMAP code over FITS files to see how this simulation differs from the SED fitting routine
+
+The primary (simplified) aims of this project were:
+
+- to simulate a molecular cloud using the Arepo simulation containing x amount of pre-stellar cores (i.e. generate synthetic data)
+- recover the values of dust column density, N and dust temperature, T for each pixel in the resulting data
+- also use initial simulation input parameters to derive values of N and T for comparison purposes
+- to produce dendrograms (https://dendrograms.readthedocs.org/en/latest/) of the resulting simulation recovered N to probe the structure of the simulated cloud
+    - repeat this procedure for initial input derived N     
+- Extract the core locations and masses in both dendrograms and compare populations (i.e. their locations, masses and number of cores detected)
 
 Project Progress
 ----------------
+
+27/06/2016: One week of work has culminated in a working PSF convolution script. At this point, it convolves any RADMC-3D FITS output with the PSF for a given filer. Now moving on to determine number of beams required to provide better resolution of Arepo data, as well as refactoring code into functions to aid productivity.
 
 09/05/16: Final commit prior to signing off on development. All code has now been written, including the supplementary dissertation. To run code, simply use run the `handler.py` file. This will ask for the simulation to be run: working simulations include the `sim` and `sph` responses (filament still non-functional). If the user wishes, an `inputs.txt` file can be directed to the code such the user inputs from the code will come directly from this file, e.g. to run the basic isothermal simulation one would run `python handler.py < inputs_sim.txt` - this would run the code from start to finish. 
 
@@ -94,5 +101,5 @@ to the notes found here. Where possible, those issues will be linked next to the
   - [x] Convolve these SEDs with the SPIRE transmission curves
     - [x] Weighted average these to generate the flux 'seen' by SPIRE
   - [x] Fit an SED to the resulting datapoints to extract the column density and B values
-    - [ ] Assess quality of the fit using chi-squared routine
-  - [ ] Plot probability contours to verify the banana shaped contour as seen in Shetty et. al.
+    - [x] Assess quality of the fit using chi-squared routine
+  - [x] Plot probability contours to verify the banana shaped contour as seen in Shetty et. al.
