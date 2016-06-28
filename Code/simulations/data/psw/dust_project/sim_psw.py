@@ -140,16 +140,61 @@ with open('image_trans_raw.txt', 'w') as g:
 
     image_trans_raw.writerows(zip(np.float64(store_all)))
 
+########################### Save data to FITS file #######################
+'''
+# Check to see whether file has already been written
+# If so, delete the file (Python cannot overwrite a binary file)
+if os.path.isfile('psw.fits') == True:
+    os.remove('psw.fits')
+'''
+# Open the image_trans_raw.txt file into an array
+image_trans_raw_1d = np.loadtxt('image_trans.out',skiprows=6)
+
+# Reshape the array to be 2-dimensional
+image_trans_raw = np.reshape(image_trans_raw_1d, (np.sqrt(len(image_trans_raw_1d)), np.sqrt(len(image_trans_raw_1d))))
+
+# Begin defining information for the header
+# Define distance to the source
+d = 300*pc # Distance to source plotted in pc and converted to cm
+
+# Determine image width
+amr = np.loadtxt('amr_grid.inp', skiprows=6) # Read in the spatial grid
+imag_width = amr[0][-1] - amr[0][0] # Determine the image width in cm
+pix_width = imag_width/((len(amr[0]))) # Determine the pixel width in cm
+
+# Use small angle approximation to determine the angle subtended by the pixel
+theta_rad = pix_width/d # In degrees
+#theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
+theta = theta_rad*3600 # Convert to degrees and then to arcseconds
+
+# Define effective filter wavelengths
+eff = 247.12451
+
+# Save the image as a FITS file
+hdu = fits.PrimaryHDU(image_trans_raw)
+hdu.writeto('psw.fits')
+
+# Write relevant information to the FITS header
+fits.setval('psw.fits', 'DISTANCE', value=d)
+fits.setval('psw.fits', 'IMGWIDTH', value=imag_width)
+fits.setval('psw.fits', 'PIXWIDTH', value=pix_width)
+fits.setval('psw.fits', 'PIXSIZE', value=theta)
+fits.setval('psw.fits', 'EFF', value=eff)
+
+# Close the file
+#hdu.close()
+
 ########################## Plot the resulting data #######################
 
-p = input('Shall the image be plotted?')
+# Query whether it should be plotted locally
+p = input('Shall the image be plotted?\n')
 
 if p == 'yes':
     # Initialise the image
     imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
     # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=150., log=False, bunit='inu')
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=300., log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
