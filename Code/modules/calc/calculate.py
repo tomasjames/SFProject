@@ -39,7 +39,7 @@ import random
 
 
 ######################### Function to determine number of beams ###########################
-def beams(d, ins, filter, extent):
+def beams(filename):
 
     '''
     Determines the number of beams for any given filter.
@@ -56,7 +56,7 @@ def beams(d, ins, filter, extent):
             SPIRE
             PACS
 
-    filter: the filter that accompanies the instrument declared in ins keyword
+    filt: the filter that accompanies the instrument declared in ins keyword
         Options - SPIRE:
             psw (250 micron)
             pmw (350 micron)
@@ -70,33 +70,53 @@ def beams(d, ins, filter, extent):
     extent: the image width (in AU)
     '''
 
+    '''
     # Use a basic if statement to determine the correct FWHM for the filter
     if ins == 'SPIRE':
-        if filter == 'psw':
+        if filt == 'psw':
             fwhm = 18.
             wav = 250.
-        elif filter == 'pmw':
+        elif filt == 'pmw':
             fwhm == 25.
             wav = 350.
-        elif filter == 'plw':
+        elif filt == 'plw':
             fwhm == 37.
             wav = 500.
 
     elif ins == 'PACS':
-        if filter == '70':
+        if filt == '70':
             fwhm = 5.2
             wav = 70.
-        elif filter == '100':
+        elif filt == '100':
             fwhm = 7.7
             wav = 100.
-        elif filter == '160':
+        elif filt == '160':
             fwhm = 12.
             wav = 160.
+    '''
+    # Determine the current working directory
+    direc = os.getcwd()
 
-    # Determine the physical resolution of the image
-    res = (d*fwhm)/206256
+    # Read in the data
+    data = fits.open(str(direc)+str('/')+str(filename)+str('.fits'))
+
+    # Extract header
+    hdu = data[0].header
+
+    # Assign pixel size and distance to variables
+    theta = hdu['PIXSIZE']
+    d = hdu['DISTANCE']
+
+    # Repeat for image width
+    image_width = hdu['IMGWIDTH']
+
+    # And for pixel width
+    pix_width = hdu['PIXWIDTH']
+
+    # Determine the physical resolution of a pixel
+    res_pixel = ((d/pc)*theta)/206256
 
     # Determine the number of beams
-    b = ((extent*au)/pc)/res
+    b = ((pix_width)/pc)/res_pixel
 
     return b

@@ -183,14 +183,14 @@ def simulation(filt, npix, sizeau, d):
     d = d*pc # Distance to source plotted in pc and converted to cm
 
     # Determine image width
-    amr = np.loadtxt('amr_grid.inp', skiprows=6) # Read in the spatial grid
-    imag_width = amr[0][-1] - amr[0][0] # Determine the image width in cm
-    pix_width = imag_width/((len(amr[0]))) # Determine the pixel width in cm
+    #amr = np.genfromtxt('amr_grid.inp', skip_header=6, filling_values=np.NaN) # Read in the spatial grid
+    #imag_width = amr[0][-1] - amr[0][0] # Determine the image width in cm
+    imag_width = sizeau*au
+    pix_width = imag_width/(npix) # Determine the pixel width in cm
 
     # Use small angle approximation to determine the angle subtended by the pixel
-    theta_rad = pix_width/d # In degrees
-    #theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
-    theta = theta_rad*3600 # Convert to degrees and then to arcseconds
+    theta_rad = np.arctan(pix_width/d) # In radians
+    theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
 
     # Check to see whether file has already been written
     # If so, delete the file (Python cannot overwrite a binary file)

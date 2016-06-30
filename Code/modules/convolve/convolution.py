@@ -101,14 +101,14 @@ def congrid(a, newdims, method='linear', centre=False, minusone=False):
         olddims = [np.arange(i, dtype = np.float) for i in list( a.shape )]
 
         # first interpolation - for ndims = any
-        mint = scipy.interpolate.interp1d( olddims[-1], a, kind=method )
+        mint = scipy.interpolate.interp1d( olddims[-1], a, kind=method, bounds_error=False, fill_value=0 )
         newa = mint( dimlist[-1] )
 
         trorder = [ndims - 1] + range( ndims - 1 )
         for i in range( ndims - 2, -1, -1 ):
             newa = newa.transpose( trorder )
 
-            mint = scipy.interpolate.interp1d( olddims[i], newa, kind=method )
+            mint = scipy.interpolate.interp1d( olddims[i], newa, kind=method, bounds_error=False, fill_value=0  )
             newa = mint( dimlist[i] )
 
         if ndims > 1:
@@ -186,7 +186,7 @@ def conv(filter):
     image_width = hdu['IMGWIDTH'] # In cm
 
     # Pull out the pixel width
-    data_theta = hdu['PIXSIZE'] # Pixel size in "
+    data_theta = hdu['PIXSIZE'] # Pixel size in "/pixel
 
     # Determine the size of one pixel
     data_size = (250*data_theta)/206256 # Extent of one pixel
@@ -197,7 +197,7 @@ def conv(filter):
     # Given that the PSF has different file names depending on the filter under consideration, use this if statement to determine
     # which is the correct one
     if filter == 'psw':
-        psf_raw = fits.open('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/psf/theoretical_spire_beam_model_psw_V0_2.fits')
+        psf_raw = fits.open('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/psf/ken/psf_0250.fits')
 
     elif filter == 'pmw':
         psf_raw = fits.open('/Users/tomasjames/Documents/University/Project/ZiggyStarDust/Code/datafiles/psf/theoretical_spire_beam_model_pmw_V0_2.fits')
@@ -210,15 +210,17 @@ def conv(filter):
     psf_header = psf_raw[0].header
 
     # Assign cards to variables
-    psf_theta = psf_header['CDELT1'] # Pixel width in "
-    image_width = hdu['IMGWIDTH'] # Image width in cm
+    psf_theta_deg = psf_header['CDELT2'] # Pixel width in deg
+    psf_theta = psf_theta_deg*3600.
+    #image_width = hdu['IMGWIDTH'] # Image width in cm
 
     # Plot the data for comparison purposes
     subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
     title(r'Raw SPIRE 250$\mu m$ PSF')
     imshow(psf,origin='lower')
     colorbar()
-    tight_layout
+    tight_layout()
+    #grid(color='g',linestyle='-',linewidth=1)
     subplot2grid((10,8), (8,0), colspan=8,rowspan=2)
     plot(np.linspace(0,len(psf),len(psf)),psf[len(psf)/2])
     xlim(min(np.linspace(0,len(psf),len(psf))), max(np.linspace(0,len(psf),len(psf))))
@@ -234,37 +236,78 @@ def conv(filter):
     savefig('data.pdf',dpi=300)
     close()
 
-    ############################### Rebin the data #################################
+    ############################### Rebin the PSF #################################
 
     # Take the data pixel size and determine how much larger/smaller it is than the PSF
     size_factor = data_theta/psf_theta
 
     # Convolve requires that the array be odd in dimension
     # Check to see if the size_factor is an odd number
+    # This ensures the PSF is centered in the frame
     if (np.round(size_factor) % 2 == 0):
         print 'The dimensions of the PSF are even; altering to make the dimensions odd...\n'
-        size_factor = np.round(size_factor)
+        size_factor = np.round(size_factor) + 1
     else:
         print 'The dimensions of the PSF are odd; proceeding as normal...\n'
 
     # Determine whether the pixel widths of the PSF and data differ
-    if data_theta == psf_theta:
+    if size_factor == 1:
         print 'The pixel sizes match!\n'
         psf_rebin = psf
-    else:
-        print 'The pixel sizes do not match! Rebinning the PSF so that the pixel sizes match.\n'
 
-        # Use the above rebin function to change the dimensions of the array
-        psf_rebin = congrid(psf,(psf_header['NAXIS1']/size_factor,psf_header['NAXIS2']/size_factor))
+    elif size_factor < 1:
+        print 'The pixel sizes do not match, and the PSF has larger pixel size. Necessary to increase the size of the RADMC-3D image.\n'
 
-        new_psf_theta = psf_theta*size_factor
+        # This will resize the original data to be 1/2 the original size using the value closest to the original (method='neighbour')
+        data = congrid(data, (len(data[0])*(1./2),len(data[:,0])*(1./2)),centre=True)
+        imshow(data,origin='lower')
+        title(r'Rebinned Data')
+        colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+        savefig('data_rebin.png')
+        close()
+
+        # Determine the new angular size of each pixel
+        data_theta = data_theta/(1./2)
+
+        # Adjust the size factor accordingly
+        size_factor = data_theta/psf_theta
+
+        # Use the above rebin function to change the dimensions of the PSF to
+        psf_rebin_unnorm = congrid(psf, (psf_header['NAXIS1']/size_factor,psf_header['NAXIS2']/size_factor),centre=True)
+
+        # Renormalise the PSF back to unity (or close to it)
+        psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
+
+    elif size_factor > 1:
+
+        # Use the above rebin function to change the dimensions of the PSF to
+        psf_rebin_unnorm = congrid(psf, (psf_header['NAXIS1']/size_factor,psf_header['NAXIS2']/size_factor),centre=True)
+
+        # Renormalise the PSF back to unity (or close to it)
+        psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
+
+    # Determine the new pixel angular size
+    new_psf_theta = psf_theta*size_factor
 
     # Plot the resulting data to assess accuracy of rebin
     subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
     title(r'Rebinned SPIRE 250$\mu m$ PSF')
     imshow(psf_rebin,origin='lower')
     colorbar()
-    tight_layout
+    tight_layout()
+    '''
+    # major ticks every 20, minor ticks every 5
+    major_ticks = np.arange(0, len(psf_rebin[0]), 10)
+    minor_ticks = np.arange(0, len(psf_rebin[0]), 1)
+
+    xticks(major_ticks)
+    xticks(minor_ticks)
+    yticks(major_ticks)
+    yticks(minor_ticks)
+
+    grid(which='minor',linestyle='-',alpha=0.2)
+    grid(which='major',linestyle='-',alpha=0.2)
+    '''
     subplot2grid((10,8), (8,0), colspan=8,rowspan=2)
     plot(np.linspace(0,len(psf_rebin[len(psf_rebin)/2]),len(psf_rebin[len(psf_rebin)/2])),psf_rebin[len(psf_rebin)/2])
     xlim(min(np.linspace(0,len(psf_rebin),len(psf_rebin))), max(np.linspace(0,len(psf_rebin),len(psf_rebin))))
@@ -302,6 +345,26 @@ def conv(filter):
     title(str('Convolved Data for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('convolved.pdf',dpi=300)
     close()
+
+
+    # Save to a FITS file
+    # Check to see whether file has already been written
+    # If so, delete the file (Python cannot overwrite a binary file)
+    if os.path.isfile(str(filter)+str('_convolved.fits')) == True:
+        os.remove(str(filter)+str('_convolved.fits'))
+
+    # Do the write
+    fname = str(filter)+str('_convolved.fits')
+    head = fits.PrimaryHDU(conv)
+    head.writeto(fname)
+
+    # Write some header information
+    # Write relevant information to the FITS header
+    fits.setval(fname, 'DISTANCE', value=hdu['DISTANCE'])
+    fits.setval(fname, 'IMGWIDTH', value=hdu['IMGWIDTH'])
+    fits.setval(fname, 'PIXWIDTH', value=hdu['PIXWIDTH'])
+    fits.setval(fname, 'PIXSIZE', value=data_theta)
+    fits.setval(fname, 'EFF', value=hdu['EFF'])
 
     print 'The convolution has been performed and the convolved image saved to the working directory.\n'
 

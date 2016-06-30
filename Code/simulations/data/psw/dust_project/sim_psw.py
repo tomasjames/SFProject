@@ -163,9 +163,8 @@ imag_width = amr[0][-1] - amr[0][0] # Determine the image width in cm
 pix_width = imag_width/((len(amr[0]))) # Determine the pixel width in cm
 
 # Use small angle approximation to determine the angle subtended by the pixel
-theta_rad = pix_width/d # In degrees
-#theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
-theta = theta_rad*3600 # Convert to degrees and then to arcseconds
+theta_rad = pix_width/d # In radians
+theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
 
 # Define effective filter wavelengths
 eff = 247.12451

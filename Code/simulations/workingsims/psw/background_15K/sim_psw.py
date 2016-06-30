@@ -162,12 +162,13 @@ d = 300*pc # Distance to source plotted in pc and converted to cm
 # Determine image width
 amr = np.loadtxt('amr_grid.inp', skiprows=6) # Read in the spatial grid
 imag_width = amr[0][-1] - amr[0][0] # Determine the image width in cm
-pix_width = imag_width/((len(amr[0]))) # Determine the pixel width in cm
+pix_width = imag_width/((len(amr[0])-1)) # Determine the pixel width in cm
 
 # Use small angle approximation to determine the angle subtended by the pixel
-theta_rad = pix_width/d # In degrees
+#theta_rad = (pix_width/d) # In degrees
 #theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
-theta = theta_rad*3600 # Convert to degrees and then to arcseconds
+#theta = theta_rad*3600 # Convert to degrees and then to arcseconds
+theta = (pix_width/d)*(360*3600/(2*np.pi))
 
 # Define effective filter wavelengths
 eff = 247.12451
@@ -196,7 +197,7 @@ if p == 'yes':
     imag_trans = radmc3dPy.image.readImage('image_trans.out', binary=False)
 
     # Plot the image in a matplotlib figure (ifreq is the index of the lambdarange to plot)
-    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=300., log=False, bunit='inu')
+    radmc3dPy.image.plotImage(imag_trans, arcsec=False, au=True, dpc=d/pc, log=False, bunit='inu')
 
 print '\n######################################################################'
 print 'Please run the command \"viewimage\" in the Terminal at this point to'
