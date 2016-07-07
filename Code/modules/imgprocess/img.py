@@ -39,16 +39,22 @@ import random
 
 ######################### Define function to create maps of N and T #################
 
-def map():
+def mapMaker(data_type):
 
     '''
     '''
 
     ############################### Read in image data ##############################
 
-    # Read in both data types
-    inp_data = np.loadtxt('../../curvefitting/cloud/datafeed.txt')
-    chi_data = np.loadtxt('../../curvefitting/cloud/chi_coarse.txt',skiprows=1)
+    if data_type == 'radmc':
+        # Read in both data types
+        inp_data = np.loadtxt('../../curvefitting/cloud/datafeed.txt')
+        chi_data = np.loadtxt('../../curvefitting/cloud/chi_coarse.txt',skiprows=1)
+
+    elif data_type == 'arepo':
+        # Read in both data types
+        inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
+        chi_data = np.loadtxt('../../curvefitting/sphdata/chi_coarse.txt',skiprows=1)
 
     # Split data types into plottable quantities
     inp_N = inp_data[:,1]

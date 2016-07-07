@@ -27,7 +27,7 @@ from matplotlib.pyplot import *
 
 # Import astropy
 from astropy.io import fits
-from astropy.convolution import convolve_fft
+from astropy.convolution import convolve, convolve_fft
 
 # Import scipy
 import scipy.interpolate
@@ -41,7 +41,7 @@ import random
 ########################## Function to rebin the PSF ##########################
 
 # Function taken from http://scipy-cookbook.readthedocs.io/items/Rebinning.html Example 3
-def congrid(a, newdims, method='linear', centre=False, minusone=False):
+def congrid(a, newdims, method='nearest', centre=True, minusone=True):
     '''Arbitrary resampling of source array to new dimension sizes.
     Currently only supports maintaining the same number of dimensions.
     To use 1-D arrays, first promote them to shape (x,1).
@@ -217,20 +217,24 @@ def conv(filter):
     # Plot the data for comparison purposes
     subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
     title(r'Raw SPIRE 250$\mu m$ PSF')
-    imshow(psf,origin='lower')
+    matshow(psf,origin='lower')
     colorbar()
-    tight_layout()
+    xlabel('Pixel')
+    ylabel('Pixel')
+    '''
+    #tight_layout
     #grid(color='g',linestyle='-',linewidth=1)
     subplot2grid((10,8), (8,0), colspan=8,rowspan=2)
     plot(np.linspace(0,len(psf),len(psf)),psf[len(psf)/2])
     xlim(min(np.linspace(0,len(psf),len(psf))), max(np.linspace(0,len(psf),len(psf))))
     ylabel('Pixel Value')
     xlabel('Pixel')
-    tight_layout()
+    #tight_layout
+    '''
     savefig('psf.pdf',dpi=300)
     close()
 
-    imshow(data,origin='lower')
+    matshow(data,origin='lower')
     title(str('RADMC-3D Intensity Data for SPIRE ')+str(hdu['EFF'])+str('$ \mu m$'))
     colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
     savefig('data.pdf',dpi=300)
@@ -246,7 +250,7 @@ def conv(filter):
     # This ensures the PSF is centered in the frame
     if (np.round(size_factor) % 2 == 0):
         print 'The dimensions of the PSF are even; altering to make the dimensions odd...\n'
-        size_factor = np.round(size_factor) + 1
+
     else:
         print 'The dimensions of the PSF are odd; proceeding as normal...\n'
 
@@ -273,7 +277,7 @@ def conv(filter):
         size_factor = data_theta/psf_theta
 
         # Use the above rebin function to change the dimensions of the PSF to
-        psf_rebin_unnorm = congrid(psf, (psf_header['NAXIS1']/size_factor,psf_header['NAXIS2']/size_factor),centre=True)
+        psf_rebin_unnorm = congrid(psf, ((psf_header['NAXIS1']/size_factor)+1,(psf_header['NAXIS2']/size_factor)+1),centre=True)
 
         # Renormalise the PSF back to unity (or close to it)
         psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
@@ -281,7 +285,7 @@ def conv(filter):
     elif size_factor > 1:
 
         # Use the above rebin function to change the dimensions of the PSF to
-        psf_rebin_unnorm = congrid(psf, (psf_header['NAXIS1']/size_factor,psf_header['NAXIS2']/size_factor),centre=True)
+        psf_rebin_unnorm = congrid(psf, ((psf_header['NAXIS1']/size_factor),(psf_header['NAXIS2']/size_factor)),centre=True)
 
         # Renormalise the PSF back to unity (or close to it)
         psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
@@ -289,12 +293,23 @@ def conv(filter):
     # Determine the new pixel angular size
     new_psf_theta = psf_theta*size_factor
 
+    # Save rebinned PSF to fits file
+    fname = str('psf_rebin.fits')
+    head = fits.PrimaryHDU(psf_rebin)
+    head.writeto(fname)
+
+    # Assign info to header
+    fits.setval(fname, 'DISTANCE', value=hdu['DISTANCE'])
+    fits.setval(fname, 'PIXSIZE', value=new_psf_theta)
+    fits.setval(fname, 'EFF', value=hdu['EFF'])
+
     # Plot the resulting data to assess accuracy of rebin
-    subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
+    subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
     title(r'Rebinned SPIRE 250$\mu m$ PSF')
-    imshow(psf_rebin,origin='lower')
+    matshow(psf_rebin,origin='lower')
     colorbar()
-    tight_layout()
+    xlabel('Pixel')
+    ylabel('Pixel')
     '''
     # major ticks every 20, minor ticks every 5
     major_ticks = np.arange(0, len(psf_rebin[0]), 10)
@@ -307,13 +322,14 @@ def conv(filter):
 
     grid(which='minor',linestyle='-',alpha=0.2)
     grid(which='major',linestyle='-',alpha=0.2)
-    '''
+
     subplot2grid((10,8), (8,0), colspan=8,rowspan=2)
     plot(np.linspace(0,len(psf_rebin[len(psf_rebin)/2]),len(psf_rebin[len(psf_rebin)/2])),psf_rebin[len(psf_rebin)/2])
     xlim(min(np.linspace(0,len(psf_rebin),len(psf_rebin))), max(np.linspace(0,len(psf_rebin),len(psf_rebin))))
     ylabel('Pixel Value')
     xlabel('Pixel')
-    tight_layout()
+    #tight_layout
+    '''
     savefig('psf_rebin.pdf',dpi=300)
     close()
 
@@ -340,7 +356,7 @@ def conv(filter):
 
     # Plot the resulting convolution
     #imshow(conv,origin='lower',vmin=0,vmax=1)
-    imshow(conv,origin='lower')
+    matshow(conv,origin='lower')
     colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
     title(str('Convolved Data for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('convolved.pdf',dpi=300)

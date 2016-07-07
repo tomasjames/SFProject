@@ -39,10 +39,10 @@ import random
 
 
 ######################### Function to determine number of beams ###########################
-def beams(filename):
+def beams_pp(filename):
 
     '''
-    Determines the number of beams for any given filter.
+    Determines the number of beams per pixel for any given filter.
 
     Simulations would normally expect 1 beam per pixel, so the number of beams
     aligns with the number of pixels. Increasing the number of beams per pixel provides
@@ -120,3 +120,35 @@ def beams(filename):
     b = ((pix_width)/pc)/res_pixel
 
     return b
+
+def beams_req(d, img_width, npix):
+
+    '''
+    Determines the number of beams for any given filter.
+
+    Simulations would normally expect 1 beam per pixel, so the number of beams
+    aligns with the number of pixels. Increasing the number of beams per pixel provides
+    a higher resolution.
+
+    Keywords
+    d: the distance to the source (in pc)
+
+    filt: the filter that accompanies the instrument declared in ins keyword
+        Options - SPIRE:
+            psw (250 micron)
+            pmw (350 micron)
+            plw (500 micron)
+
+        Options - PACS:
+            blue (70 micron)
+            green (100 micron)
+            red (160 micron)
+
+    extent: the image width (in AU)
+    '''
+
+
+
+    res_pixel = (pix_width/pc)/b
+
+    b = (pix_width/pc)/(((d/pc)*theta)/206256)

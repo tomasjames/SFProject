@@ -39,8 +39,20 @@ import random
 
 ############################ Define Chi squared test ############################
 
+'''
 # Chi squared
 def chi(O,E,sigma):
+
+    Returns simply the minimised chi squared value for a given dataset.
+
+    O is the flux from the actual data.
+    Sigma is the square root of the variance of O
+    E is the data that is expected
+
+    return sum((((O-E)/sigma)**2))
+'''
+
+def chi(O,E):
     '''
     Returns simply the minimised chi squared value for a given dataset.
 
@@ -48,8 +60,7 @@ def chi(O,E,sigma):
     Sigma is the square root of the variance of O
     E is the data that is expected
     '''
-    return sum((((O-E)/sigma)**2))
-
+    return sum((((O-E)**2)/E))
 
 ######################### Define a modified blackbody ############################
 
@@ -68,9 +79,16 @@ def mbb(N,dust_mass,opac,v,T):
 
 ########################## Define wrapper to apply to data ########################
 
-def chiTest():
+def chiTest(data_type):
 
     '''
+    A function to run the Chi-squared minimisation analysis over the SEDs generated.
+
+    Keywords
+    data_type: whether the data being considered is RADMC-3D data, or Arepo data
+        Options:
+            'radmc': spherical, isothermal cloud SEDs
+            'arepo': the arepo simulation SEDs
     '''
 
     ################### Read the average data determined earlier ###################
@@ -97,6 +115,7 @@ def chiTest():
             filenames.append(file)
 
     # Assign to variables and put fluxes into an array (data plotted later)
+    # +1 term avoids the filename that is placed in the array for identification
     blue = data[data.index(filenames[0])+1]
     green = data[data.index(filenames[1])+1]
     plw = data[data.index(filenames[2])+1]
@@ -104,10 +123,16 @@ def chiTest():
     psw = data[data.index(filenames[4])+1]
     red = data[data.index(filenames[5])+1]
 
+    '''
     # Extract meaningful data from input files
     v_data = np.array([psw[:,4],pmw[:,4],plw[:,4],blue[:,4],green[:,4],red[:,4]])
     flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
     flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
+    '''
+
+    # Extract meaningful data from input files
+    v_data = np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]])
+    flux = np.array([psw[:,2],pmw[:,2],plw[:,2],blue[:,2],green[:,2],red[:,2]])
 
     # Read the initial radmc3dPy output to get image dimensions and info
     #imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
@@ -135,12 +160,12 @@ def chiTest():
     v = np.linspace(v_init, v_fin, nlam)
 
     # Find the index of the frequency that most closely matches the frequency of the band (i.e. find the difference between the two and find the index at which this is the minimum)
-    psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0,4]))
-    pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0,4]))
-    plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0,4]))
-    blue_index = min(enumerate(v), key=lambda a: abs(a[1]-blue[0,4]))
-    green_index = min(enumerate(v), key=lambda b: abs(b[1]-green[0,4]))
-    red_index = min(enumerate(v), key=lambda c: abs(c[1]-red[0,4]))
+    psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0][1]))
+    pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0,1]))
+    plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0,1]))
+    blue_index = min(enumerate(v), key=lambda a: abs(a[1]-blue[0,1]))
+    green_index = min(enumerate(v), key=lambda b: abs(b[1]-green[0,1]))
+    red_index = min(enumerate(v), key=lambda c: abs(c[1]-red[0,1]))
 
     # Solid angle of the beam
     sigma_arc = 1768 # 465 square arcseconds
@@ -159,16 +184,22 @@ def chiTest():
     # Dust to gas ratio
     d2g = 0.01
 
-    # Read in the dust density information
-    dust_density = np.loadtxt('../../workingsims/blue/background_15K/dust_density.inp', skiprows=3)
-    dust_temperature = np.loadtxt('../../workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
+    if data_type == 'radmc':
+        # Read in the dust density information
+        dust_density = np.loadtxt('../../workingsims_psf/psw/background_15K/dust_density.inp', skiprows=3)
+        dust_temperature = np.loadtxt('../../workingsims_psf/psw/background_15K/dust_temperature.dat', skiprows=3)
+        imag = radmc3dPy.image.readImage('../../workingsims_psf/psw/background_15K/image.out')
+
+    elif data_type == 'arepo':
+        dust_density = np.loadtxt('../../data_psf/psw/dust_project/dust_density.inp', skiprows=3)
+        dust_temperature = np.loadtxt('../../data_psf/psw/dust_project/dust_temperature.dat', skiprows=3)
+        imag = radmc3dPy.image.readImage('../../data_psf/psw/dust_project/image.out')
 
     # Create file to store the values
     datafeed_store = open('datafeed.txt', 'w')
     df = csv.writer(datafeed_store, delimiter=' ')
 
     # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-    imag = radmc3dPy.image.readImage('../../workingsims/blue/background_15K/image.out')
     xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
 
     # Create list to store values of dust density summed along every x,y coordinate
@@ -176,7 +207,7 @@ def chiTest():
 
     # Ask for distance to source
     #d = input('At what distance is the source? This answer should be in parsecs.\n')
-    d = 150
+    d = 300
     D = np.float64(d)*pc # Convert to cm
 
     # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
@@ -232,12 +263,12 @@ def chiTest():
         T_full.append(col_T)
 
     #N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
-    N = np.linspace(16, 21, 40)
+    N = np.linspace(15, 25, 50)
 
     # T is independent of the column density in determination so this remains unchanged
     #T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
     #T = np.logspace(np.log10(5),np.log10(15),80,base=10)
-    T = np.linspace(9, 16, 40)
+    T = np.linspace(5, 25, 50)
 
     # Create 2 2D arrays of the data to track the progress of the loop
     T_mesh, N_mesh = np.meshgrid(T,N)
@@ -294,18 +325,19 @@ def chiTest():
                 to_fit_red = blackbody[red_index[0]]
 
                 # Put the fitting fluxes into an array
-                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
                 #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
-                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
+                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
 
                 # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-                points = np.array([flux[2][h],flux[1][h],flux[0][h]])
-                points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
-                #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+                #points = np.array([flux[2][h],flux[1][h],flux[0][h]])
+                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
+                points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
                 #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
                 # Append the chi squared value
-                chisquared = chi(to_fit,points,sigma=points_error)
+                #chisquared = chi(to_fit,points,sigma=points_error)
+                chisquared = chi(to_fit,points)
 
                 if chisquared == np.inf:
                     chivals.append(np.nan)
@@ -384,13 +416,21 @@ def chiTest():
         if h == 0:
         # Plot the data
             figure(1)
+            '''
             errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
             errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
             errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
             errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
             errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='gx',label='PACS: Green')
             errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='rx',label='PACS: Red')
-            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[2]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[2]/2)+str('$\/K$'))
+            '''
+            plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
+            plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
+            plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')
+            plot(blue[0][1],blue[0][2],'bx',label='PACS: Blue')
+            plot(green[0][1],green[0][2],'gx',label='PACS: Green')
+            plot(red[0][1],red[0][2],'rx',label='PACS: Red')
+            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
             xlabel(r'$\nu \/(Hz)$')
             ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
             xscale("log", nonposx='clip')
@@ -451,9 +491,11 @@ def chiTest():
     print 'Now determining the (new) modified blackbody curves.\n'
 
     # Define the new N and T
-    N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 100)
+    #N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 400)
     #T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
-    T = np.linspace(min_T-min_T/4, max_T+min_T/4, 100)
+    #T = np.linspace(min_T-min_T/4, max_T+min_T/4, 400)
+    N = np.linspace(np.log10(min_N-1), np.log10(max_N+1), 400)
+    T = np.linspace(min_T-1, max_T+1, 400)
 
     # Create 2 2D arrays of the data to track the progress of the loop
     T_mesh, N_mesh = np.meshgrid(T,N)
@@ -509,12 +551,13 @@ def chiTest():
 
                 # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
                 points = np.array([flux[2][h],flux[1][h],flux[0][h]])
-                points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
+                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
                 #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
                 #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
                 # Append the chi squared value
-                chisquared = chi(to_fit,points,sigma=points_error)
+                #chisquared = chi(to_fit,points,sigma=points_error)
+                chisquared - chi(to_fit,points)
 
                 if chisquared == np.inf:
                     chivals.append(np.nan)
@@ -597,13 +640,21 @@ def chiTest():
         if h == n:
         # Plot the data
             figure(1)
+            '''
             errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
             errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
             errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
             errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
             errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='gx',label='PACS: Green')
             errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='rx',label='PACS: Red')
-            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[2]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[2]/2)+str('$\/K$'))
+            '''
+            plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
+            plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
+            plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')
+            plot(blue[0][1],blue[0][2],'bx',label='PACS: Blue')
+            plot(green[0][1],green[0][2],'gx',label='PACS: Green')
+            plot(red[0][1],red[0][2],'rx',label='PACS: Red')
+            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
             xlabel(r'$\nu \/(Hz)$')
             ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
             xscale("log", nonposx='clip')
