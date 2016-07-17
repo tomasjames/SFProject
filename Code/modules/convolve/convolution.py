@@ -236,7 +236,8 @@ def conv(filter):
 
     matshow(data,origin='lower')
     title(str('RADMC-3D Intensity Data for SPIRE ')+str(hdu['EFF'])+str('$ \mu m$'))
-    colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+    #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+    colorbar(label=r'$I$ [MJy/ster]')
     savefig('data.pdf',dpi=300)
     close()
 
@@ -266,7 +267,8 @@ def conv(filter):
         data = congrid(data, (len(data[0])*(1./2),len(data[:,0])*(1./2)),centre=True)
         imshow(data,origin='lower')
         title(r'Rebinned Data')
-        colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+        #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+        colorbar(label=r'$I$ [MJy/ster]')
         savefig('data_rebin.png')
         close()
 
@@ -357,7 +359,8 @@ def conv(filter):
     # Plot the resulting convolution
     #imshow(conv,origin='lower',vmin=0,vmax=1)
     matshow(conv,origin='lower')
-    colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+    #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+    colorbar(label=r'$I$ [MJy/ster]')
     title(str('Convolved Data for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('convolved.pdf',dpi=300)
     close()

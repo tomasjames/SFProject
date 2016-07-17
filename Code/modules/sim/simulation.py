@@ -43,7 +43,7 @@ from inputfile.datafilegen import *
 from convolve.convolution import *
 
 ########################## Function to run initial sim ##########################
-def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, amr, dust):
+def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, amr, dust, sim_name):
 
     '''
     Begins the RADMC-3D simulation based on the keyword arguments supplied.
@@ -189,8 +189,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     ########################### Save data to FITS file #######################
 
-    # Open the image_trans_raw.txt file into an array
-    image_trans_raw_1d = np.loadtxt('image_trans.out',skiprows=6)
+    # Open the image_trans_raw.txt file into an array and convert to MJy/sr
+    image_trans_raw_1d = np.loadtxt('image_trans.out',skiprows=6)/(10**(-23))
 
     # Reshape the array to be 2-dimensional
     image_trans_raw = np.reshape(image_trans_raw_1d, (np.sqrt(len(image_trans_raw_1d)), np.sqrt(len(image_trans_raw_1d))))
@@ -276,7 +276,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         psf_raw = fits.open('../../../../datafiles/psf/PSF_green_slope-1_small.fits')
 
     # Extract the data
-    psf = psf_raw[0].data
+    psf = psf_raw[0].data[0]
     psf_header = psf_raw[0].header
 
     # Ensure that the data is normalised
@@ -297,9 +297,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     #image_width = hdu['IMGWIDTH'] # Image width in cm
 
     # Plot the data for comparison purposes
-    subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
+    #subplot2grid((10,8), (0,0), colspan=8,rowspan=8)
     title(r'Raw SPIRE 250$\mu m$ PSF')
-    matshow(psf,origin='lower')
+    #matshow(psf,origin='lower')
+    imshow(psf,interpolation='nearest',origin='lower')
     colorbar()
     xlabel('Pixel')
     ylabel('Pixel')
@@ -316,10 +317,11 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     savefig('psf.pdf',dpi=300)
     close()
 
-    matshow(data,origin='lower')
+    #matshow(data,origin='lower')
+    imshow(data,interpolation='nearest',origin='lower')
     title(str('RADMC-3D Intensity Data for SPIRE ')+str(hdu['EFF'])+str('$ \mu m$'))
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
-    colorbar()
+    colorbar(label=r'$I$ [MJy/ster]')
     savefig('data.pdf',dpi=300)
     close()
 
@@ -354,7 +356,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         data = congrid(data, (len(data[0])*(1./2),len(data[:,0])*(1./2)),centre=True)
         imshow(data,origin='lower')
         title(r'Rebinned Data')
-        colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+        #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
+        colorbar(label=r'$I$ [MJy/ster]')
         savefig('data_rebin.png')
         close()
 
@@ -403,32 +406,13 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     fits.setval(fname, 'EFF', value=hdu['EFF'])
 
     # Plot the resulting data to assess accuracy of rebin
-    subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
+    #subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
     title(r'Rebinned SPIRE 250$\mu m$ PSF')
-    matshow(psf_rebin,origin='lower')
+    #matshow(psf_rebin,origin='lower')
+    imshow(psf_rebin,interpolation='nearest',origin='lower')
     colorbar()
     xlabel('Pixel')
     ylabel('Pixel')
-    '''
-    # major ticks every 20, minor ticks every 5
-    major_ticks = np.arange(0, len(psf_rebin[0]), 10)
-    minor_ticks = np.arange(0, len(psf_rebin[0]), 1)
-
-    xticks(major_ticks)
-    xticks(minor_ticks)
-    yticks(major_ticks)
-    yticks(minor_ticks)
-
-    grid(which='minor',linestyle='-',alpha=0.2)
-    grid(which='major',linestyle='-',alpha=0.2)
-
-    subplot2grid((10,8), (8,0), colspan=8,rowspan=2)
-    plot(np.linspace(0,len(psf_rebin[len(psf_rebin)/2]),len(psf_rebin[len(psf_rebin)/2])),psf_rebin[len(psf_rebin)/2])
-    xlim(min(np.linspace(0,len(psf_rebin),len(psf_rebin))), max(np.linspace(0,len(psf_rebin),len(psf_rebin))))
-    ylabel('Pixel Value')
-    xlabel('Pixel')
-    #tight_layout
-    '''
     savefig('psf_rebin.pdf',dpi=300)
     close()
 
@@ -454,10 +438,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     print 'Convolution complete!\nSaving the image...\n'
 
     # Plot the resulting convolution
-    #imshow(conv,origin='lower',vmin=0,vmax=1)
-    matshow(conv,origin='lower')
+    #matshow(conv,origin='lower')
+    imshow(conv,interpolation=None,origin='lower')
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]',use_gridspec=False)
-    colorbar()
+    colorbar(label=r'$I$ [MJy/ster]')
     title(str('Convolved Data for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('convolved.pdf',dpi=300)
     close()
@@ -501,14 +485,14 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         hdu.writeto(fname)
 
     # Write relevant information to the FITS header
-    fits.setval(fname, 'CDELT1', value='GLON-TAN') # Changes the coordinate system to Galactic Longitude
-    fits.setval(fname, 'CDELT2', value='GLAT-TAN') # Changes the coordinate system to Galactic Latitude
+    fits.setval(fname, 'CTYPE1', value='GLON-CAR') # Changes the coordinate system to Galactic Longitude
+    fits.setval(fname, 'CTYPE2', value='GLAT-CAR') # Changes the coordinate system to Galactic Latitude
     fits.setval(fname, 'CRPIX1', value=len(conv[0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRPIX2', value=len(conv[:,0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRVAL1', value=159.4507) # Coordinate of that pixel
     fits.setval(fname, 'CRVAL2', value=-19.8196)
-    fits.setval(fname, 'CDELT1', value=new_psf_theta) # Degrees per pixel
-    fits.setval(fname, 'CDELT2', value=new_psf_theta)
+    fits.setval(fname, 'CDELT1', value=(-1)*new_psf_theta/3600) # Degrees per pixel (CDELT1 has to be negative)
+    fits.setval(fname, 'CDELT2', value=new_psf_theta/3600)
 
     ############################### Check image power ##############################
 
@@ -553,9 +537,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         kern_hdu = kern[0].header
 
         # Plot the initial kernel
-        subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
+        #subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
         title(str(r'Conversion Kernel'))
-        matshow(kern_vals,origin='lower')
+        #matshow(kern_vals,origin='lower')
+        imshow(kern_vals,interpolation=None,origin='lower')
         colorbar()
         xlabel('Pixel')
         ylabel('Pixel')
@@ -595,9 +580,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         kern_rebin = kern_rebin_unnorm*(np.sum(kern_vals)/np.sum(kern_rebin_unnorm))
 
         # Plot the resulting data to assess accuracy of rebin
-        subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
+        #subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
         title(str(r'Rebinned Conversion Kernel'))
-        matshow(kern_rebin,origin='lower')
+        #matshow(kern_rebin,origin='lower')
+        imshow(kern_rebin,interpolation='nearest',origin='lower')
         colorbar()
         xlabel('Pixel')
         ylabel('Pixel')
@@ -656,11 +642,11 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     hdu = fits.open(str(filt)+str('_convolved.fits'))[0].header
 
     # Plot the resulting convolution
-    #imshow(conv,origin='lower',vmin=0,vmax=1)
-    matshow(common_conv,origin='lower')
+    #matshow(common_conv,origin='lower')
+    imshow(conv,interpolation=None,origin='lower')
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]',use_gridspec=False)
-    colorbar()
-    title(str(r'Convolved Data to SPIRE 500$\mu m$ \nfor SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
+    colorbar(label=r'$I$ [MJy/ster]')
+    title(str(r'Convolved Data to SPIRE 500$\mu m$ \n for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('common_convolved.pdf',dpi=300)
     close()
 
@@ -733,8 +719,6 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     v_cen = cc/(w_cen*10**-4)
 
     ############################ Sample flux at each pixel #########################
-
-    sim_name = 'cloud'
 
     # Check to see if folder exists before entering file write
     if os.path.isdir(str('../../../curvefitting/')+str(sim_name)) == True:

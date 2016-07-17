@@ -75,7 +75,7 @@ def mbb(N,dust_mass,opac,v,T):
     #b = ((hh)*(cc))/(wav*(kk)*T)
     a = (2*(hh)*(v**3))/(cc**2)
     b = (hh*v)/(kk*T)
-    return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))
+    return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/(10**(-23))
 
 ########################## Define wrapper to apply to data ########################
 
@@ -123,17 +123,17 @@ def chiTest(data_type):
     psw = data[data.index(filenames[4])+1]
     red = data[data.index(filenames[5])+1]
 
-    '''
     # Extract meaningful data from input files
     v_data = np.array([psw[:,4],pmw[:,4],plw[:,4],blue[:,4],green[:,4],red[:,4]])
     flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
+    '''
     flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
     '''
-
+    '''
     # Extract meaningful data from input files
     v_data = np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]])
     flux = np.array([psw[:,2],pmw[:,2],plw[:,2],blue[:,2],green[:,2],red[:,2]])
-
+    '''
     # Read the initial radmc3dPy output to get image dimensions and info
     #imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
 
@@ -325,14 +325,14 @@ def chiTest(data_type):
                 to_fit_red = blackbody[red_index[0]]
 
                 # Put the fitting fluxes into an array
-                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
                 #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
-                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
+                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
 
                 # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-                #points = np.array([flux[2][h],flux[1][h],flux[0][h]])
+                points = np.array([flux[2][h],flux[1][h],flux[0][h]])
                 #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
-                points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+                #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
                 #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
                 # Append the chi squared value
@@ -416,14 +416,6 @@ def chiTest(data_type):
         if h == 0:
         # Plot the data
             figure(1)
-            '''
-            errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
-            errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
-            errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
-            errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
-            errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='gx',label='PACS: Green')
-            errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='rx',label='PACS: Red')
-            '''
             plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
             plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
             plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')
@@ -494,8 +486,8 @@ def chiTest(data_type):
     #N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 400)
     #T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
     #T = np.linspace(min_T-min_T/4, max_T+min_T/4, 400)
-    N = np.linspace(np.log10(min_N-1), np.log10(max_N+1), 400)
-    T = np.linspace(min_T-1, max_T+1, 400)
+    N = np.linspace(np.log10(min_N)-0.5, np.log10(max_N)+0.5, 400)
+    T = np.linspace(min_T-0.5, max_T+0.5, 400)
 
     # Create 2 2D arrays of the data to track the progress of the loop
     T_mesh, N_mesh = np.meshgrid(T,N)
@@ -557,7 +549,7 @@ def chiTest(data_type):
 
                 # Append the chi squared value
                 #chisquared = chi(to_fit,points,sigma=points_error)
-                chisquared - chi(to_fit,points)
+                chisquared = chi(to_fit,points)
 
                 if chisquared == np.inf:
                     chivals.append(np.nan)
@@ -637,17 +629,9 @@ def chiTest(data_type):
         cs.writerow(cs_towrite)
         #print 'Writing row to datafile...\n'
 
-        if h == n:
+        if h == 0:
         # Plot the data
             figure(1)
-            '''
-            errorbar(psw[0][4],psw[0][5],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
-            errorbar(pmw[0][4],pmw[0][5],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
-            errorbar(plw[0][4],plw[0][5],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
-            errorbar(blue[0][4],blue[0][5],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
-            errorbar(green[0][4],green[0][5],yerr=green[0][-1],fmt='gx',label='PACS: Green')
-            errorbar(red[0][4],red[0][5],yerr=red[0][-1],fmt='rx',label='PACS: Red')
-            '''
             plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
             plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
             plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')

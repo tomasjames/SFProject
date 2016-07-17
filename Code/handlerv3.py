@@ -54,7 +54,7 @@ if data_type == 'sim':
 
     # Run through the files
     for suffix in filt:
-        
+
         # Print the intentions of the script to keep track of code's location
         print(str('Changing the directory to:')+str(' simulations/workingsims_psf/')+str(suffix)+str('/background_15K/\n'))
 
@@ -65,7 +65,7 @@ if data_type == 'sim':
         print(str('Now running the simulation for ')+str(suffix)+str('\n'))
 
         # Run the simulation itself
-        simulation(mode=mode ,filt=str(suffix), npix=npix, sizeau=sizeau, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, amr=amr, dust=dust)
+        simulation(mode=mode ,filt=str(suffix), npix=npix, sizeau=sizeau, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, amr=amr, dust=dust, sim_name='cloud')
 
         # Print to tell simulation is being run
         #print(str('Now determining the SED for')+str(suffix)+str('\n'))
@@ -217,7 +217,7 @@ elif data_type == 'sph':
         print(str('Now running the simulation for ')+str(suffix)+str('\n'))
 
         # Run the simulation itself
-        simulation(mode=mode, filt=str(suffix), npix=200, sizeau=133692, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, amr=False, dust=False)
+        simulation(mode=mode, filt=str(suffix), npix=200, sizeau=133692, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, amr=False, dust=False, sim_name='sphdata')
 
         # Print to tell simulation is being run
         print(str('Now determining the SED for')+str(suffix)+str('\n'))

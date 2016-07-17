@@ -35,6 +35,9 @@ import scipy.ndimage
 # Import glob for file scraping
 import glob
 
+# Import astrodendro
+from astrodendro import Dendrogram
+
 import random
 
 ######################### Define function to create maps of N and T #################
@@ -63,8 +66,6 @@ def mapMaker(data_type):
     chi_N, chi_N_error = chi_data[:,1], chi_data[:,4]
     chi_T, chi_T_error = chi_data[:,2], chi_data[:,5]
 
-    ################################# Plot image data ################################
-
     # Reshape the data such that x and y pixels correspond
     N_chi_inp, N_chi_inp_error = np.reshape(chi_N, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_N_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
     T_chi_inp, T_chi_inp_error = np.reshape(chi_T, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data)))), np.reshape(chi_T_error, (np.sqrt(len(chi_data)),np.sqrt(len(chi_data))))
@@ -72,21 +73,59 @@ def mapMaker(data_type):
     N_data_inp = np.reshape(inp_N, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
     T_data_inp = np.reshape(inp_T, (np.sqrt(len(inp_data)),np.sqrt(len(inp_data))))
 
+    ############################ Determine basic image stats #########################
+
+    # Find the lowest and largest N and T for normalising colorbars
+    min_N_data, max_N_data = np.amin(np.log10(N_data_inp)), np.amax(np.log10(N_data_inp))
+    min_T_data, max_T_data = np.amin(T_data_inp), np.amax(T_data_inp)
+
+    min_N_chi, max_N_chi = np.amin(np.log10(N_chi_inp)), np.amax(np.log10(N_chi_inp))
+    min_T_chi, max_T_chi = np.amin(T_chi_inp), np.amax(T_chi_inp)
+
+    # Determine which of the min and max quantities is greatest
+    if max(max_N_data, max_N_chi) == max_N_data:
+        max_N = max_N_data
+    elif max(max_N_data, max_N_chi) == max_N_chi:
+        max_N = max_N_chi
+
+    if min(min_N_data, min_N_chi) == min_N_data:
+        min_N = min_N_data
+    elif min(min_N_data, min_N_chi) == min_N_chi:
+        min_N = min_N_chi
+
+    if max(max_T_data, max_T_chi) == max_T_data:
+        max_T = max_T_data
+    elif max(max_T_data, max_T_chi) == max_T_chi:
+        max_T = max_T_chi
+
+    if min(min_T_data, min_T_chi) == min_T_data:
+        min_T = min_T_data
+    elif min(min_T_data, min_T_chi) == min_T_chi:
+        min_T = min_T_chi
+
+    ################################# Plot image data ################################
+
+    # Determine number of bins
+    bins=np.linspace(np.log10(np.amin(chi_N)), np.log10(np.amax(chi_N)), len(np.unique(chi_N))+1)
+    h,b,p = hist(np.log10(chi_N),bins=bins,histtype='step')
+    close()
+
     # Plot the data along with a PDF
     figure()
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
-    imshow(np.log10(N_chi_inp),origin='lower',vmin=np.log10(min(chi_N)),vmax=np.log10(max(chi_N)))
+    imshow(np.log10(N_chi_inp),origin='lower',vmin=min_N,vmax=max_N)
     colorbar(label='$log_{10}(N)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the $\chi^{2}$ Recovered $N$\n')
 
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
-    #hist(np.log10(N_chi_inp),bins=5,normed=True)
-    h, b = np.histogram(np.log10(N_chi_inp), bins=np.linspace(np.log10(np.amin(N_chi_inp)), np.log10(np.amax(N_chi_inp)), 100), density=False)
-    #bar(b[:-1],h,width=(max(h)-min(h))/len(N_chi_inp))
-    bar(b[:-1],np.log10(h),width=0.02)
-    xlim(np.log10(min(chi_N)),np.log10(max(inp_N)))
+    #hist(np.log10(chi_N),bins=np.linspace(np.log10(np.amin(chi_N)), np.log10(np.amax(chi_N)), len(np.unique(chi_N))+1),histtype='step',log=True)
+    #h, b = np.histogram(np.log10(N_chi_inp), bins=np.linspace(np.log10(np.amin(N_chi_inp)), np.log10(np.amax(N_chi_inp)), len(np.unique(N_chi_inp))), density=False)
+    bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
+    #plot(b[:-1],np.log10(h),ls='steps')
+    #xlim(np.log10(min(chi_N)),np.log10(max(inp_N)))
+    xlim(min_N,max_N)
     title('PDF of $\chi^{2}$ Recovered $N$')
     xlabel('$log_{10}(N)$',fontsize=10)
     ylabel('$log_{10}{(n_{pix})}\/(per\/bin)$',fontsize=10)
@@ -106,7 +145,7 @@ def mapMaker(data_type):
 
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
     #hist(np.log10(N_chi_inp),bins=5,normed=True)
-    h, b = np.histogram(np.log10(N_chi_inp_error), bins=np.linspace(np.log10(np.amin(N_chi_inp_error)), np.log10(np.amax(N_chi_inp_error)), 100), density=False)
+    h, b = np.histogram(np.log10(N_chi_inp_error), bins=np.linspace(np.log10(np.amin(N_chi_inp_error)), np.log10(np.amax(N_chi_inp_error)), len(np.unique(N_chi_inp_error))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(N_chi_inp))
     bar(b[:-1],h/np.sum(h),width=0.02)
     title('PDF of $\chi^{2}$ Recovered $N$')
@@ -120,18 +159,23 @@ def mapMaker(data_type):
     # Plot the data along with a PDF
     figure()
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
-    imshow(T_chi_inp,origin='lower',vmin=min(inp_T),vmax=max(chi_T))
+    imshow(T_chi_inp,origin='lower',vmin=min_T,vmax=max_T)
     colorbar(label='$T\/(K)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the $\chi^{2}$ Recovered $T$\n')
 
+    # Determine number of bins
+    bins=np.linspace(np.log10(np.amin(chi_T)), np.log10(np.amax(chi_T)), len(np.unique(chi_T))+1)
+    h,b,p = hist(np.log10(chi_T),bins=bins,histtype='step')
+    close()
+
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
     #hist(T_chi_inp,bins=5,normed=True)
-    h, b = np.histogram(T_chi_inp, bins=np.linspace((np.amin(T_chi_inp)), (np.amax(T_chi_inp)), 100), density=False)
+    #h, b = np.histogram(T_chi_inp, bins=np.linspace((np.amin(T_chi_inp)), (np.amax(T_chi_inp)), len(np.unique(T_chi_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(T_chi_inp))
-    bar(b[:-1],h,width=0.1)
-    xlim(min(inp_T),max(chi_T))
+    bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
+    xlim(min_T,max_T)
     title('PDF of $\chi^{2}$ Recovered $T$')
     xlabel('$T\/(K)$',fontsize=10)
     ylabel('$log_{10}{(n_{pix})}\/(per\/bin)$',fontsize=10)
@@ -151,7 +195,7 @@ def mapMaker(data_type):
 
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
     #hist(T_chi_inp,bins=5,normed=True)
-    h, b = np.histogram(T_chi_inp_error, bins=np.linspace((np.amin(T_chi_inp_error)), (np.amax(T_chi_inp_error)), 100), density=False)
+    h, b = np.histogram(T_chi_inp_error, bins=np.linspace((np.amin(T_chi_inp_error)), (np.amax(T_chi_inp_error)), len(np.unique(T_chi_inp_error))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(T_chi_inp))
     bar(b[:-1],h/np.sum(h),width=0.06)
     xlim(min(inp_T),max(inp_T))
@@ -167,7 +211,7 @@ def mapMaker(data_type):
     figure()
     N_data_inp[N_data_inp == 0] = np.nan
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
-    imshow(np.log10(N_data_inp),origin='lower',vmin=np.log10(np.amin(N_chi_inp)),vmax=np.log10(np.amax(N_chi_inp)))
+    imshow(np.log10(N_data_inp),origin='lower',vmin=min_N,vmax=max_N)
     colorbar(label='$log_{10}(N)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
@@ -175,7 +219,7 @@ def mapMaker(data_type):
 
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
     #hist(np.log10(N_data_inp),bins=5,normed=True)
-    h, b = np.histogram(np.log10(N_data_inp), bins=np.linspace(np.log10(np.amin(N_data_inp)), np.log10(np.amax(N_data_inp)), 100), density=False)
+    h, b = np.histogram(np.log10(N_data_inp), bins=np.linspace(np.log10(np.amin(N_data_inp)), np.log10(np.amax(N_data_inp)), len(np.unique(N_data_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(N_data_inp))
     bar(b[:-1],np.log10(h),width=0.02)
     xlim(np.log10(min(chi_N)),np.log10(max(inp_N)))
@@ -191,7 +235,7 @@ def mapMaker(data_type):
     figure()
     T_data_inp[T_data_inp == 0] = np.nan
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
-    imshow(T_data_inp,origin='lower',vmin=min(inp_T),vmax=max(chi_T))
+    imshow(T_data_inp,origin='lower',vmin=min_T,vmax=max_T)
     colorbar(label='$T\/(K)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
@@ -199,7 +243,7 @@ def mapMaker(data_type):
 
     subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
     #hist(T_data_inp,bins=5,normed=True)
-    h, b = np.histogram(T_data_inp, bins=np.linspace((np.amin(T_data_inp)), (np.amax(T_data_inp)), 100), density=False)
+    h, b = np.histogram(T_data_inp, bins=np.linspace((np.amin(T_data_inp)), (np.amax(T_data_inp)), len(np.unique(T_data_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(T_data_inp))
     bar(b[:-1],h,width=0.1)
     xlim(min(inp_T),max(inp_T))
@@ -422,7 +466,7 @@ def dendrogram():
 
             # Show contour for ``min_value``
             p.plot_contour(ax1, color='black')
-            p.colorbar()
+            #p.colorbar()
 
             # Determine the type of structure
             if struct.is_leaf:
@@ -432,8 +476,8 @@ def dendrogram():
                 indices = struct.indices(subtree=True)
                 vals = struct.values(subtree=True)
 
-                print indices
-                print vals
+                #print indices
+                #print vals
 
                 # Highlight two branches
                 p.plot_contour(ax1, structure=struct, lw=3, colors="#%06x" % random.randint(0, 0xFFFFFF))

@@ -121,7 +121,7 @@ def beams_pp(filename):
 
     return b
 
-def beams_req(d, img_width, npix):
+def beams_req(d, b, img_width, npix):
 
     '''
     Determines the number of beams for any given filter.
@@ -133,22 +133,17 @@ def beams_req(d, img_width, npix):
     Keywords
     d: the distance to the source (in pc)
 
-    filt: the filter that accompanies the instrument declared in ins keyword
-        Options - SPIRE:
-            psw (250 micron)
-            pmw (350 micron)
-            plw (500 micron)
+    b: the number of required beams in each pixel
 
-        Options - PACS:
-            blue (70 micron)
-            green (100 micron)
-            red (160 micron)
+    img_width: the width of the overall image (in AU)
 
-    extent: the image width (in AU)
+    npix: the number of pixels in the image
     '''
 
+    # Determine the pixel width
+    pix_width = ((img_width*au)/pc)/npix
 
+    # Determine the angular size of the pixel
+    theta = (206256)*(pix_width/(d*b))
 
-    res_pixel = (pix_width/pc)/b
-
-    b = (pix_width/pc)/(((d/pc)*theta)/206256)
+    return theta
