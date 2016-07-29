@@ -23,6 +23,8 @@ import numpy as np
 import csv
 
 # Import matplotlib
+import matplotlib as mpl
+mpl.use('Qt4Agg')
 from matplotlib.pyplot import *
 
 # Import astropy
@@ -42,22 +44,25 @@ import random
 
 ######################### Define function to create maps of N and T #################
 
-def mapMaker(data_type):
+def mapMaker(data_type,B):
 
     '''
     '''
 
     ############################### Read in image data ##############################
 
+    # Define a string that contains the correct folder name for us in the below statement
+    beta_str = str('B=')+str(B)
+
     if data_type == 'radmc':
         # Read in both data types
-        inp_data = np.loadtxt('../../curvefitting/cloud/datafeed.txt')
-        chi_data = np.loadtxt('../../curvefitting/cloud/chi_coarse.txt',skiprows=1)
+        inp_data = np.loadtxt('../../../curvefitting/cloud/')+str(beta_str)+str('/datafeed.txt')
+        chi_data = np.loadtxt(('../../../curvefitting/cloud/')+str(beta_str)+str('/chi_fine.txt'),skiprows=1)
 
     elif data_type == 'arepo':
         # Read in both data types
-        inp_data = np.loadtxt('../../curvefitting/sphdata/datafeed.txt')
-        chi_data = np.loadtxt('../../curvefitting/sphdata/chi_coarse.txt',skiprows=1)
+        inp_data = np.loadtxt('../../../curvefitting/sphdata/')+str(beta_str)+str('datafeed.txt')
+        chi_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('chi_fine.txt'),skiprows=1)
 
     # Split data types into plottable quantities
     inp_N = inp_data[:,1]

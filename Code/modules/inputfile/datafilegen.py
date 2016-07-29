@@ -18,12 +18,14 @@ from radmc3dPy.natconst import *
 import glob
 
 # Import matplotlib to plot
+import matplotlib as mpl
+mpl.use('Qt4Agg')
 import matplotlib.pyplot as plt
 
 # Import interpolation modules
 from scipy.interpolate import interp1d
 
-def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperature, nlam, opaclaw, B, amr_gen=True, dust_gen=True, points=100.):
+def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperature, nlam, opaclaw, kappa_0, B, amr_gen=True, dust_gen=True, points=100.):
 
     '''
     Determines all necessary input files required to run a basic isothermal sphere simulation (either a thermal Monte-Carlo simulation or ray-trace) using RADMC-3D.
@@ -327,7 +329,7 @@ def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperat
     # Ask for reference opacity
     #kappa_0 = input('What reference intensity should be used? (1 is a safe default)\n')
     #kappa_0 = 3.09e-1
-    kappa_0 = 4.
+    #kappa_0 = 4.
     print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994.\n'
 
     # Ask for the number of wavelength points

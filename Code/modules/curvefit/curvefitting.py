@@ -23,6 +23,8 @@ import numpy as np
 import csv
 
 # Import matplotlib
+import matplotlib as mpl
+mpl.use('Qt4Agg')
 from matplotlib.pyplot import *
 
 # Import astropy
@@ -39,28 +41,30 @@ import random
 
 ############################ Define Chi squared test ############################
 
-'''
+
 # Chi squared
 def chi(O,E,sigma):
-
+    '''
     Returns simply the minimised chi squared value for a given dataset.
 
     O is the flux from the actual data.
     Sigma is the square root of the variance of O
     E is the data that is expected
+    '''
 
     return sum((((O-E)/sigma)**2))
-'''
 
+'''
 def chi(O,E):
-    '''
+
     Returns simply the minimised chi squared value for a given dataset.
 
     O is the flux from the actual data.
     Sigma is the square root of the variance of O
     E is the data that is expected
-    '''
+
     return sum((((O-E)**2)/E))
+'''
 
 ######################### Define a modified blackbody ############################
 
@@ -77,107 +81,20 @@ def mbb(N,dust_mass,opac,v,T):
     b = (hh*v)/(kk*T)
     return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/(10**(-23))
 
-########################## Define wrapper to apply to data ########################
-
-def chiTest(data_type):
+def dataDerive(data_type, kappa_0, B):
 
     '''
-    A function to run the Chi-squared minimisation analysis over the SEDs generated.
+    Function to take input quantities for RADMC-3D and derive from them 'true' values of the dust column density and dust temperature
 
-    Keywords
-    data_type: whether the data being considered is RADMC-3D data, or Arepo data
+    Keywords:
+    data_type: the type of data being used
         Options:
-            'radmc': spherical, isothermal cloud SEDs
-            'arepo': the arepo simulation SEDs
+            'radmc' or 'arepo'
     '''
-
-    ################### Read the average data determined earlier ###################
-
-    # Initialise a list to store the read in data
-    data, filenames = [], []
-
-    # Initiate counter to help store the passbands
-    count = -1
-
-    # Loop through all files that contain average data
-    for file in glob.glob('*_average_data.txt'):
-        # Open them
-        with open(file) as f:
-            count += 1
-
-            # Read in using loadtxt and then append the data to a list for use later
-            contents = np.loadtxt(file, delimiter=" ")
-
-            # Append the name of the file to the position (count+len(data)) followed by
-            # the file contents
-            data.insert(count+len(data), file)
-            data.append(contents)
-            filenames.append(file)
-
-    # Assign to variables and put fluxes into an array (data plotted later)
-    # +1 term avoids the filename that is placed in the array for identification
-    blue = data[data.index(filenames[0])+1]
-    green = data[data.index(filenames[1])+1]
-    plw = data[data.index(filenames[2])+1]
-    pmw = data[data.index(filenames[3])+1]
-    psw = data[data.index(filenames[4])+1]
-    red = data[data.index(filenames[5])+1]
-
-    # Extract meaningful data from input files
-    v_data = np.array([psw[:,4],pmw[:,4],plw[:,4],blue[:,4],green[:,4],red[:,4]])
-    flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
-    '''
-    flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
-    '''
-    '''
-    # Extract meaningful data from input files
-    v_data = np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]])
-    flux = np.array([psw[:,2],pmw[:,2],plw[:,2],blue[:,2],green[:,2],red[:,2]])
-    '''
-    # Read the initial radmc3dPy output to get image dimensions and info
-    #imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
-
-    ######################### Determine (again) the opacity ########################
-
-    # Query for reference wavelength
-    w_ref = 250e-4
-    v_ref = cc/w_ref
-    print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
-
-    # Ask for reference opacity
-    kappa_0 = 4.0
-    print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994. According to http://arxiv.org/pdf/1302.5699v1.pdf the value of B=2.08 fits the power law.\n'
-
-    # Define the start and end points of the spectrum
-    lambda_init = 55.670637e-4
-    lambda_fin = 690.8139e-4
-    v_init = cc/lambda_init
-    v_fin = cc/lambda_fin
-    nlam = 600
-
-    # Create array of wavelengths from range given and reshape
-    w = np.linspace(lambda_init, lambda_fin, nlam)
-    v = np.linspace(v_init, v_fin, nlam)
-
-    # Find the index of the frequency that most closely matches the frequency of the band (i.e. find the difference between the two and find the index at which this is the minimum)
-    psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0][1]))
-    pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0,1]))
-    plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0,1]))
-    blue_index = min(enumerate(v), key=lambda a: abs(a[1]-blue[0,1]))
-    green_index = min(enumerate(v), key=lambda b: abs(b[1]-green[0,1]))
-    red_index = min(enumerate(v), key=lambda c: abs(c[1]-red[0,1]))
-
-    # Solid angle of the beam
-    sigma_arc = 1768 # 465 square arcseconds
-    sigma_beam = sigma_arc*(1/4.24e10) # 465 square arcseconds in steradians
-
-    # Ask for spectral index
-    B = 2.0
-
-    # Evaluate opacities
-    opacity = kappa_0*(v/v_ref)**B
 
     #################### Determine the expected column density #####################
+
+    B_val = str('B=')+str(B)
 
     print 'Entering the column density determination script\n'
 
@@ -186,14 +103,14 @@ def chiTest(data_type):
 
     if data_type == 'radmc':
         # Read in the dust density information
-        dust_density = np.loadtxt('../../workingsims_psf/psw/background_15K/dust_density.inp', skiprows=3)
-        dust_temperature = np.loadtxt('../../workingsims_psf/psw/background_15K/dust_temperature.dat', skiprows=3)
-        imag = radmc3dPy.image.readImage('../../workingsims_psf/psw/background_15K/image.out')
+        dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_temperature.dat'), skiprows=3)
+        imag = radmc3dPy.image.readImage(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/image.out'))
 
     elif data_type == 'arepo':
-        dust_density = np.loadtxt('../../data_psf/psw/dust_project/dust_density.inp', skiprows=3)
-        dust_temperature = np.loadtxt('../../data_psf/psw/dust_project/dust_temperature.dat', skiprows=3)
-        imag = radmc3dPy.image.readImage('../../data_psf/psw/dust_project/image.out')
+        dust_density = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_temperature.dat'), skiprows=3)
+        imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('psw/dust_project/image.out'))
 
     # Create file to store the values
     datafeed_store = open('datafeed.txt', 'w')
@@ -212,10 +129,6 @@ def chiTest(data_type):
 
     # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
     dust_mass = muh2*mp*d2g
-
-    # Determine solid angle of the pixel
-    #sigma_pix = (imag.sizepix_x*imag.sizepix_y)/D**2
-    sigma_pix = sigma_beam
 
     # Instantiate a counter and a number of lists to store values (and for diagnostics)
     count = 0
@@ -262,23 +175,148 @@ def chiTest(data_type):
         col_full.append(col)
         T_full.append(col_T)
 
-    #N = np.linspace(np.log10(min(col_full)/100), np.log10(max(col_full)*100), 40)
-    N = np.linspace(15, 25, 50)
-
-    # T is independent of the column density in determination so this remains unchanged
-    #T = np.linspace(min(dust_temperature)-4,max(dust_temperature)+4,40)
-    #T = np.logspace(np.log10(5),np.log10(15),80,base=10)
-    T = np.linspace(5, 25, 50)
-
-    # Create 2 2D arrays of the data to track the progress of the loop
-    T_mesh, N_mesh = np.meshgrid(T,N)
-
     datafeed_store.close()
 
-    print 'Column densities have been evaluated and have been saved to the file datafeed_store.txt,\n'
+    print 'Column densities have been evaluated and have been saved to the file datafeed.txt,\n'
 
-    #N = np.linspace(np.round(col,-22),2*np.round(col,-22),10000)
-    #A = (imag.sizepix_x*imag.sizepix_y) # Area of one pixel in cm
+    return col_full, T_full
+
+########################## Define wrapper to apply to data ########################
+
+def chiTest(data_type, output_name, N, T, kappa_0, B):
+
+    '''
+    A function to run the Chi-squared minimisation analysis over the SEDs generated.
+
+    Keywords
+    data_type: whether the data being considered is RADMC-3D data, or Arepo data
+        Options:
+            'radmc': spherical, isothermal cloud SEDs
+            'arepo': the arepo simulation SEDs
+
+    output_name: the name of the output file to store the values
+        Options:
+            'chi_coarse.txt' or 'chi_fine.txt'
+
+    N: an array of specific length containing all of the values of dust column density to be used in the sim
+        Values MUST be logarithmic, i.e. 1x10**17 would be 17
+        Options:
+            N = np.array([17,18,19,20])
+
+    T: an array of specific length containing all of the values of dust temperature to be used in the sim
+        Values NEED NOT be logarithmic
+        Options:
+            T = np.array([10,11,12])
+    '''
+
+    ################### Read the average data determined earlier ###################
+
+    # Instantiate the B val
+    B_val = str('B=')+str(B)
+
+    # Initialise a list to store the read in data
+    data, filenames = [], []
+
+    # Initiate counter to help store the passbands
+    count = -1
+
+    # Loop through all files that contain average data
+    for file in glob.glob('*_average_data.txt'):
+        # Open them
+        with open(file) as f:
+            count += 1
+
+            # Read in using loadtxt and then append the data to a list for use later
+            contents = np.loadtxt(file, delimiter=" ")
+
+            # Append the name of the file to the position (count+len(data)) followed by
+            # the file contents
+            data.insert(count+len(data), file)
+            data.append(contents)
+            filenames.append(file)
+
+    # Assign to variables and put fluxes into an array (data plotted later)
+    # +1 term avoids the filename that is placed in the array for identification
+    blue = data[data.index(filenames[0])+1]
+    green = data[data.index(filenames[1])+1]
+    plw = data[data.index(filenames[2])+1]
+    pmw = data[data.index(filenames[3])+1]
+    psw = data[data.index(filenames[4])+1]
+    red = data[data.index(filenames[5])+1]
+
+    '''
+    # Extract meaningful data from input files
+    v_data = np.array([psw[:,4],pmw[:,4],plw[:,4],blue[:,4],green[:,4],red[:,4]])
+    flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
+    flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
+    '''
+    # Extract meaningful data from input files
+    v_data = np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]])
+    flux = np.array([psw[:,2],pmw[:,2],plw[:,2],blue[:,2],green[:,2],red[:,2]])
+    flux_error = np.array([psw[:,3],pmw[:,3],plw[:,3],blue[:,3],green[:,3],red[:,3]])
+
+    # Read the initial radmc3dPy output to get image dimensions and info
+    #imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
+
+    ######################### Determine (again) the opacity ########################
+
+    # Query for reference wavelength
+    w_ref = 250e-4
+    v_ref = cc/w_ref
+    print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
+
+    # Ask for reference opacity
+    #kappa_0 = 4.0
+    print '\nThe k_0 opacity is taken to be', kappa_0, 'cm^2/g as per Ossenkopf and Henning, 1994. According to http://arxiv.org/pdf/1302.5699v1.pdf the value of B=2.08 fits the power law.\n'
+
+    # Define the start and end points of the spectrum
+    lambda_init = 55.670637e-4
+    lambda_fin = 690.8139e-4
+    v_init = cc/lambda_init
+    v_fin = cc/lambda_fin
+    nlam = 600
+
+    # Create array of wavelengths from range given and reshape
+    w = np.linspace(lambda_init, lambda_fin, nlam)
+    v = np.linspace(v_init, v_fin, nlam)
+
+    # Find the index of the frequency that most closely matches the frequency of the band (i.e. find the difference between the two and find the index at which this is the minimum)
+    psw_index = min(enumerate(v), key=lambda x: abs(x[1]-psw[0][1]))
+    pmw_index = min(enumerate(v), key=lambda y: abs(y[1]-pmw[0,1]))
+    plw_index = min(enumerate(v), key=lambda z: abs(z[1]-plw[0,1]))
+    blue_index = min(enumerate(v), key=lambda a: abs(a[1]-blue[0,1]))
+    green_index = min(enumerate(v), key=lambda b: abs(b[1]-green[0,1]))
+    red_index = min(enumerate(v), key=lambda c: abs(c[1]-red[0,1]))
+
+    # Evaluate opacities
+    opacity = kappa_0*(v/v_ref)**B
+
+    ############################# Read in necessary values ##########################
+
+    # Dust to gas ratio
+    d2g = 0.01
+
+    if data_type == 'radmc':
+        # Read in the dust density information
+        dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_temperature.dat'), skiprows=3)
+        imag = radmc3dPy.image.readImage(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/image.out'))
+
+    elif data_type == 'arepo':
+        dust_density = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_temperature.dat'), skiprows=3)
+        imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('psw/dust_project/image.out'))
+
+    # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
+    xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
+
+    # Ask for distance to source
+    #d = input('At what distance is the source? This answer should be in parsecs.\n')
+    d = 300
+    D = np.float64(d)*pc # Convert to cm
+
+    # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
+    dust_mass = muh2*mp*d2g
 
     ###################### Determine the modified black body #######################
 
@@ -287,14 +325,12 @@ def chiTest(data_type):
     chi_min_index_all, chi_min_blackbody_all = [], []
 
     # Save this to a file for storage
-    chi_store = open('chi_coarse.txt', 'w')
+    chi_store = open(str(output_name), 'w')
     cs = csv.writer(chi_store, delimiter=' ')
 
     # Save a line to allow better understanding of the columns
     cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared', 'One-Sigma N', 'One-Sigma T', 'Two-Sigma N', 'Two-Sigma T', 'Three-Sigma N', 'Three-Sigma T']
     cs.writerow(cs_towrite)
-
-    n = random.sample(range(0,imag.nx*imag.ny), 4)
 
     for h in range(0,imag.nx*imag.ny):
 
@@ -331,13 +367,13 @@ def chiTest(data_type):
 
                 # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
                 points = np.array([flux[2][h],flux[1][h],flux[0][h]])
-                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
+                points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
                 #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
                 #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
                 # Append the chi squared value
-                #chisquared = chi(to_fit,points,sigma=points_error)
-                chisquared = chi(to_fit,points)
+                chisquared = chi(to_fit,points,sigma=points_error)
+                #chisquared = chi(to_fit,points)
 
                 if chisquared == np.inf:
                     chivals.append(np.nan)
@@ -373,6 +409,9 @@ def chiTest(data_type):
         chi_min_blackbody = mod[chi_min_index]
 
         ############## Error analysis begins here #############
+
+        # Create 2 2D arrays of the data to track the progress of the loop
+        T_mesh, N_mesh = np.meshgrid(T,N)
 
         # Reshape the chivals to fit the format of N_mesh and T_mesh
         chivals_mesh = np.reshape(chivals, (len(T),len(N)))
@@ -413,6 +452,12 @@ def chiTest(data_type):
         cs.writerow(cs_towrite)
         #print 'Writing row to datafile...\n'
 
+        # Determine location to save images
+        if 'coarse' in str(output_name):
+            save_path = 'imgdump/coarse/'
+        else:
+            save_path = 'imgdump/fine/'
+
         if h == 0:
         # Plot the data
             figure(1)
@@ -422,261 +467,45 @@ def chiTest(data_type):
             plot(blue[0][1],blue[0][2],'bx',label='PACS: Blue')
             plot(green[0][1],green[0][2],'gx',label='PACS: Green')
             plot(red[0][1],red[0][2],'rx',label='PACS: Red')
-            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
+            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
             xlabel(r'$\nu \/(Hz)$')
             ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
             xscale("log", nonposx='clip')
             yscale("log", nonposx='clip')
             grid(True,which='both')
             legend(loc='best',prop={'size':8})
-            title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n for T < 11K at the ')+str(h)+str('th Pixel\n'))
-            savefig(str('imgdump/coarse/averages_coarse')+str(h)+str('.png'),dpi=300)
+            title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n at the ')+str(h)+str('th Pixel\n'))
+            savefig(str(save_path)+str('averages_coarse_')+str(h)+str('.png'),dpi=300)
             close()
 
         # Also plot probability contour
             figure(2)
             #plot(10**N_mesh,T_mesh, 'b.')
-            plot(N_index[chi_min_index], T_index[chi_min_index], 'r.', label=str(r'$\chi^{2}$ Minimum=')+str(min(chivals)))
+            plot(N_index[chi_min_index], T_index[chi_min_index], 'ro', label=str(r'$\chi^{2}$ Minimum=')+str(min(chivals)))
             CS = contour(10**N_mesh,T_mesh,chivals_mesh)
             clabel(CS)
-            xlabel(r'$N\/(g\/cm^{-3})$')
+            xlabel(r'$N\/(cm^{-2})$')
             ylabel(r'$T\/(K)$')
             title(r'$\chi^{2} Contours$')
             legend(loc='best',prop={'size':8})
-            savefig(str('imgdump/coarse/contours_')+str(h)+str('.png'),dpi=300)
+            savefig(str(save_path)+str('contours_')+str(h)+str('.png'),dpi=300)
             close()
 
         # And the chi-squared landscape
             figure(3)
             subplot(2,1,1)
-            plot(T_index, chivals, 'bo')
-            plot(T_index[chi_min_index], chivals[chi_min_index], 'r.')
+            plot(T_index, chivals, 'b.')
+            plot(T_index[chi_min_index], chivals[chi_min_index], 'ro')
             xlabel(r'$T\/(K)$')
             ylabel(r'$\chi^{2}$')
 
             subplot(2,1,2)
-            plot(N_index, chivals, 'bo')
-            plot(N_index[chi_min_index], chivals[chi_min_index], 'r.')
-            xlabel(r'$N\/(g\/cm^{-2})$')
+            plot(N_index, chivals, 'b.')
+            plot(N_index[chi_min_index], chivals[chi_min_index], 'ro')
+            xlabel(r'$N\/(cm^{-2})$')
             ylabel(r'$\chi^{2}$')
 
-            savefig(str('imgdump/coarse/landscape_')+str(h)+str('.png'),dpi=300)
+            savefig(str(save_path)+str('landscape_')+str(h)+str('.png'),dpi=300)
             close()
 
     chi_store.close()
-
-    ###################### Repeat for a second time #######################
-
-    # Reopen the chi-squared storage
-    chi_coarse = np.loadtxt('chi_coarse.txt', skiprows=1)
-
-    # Determine the minimum and maximum column densities and temperatures
-    #min_N_loc, max_N_loc = np.where(chi_coarse[:,1] == chi_coarse[:,1].min())[0][0], np.where(chi_coarse[:,1] == chi_coarse[:,1].max())[0][0]
-    #min_T_loc, max_T_loc = np.where(chi_coarse[:,2] == chi_coarse[:,2].min())[0][0], np.where(chi_coarse[:,2] == chi_coarse[:,2].max())[0][0]
-
-    #min_N, max_N = chi_coarse[:,1][min_N_loc], chi_coarse[:,1][max_N_loc]
-    #min_T, max_T = chi_coarse[:,2][min_T_loc], chi_coarse[:,2][max_T_loc]
-
-    min_N, max_N = np.min(chi_coarse[:,1]), np.max(chi_coarse[:,1])
-    min_T, max_T = np.min(chi_coarse[:,2]), np.max(chi_coarse[:,2])
-
-    print 'Now determining the (new) modified blackbody curves.\n'
-
-    # Define the new N and T
-    #N = np.linspace(np.log10(min_N-min_N/4), np.log10(max_N+min_N/4), 400)
-    #T = np.logspace(np.log10(min_T-min_T/4),np.log10(max_T+min_T/4), 80,base=10)
-    #T = np.linspace(min_T-min_T/4, max_T+min_T/4, 400)
-    N = np.linspace(np.log10(min_N)-0.5, np.log10(max_N)+0.5, 400)
-    T = np.linspace(min_T-0.5, max_T+0.5, 400)
-
-    # Create 2 2D arrays of the data to track the progress of the loop
-    T_mesh, N_mesh = np.meshgrid(T,N)
-
-    print 'I am now considering N from', min(N), 'to', max(N), 'and T from'
-    print min(T), 'to', max(T), '.\n'
-
-    chi_min_index_all, chi_min_blackbody_all = [], []
-
-    # Save this to a file for storage
-    chi_fine = open('chi_fine.txt', 'w')
-    cs = csv.writer(chi_fine, delimiter=' ')
-
-    # Save a line to allow better understanding of the columns
-    cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared', 'One-Sigma N', 'One-Sigma T', 'Two-Sigma N', 'Two-Sigma T', 'Three-Sigma N', 'Three-Sigma T']
-    cs.writerow(cs_towrite)
-
-    n = random.randint(0,imag.nx*imag.ny)
-
-    for h in range(0,imag.nx*imag.ny):
-
-        # Loop through each column density and determine modified black body curve
-        mod,chivals,N_index,T_index = [],[],[],[]
-
-        # Loop through both N and T to determine the blackbody
-        for i in range(0,len(N)):
-            for j in range(0,len(T)):
-                blackbody = mbb(10**N[i],dust_mass,opacity,v,T=T[j])
-
-                # Append the value of the given blackbody to a list for storage
-                mod.append(blackbody)
-
-                # Append the given values of N and T
-                N_index.append(10**N[i])
-                T_index.append(T[j])
-
-                #print 'N=',10**N[i],'and T=',T[i]
-
-                # Define lists to store band fluxes
-                to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
-
-                # Find the flux at the index determined earlier
-                to_fit_psw = blackbody[psw_index[0]]
-                to_fit_pmw = blackbody[pmw_index[0]]
-                to_fit_plw = blackbody[plw_index[0]]
-                to_fit_blue = blackbody[blue_index[0]]
-                to_fit_green = blackbody[green_index[0]]
-                to_fit_red = blackbody[red_index[0]]
-
-                # Put the fitting fluxes into an array
-                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
-                to_fit = np.array([to_fit_plw,to_fit_pmw,to_fit_psw])
-
-                # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-                points = np.array([flux[2][h],flux[1][h],flux[0][h]])
-                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
-                #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
-                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
-
-                # Append the chi squared value
-                #chisquared = chi(to_fit,points,sigma=points_error)
-                chisquared = chi(to_fit,points)
-
-                if chisquared == np.inf:
-                    chivals.append(np.nan)
-                else:
-                    chivals.append(chisquared)
-                #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
-
-                #print str('Found the chi-squared landscape. Moving to the next values...\n')
-
-        if h == imag.nx*imag.ny/10:
-            print '\r[=>         ] 10%'
-        elif h == 2*(imag.nx*imag.ny)/10:
-            print '\r[==>        ] 20%'
-        elif h == 3*(imag.nx*imag.ny)/10:
-            print '\r[===>       ] 30%'
-        elif h == 4*(imag.nx*imag.ny)/10:
-            print '\r[====>      ] 40%'
-        elif h == 5*(imag.nx*imag.ny)/10:
-            print '\r[=====>     ] 50%'
-        elif h == 6*(imag.nx*imag.ny)/10:
-            print '\r[======>    ] 60%'
-        elif h == 7*(imag.nx*imag.ny)/10:
-            print '\r[=======>   ] 70%'
-        elif h == 8*(imag.nx*imag.ny)/10:
-            print '\r[========>  ] 80%'
-        elif h == 9*(imag.nx*imag.ny)/10:
-            print '\r[=========> ] 90%'
-        elif h == (imag.nx*imag.ny)-1:
-            print '\r[==========>] 100%'
-
-        # Determine the chi squared minimum
-        chi_min_index = chivals.index(min(chivals))
-        chi_min_blackbody = mod[chi_min_index]
-
-        # Append this value to a list to store the values
-        chi_min_index_all.append(chi_min_index)
-        chi_min_blackbody_all.append(chi_min_blackbody)
-
-        ############## Error analysis begins here #############
-
-        # Reshape the chivals to fit the format of N_mesh and T_mesh
-        chivals_mesh = np.reshape(chivals, (len(T),len(N)))
-
-        # Determine error in the value by finding location of points that lie within 3 sigma
-        # Start by finding the location in the mesh of the minimum chi-squared value
-        val = zip(*np.where(chivals_mesh == np.amin(chivals_mesh)))
-
-        # According to Data Analysis notes 2D distribution has the following values of delta-chi-squared
-        delta_1 = 2.3 #(one_sigma)
-        delta_2 = 6.17 #(two_sigma)
-        delta_3 = 11.8 #(three_sigma)
-
-        # Find the locations of the points within these bounds
-        one_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_1) & (chivals_mesh <= chivals_mesh[val[0]]+delta_1)))
-        two_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_2) & (chivals_mesh <= chivals_mesh[val[0]]+delta_2)))
-        three_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val[0]]-delta_3) & (chivals_mesh <= chivals_mesh[val[0]]+delta_3)))
-
-        T_temp, N_temp = [], []
-        T_error, N_error = [], []
-
-        # Pull the values of N and T at these points
-        for d in [one_sigma, two_sigma, three_sigma]:
-            for c in d:
-                T_temp.append(T_mesh[c])
-                N_temp.append(10**N_mesh[c])
-
-            T_error.append(max(T_temp) - min(T_temp))
-            N_error.append(max(N_temp) - min(N_temp))
-
-        # Append this value to a list to store the values
-        chi_min_index_all.append(chi_min_index)
-        chi_min_blackbody_all.append(chi_min_blackbody)
-
-        cs_towrite = [h, N_index[chi_min_index], T_index[chi_min_index], min(chivals), N_error[0], T_error[0], N_error[1], T_error[1], N_error[2], T_error[2]]
-
-        # Write to file
-        cs.writerow(cs_towrite)
-        #print 'Writing row to datafile...\n'
-
-        if h == 0:
-        # Plot the data
-            figure(1)
-            plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
-            plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
-            plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')
-            plot(blue[0][1],blue[0][2],'bx',label='PACS: Blue')
-            plot(green[0][1],green[0][2],'gx',label='PACS: Green')
-            plot(red[0][1],red[0][2],'rx',label='PACS: Red')
-            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$g\/cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
-            xlabel(r'$\nu \/(Hz)$')
-            ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
-            xscale("log", nonposx='clip')
-            yscale("log", nonposx='clip')
-            grid(True,which='both')
-            legend(loc='best',prop={'size':8})
-            title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n for T < 11K at the ')+str(h)+str('th Pixel\n'))
-            savefig(str('imgdump/fine/averages_coarse')+str(h)+str('.png'),dpi=300)
-            close()
-
-        # Also plot probability contour
-            figure(2)
-            #plot(10**N_mesh,T_mesh, 'b.')
-            plot(N_index[chi_min_index], T_index[chi_min_index], 'r.', label=str(r'$\chi^{2}$ Minimum=')+str(min(chivals)))
-            CS = contour(10**N_mesh,T_mesh,chivals_mesh)
-            clabel(CS)
-            xlabel(r'$N\/(g\/cm^{-3})$')
-            ylabel(r'$T\/(K)$')
-            title(r'$\chi^{2} Contours$')
-            legend(loc='best',prop={'size':8})
-            savefig(str('imgdump/fine/contours_')+str(h)+str('.png'),dpi=300)
-            close()
-
-        # And the chi-squared landscape
-            figure(3)
-            subplot(2,1,1)
-            plot(T_index, chivals, 'bo')
-            plot(T_index[chi_min_index], chivals[chi_min_index], 'r.')
-            xlabel(r'$T\/(K)$')
-            ylabel(r'$\chi^{2}$')
-
-            subplot(2,1,2)
-            plot(N_index, chivals, 'bo')
-            plot(N_index[chi_min_index], chivals[chi_min_index], 'r.')
-            xlabel(r'$N\/(g\/cm^{-2})$')
-            ylabel(r'$\chi^{2}$')
-
-            savefig(str('imgdump/fine/landscape_')+str(h)+str('.png'),dpi=300)
-            close()
-
-    chi_fine.close()

@@ -6,7 +6,7 @@
 ############################# Import statements ################################
 # Import matplotlib
 import matplotlib as mpl
-mpl.use('Agg')
+mpl.use('Qt4Agg')
 from matplotlib.pyplot import *
 
 # Import RADMC-3D
@@ -39,11 +39,15 @@ import glob
 
 import random
 
+# Import the necessary modules
 from inputfile.datafilegen import *
 from convolve.convolution import *
 
+# Import photutils
+import photutils
+
 ########################## Function to run initial sim ##########################
-def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, amr, dust, sim_name):
+def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, kappa_0, B, amr, dust, sim_name):
 
     '''
     Begins the RADMC-3D simulation based on the keyword arguments supplied.
@@ -96,7 +100,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     data_choice = mode
     if data_choice == 'd':
         # Call the data file generation generation script to write the necessary files to the working directory
-        datafilegen(m=mass, cloud=cloud_density, outside=outside_density, width=sizeau, l=npix, cloud_temperature=cloud_temp, outside_temperature=outside_temp, nlam=10000, opaclaw='H', B=2.0, amr_gen=amr, dust_gen=dust, points=100)
+        datafilegen(m=mass, cloud=cloud_density, outside=outside_density, width=sizeau, l=npix, cloud_temperature=cloud_temp, outside_temperature=outside_temp, nlam=10000, opaclaw='H', kappa_0=kappa_0, B=B, amr_gen=amr, dust_gen=dust, points=100)
 
     ################################## Run raytrace ################################
 
@@ -170,8 +174,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
                     #if i == 0. and j == 0. and k == 0.:
                         #image_trans.write('  \n')
                     trans_store.append(np.float64(trans_data[k][1])) # Appends the transmission to a list
-                    store.append(np.float64(imag.image[i][j][k]*trans_data[k][1])) # Determines the transmission weighting
-                    store_all.append(np.float64(imag.image[i][j][k]*trans_data[k][1]))
+                    store.append(np.float64(imag.image[j][i][k]*trans_data[k][1])) # Determines the transmission weighting
+                    store_all.append(np.float64(imag.image[j][i][k]*trans_data[k][1]))
                 summation.append(np.float64(np.sum(store)/np.sum(trans_store))) # Reduces that weighting to one discrete point
                 #image_trans.write(str(np.sum(store))+str('\n'))
                 store, trans_store = [], []
@@ -258,22 +262,22 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     # which is the correct one
     if filt == 'psw':
 	    #psf_raw = fits.open('../../../../datafiles/psf/ken/psf_0250.fits')
-        psf_raw = fits.open('../../../../datafiles/psf/theoretical_spire_beam_model_psw_V0_2.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_psw_V0_2.fits')
 
     elif filt == 'pmw':
-        psf_raw = fits.open('../../../../datafiles/psf/theoretical_spire_beam_model_pmw_V0_2.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_pmw_V0_2.fits')
 
     elif filt == 'plw':
-        psf_raw = fits.open('../../../../datafiles/psf/theoretical_spire_beam_model_plw_V0_2.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_plw_V0_2.fits')
 
     elif filt == 'red':
-        psf_raw = fits.open('../../../../datafiles/psf/PSF_red_slope-1_small.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/PSF_red_slope-1_small.fits')
 
     elif filt == 'blue':
-        psf_raw = fits.open('../../../../datafiles/psf/PSF_blue_slope-1_small.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/PSF_blue_slope-1_small.fits')
 
     elif filt == 'green':
-        psf_raw = fits.open('../../../../datafiles/psf/PSF_green_slope-1_small.fits')
+        psf_raw = fits.open('../../../../../datafiles/psf/PSF_green_slope-1_small.fits')
 
     # Extract the data
     psf = psf_raw[0].data[0]
@@ -339,7 +343,6 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     if (dimen % 2 == 0):
         print 'The dimensions of the PSF are even; altering to make the dimensions odd...\n'
         dimen = dimen+1
-
     else:
         print 'The dimensions of the PSF are odd; proceeding as normal...\n'
 
@@ -432,7 +435,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     print 'Currently convolving...'
 
     # Use the convolution to convolve the rebinned data with the PSF
-    conv = convolve(data, psf_rebin, boundary='extend',normalize_kernel=True)
+    conv = convolve(data, psf_rebin, boundary='extend', normalize_kernel=True)
     #conv = convolve_fft(data, psf_rebin, boundary='extend')
 
     print 'Convolution complete!\nSaving the image...\n'
@@ -485,14 +488,14 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         hdu.writeto(fname)
 
     # Write relevant information to the FITS header
-    fits.setval(fname, 'CTYPE1', value='GLON-CAR') # Changes the coordinate system to Galactic Longitude
-    fits.setval(fname, 'CTYPE2', value='GLAT-CAR') # Changes the coordinate system to Galactic Latitude
+    fits.setval(fname, 'CDELT1', value=(-1)*new_psf_theta/3600) # Degrees per pixel (CDELT1 has to be negative)
+    fits.setval(fname, 'CDELT2', value=new_psf_theta/3600)
     fits.setval(fname, 'CRPIX1', value=len(conv[0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRPIX2', value=len(conv[:,0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRVAL1', value=159.4507) # Coordinate of that pixel
     fits.setval(fname, 'CRVAL2', value=-19.8196)
-    fits.setval(fname, 'CDELT1', value=(-1)*new_psf_theta/3600) # Degrees per pixel (CDELT1 has to be negative)
-    fits.setval(fname, 'CDELT2', value=new_psf_theta/3600)
+    fits.setval(fname, 'CTYPE1', value='GLON-CAR') # Changes the coordinate system to Galactic Longitude
+    fits.setval(fname, 'CTYPE2', value='GLAT-CAR') # Changes the coordinate system to Galactic Latitude
 
     ############################### Check image power ##############################
 
@@ -510,27 +513,21 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     ############################## Commonise image scales ##########################
     ################################################################################
 
-    # Put filt into list for set checking (see a few lines ahead)
-    filt_to_test = [filt]
-
-    # Define list containing all possible filters
-    filters_kernels = ['psw','pmw','blue','green','red']
-
-    # Check whether the filter under consideration is within the list filters_kernels
+    # Check whether the filter under consideration is within the list of used filters
     # If so, run the convolution routine
-    if set(filt_to_test) < set(filters_kernels) == True:
+    if filt in ('psw','pmw','blue','green','red'):
 
         # Read in the kernel
         if filt == 'psw':
-            kern = fits.open('../../../../datafiles/psf/comconv/spire250_to_spire500.fits')
+            kern = fits.open('../../../../../datafiles/psf/comconv/spire250_to_spire500.fits')
         elif filt == 'pmw':
-            kern = fits.open('../../../../datafiles/psf/comconv/spire350_to_spire500.fits')
+            kern = fits.open('../../../../../datafiles/psf/comconv/spire350_to_spire500.fits')
         elif filt == 'blue':
-            kern = fits.open('../../../../datafiles/psf/comconv/pacs70_to_spire500.fits')
+            kern = fits.open('../../../../../datafiles/psf/comconv/pacs70_to_spire500.fits')
         elif filt == 'green':
-            kern = fits.open('../../../../datafiles/psf/comconv/pacs100_to_spire500.fits')
+            kern = fits.open('../../../../../datafiles/psf/comconv/pacs100_to_spire500.fits')
         elif filt == 'red':
-            kern = fits.open('../../../../datafiles/psf/comconv/pacs160_to_spire500.fits')
+            kern = fits.open('../../../../../datafiles/psf/comconv/pacs160_to_spire500.fits')
 
         # Extract data and header
         kern_vals = kern[0].data
@@ -624,7 +621,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         print 'Currently convolving to common resolution...'
 
         # Perform the convolution
-        common_conv = convolve(conv, kern_rebin, boundary='extend',normalize_kernel=True)
+        common_conv = convolve(conv, kern_rebin, boundary='extend', normalize_kernel=True)
 
         print 'Convolution complete!\nSaving the image...\n'
 
@@ -643,10 +640,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     # Plot the resulting convolution
     #matshow(common_conv,origin='lower')
-    imshow(conv,interpolation=None,origin='lower')
+    imshow(common_conv,interpolation=None,origin='lower')
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]',use_gridspec=False)
     colorbar(label=r'$I$ [MJy/ster]')
-    title(str(r'Convolved Data to SPIRE 500$\mu m$ \n for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
+    title(str(r'Convolved Data to SPIRE 500$\mu m$ for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
     savefig('common_convolved.pdf',dpi=300)
     close()
 
@@ -684,6 +681,9 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     print 'The initial power in the image is ', raw_power
     print 'The power in the convolved image is ', convolved_power
 
+    return common_conv
+
+    '''
     ################################################################################
     ################################# Generate the SED #############################
     ################################################################################
@@ -753,13 +753,12 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     # Close the file
     save_data.close()
+    '''
 
-
-'''
 ########################## Function to generate the SED ##########################
-def sedGeneration(filt, sim_name):
+def sedGeneration(filt, sim_name, kappa_0, B, withPSF=True):
 
-
+    '''
     Generates one point of an SED on a pixel by pixel basis for the RADMC-3D output returned in the function sim().
     The function will write the SED points to a text file, <filter>_average_data.txt.
 
@@ -777,41 +776,40 @@ def sedGeneration(filt, sim_name):
             100 (100 micron)
             160 (160 micron)
 
+
     sim_name: a name to be given to the simulation in order to allow it to write to organisational folders of this name
         Options:
             'cloud'
             'sphdata'
 
+    limit: the pixel value required in which to mask the data. This should be the lowest pixel value of the source encountered.
+        Options:
+            Float
 
-    ############################### Read in image data ##############################
+    B: the dust emissitivity index
+        Options:
+            '1.8'
+            '2.0'
+            '2.2'
 
-    # Read in the transmission weighted image devised earlier
-    image_trans_raw = np.loadtxt('image_trans_raw.txt')
+    withPSF: boolean argument that will generate an SED for the PSF convolved data OR the original data
+        Options:
+            True (for PSF)
+            False (without PSF)
+    '''
 
-    # Read in the original image file
-    imag = radmc3dPy.image.readImage('image.out')
+    ################################## Open the image ##############################
 
-    #imag = np.reshape(imag.image, (1,len(imag.image)*len(imag.image[0])))
-
-    # Resize the transmission weighted data
-    image_trans_raw = np.reshape(image_trans_raw, (len(imag.image),len(imag.image[0]),len(imag.image[0][0])))
-
-    print 'Data dimensions dictate that there are', imag.nx*imag.ny, 'rows before a new wavelength data entry begins.\n This means that there are', imag.nwav, 'wavelength fluxes at the central pixel.\n'
-
-    ########################## Read in the transmission data #######################
-
-    # Reads the transmission data
-    trans_data = np.loadtxt('transmission.txt')
-
-    # Assign to variables
-    trans_wav = trans_data[:,0]
-    trans_v = cc/(trans_wav*10**-4)
-    trans = trans_data[:,1]
+    if withPSF == True:
+        # Read in the convolved and transmission weighted image
+        img = fits.open(str(filt)+str('_common_convolved.fits'))
+    else:
+        # Read in the convolved and transmission weighted image
+        img = fits.open(str(filt)+str('.fits'))
+    img_data = img[0].data
+    img_header = img[0].header
 
     ######################### Determine frequency of the image #####################
-
-    # Determine parameters
-    wav = imag.wav
 
     # Loop through possible filters to find effective wavelength
     if filt == 'psw':
@@ -828,67 +826,48 @@ def sedGeneration(filt, sim_name):
         w_cen = 153.94392
 
     # Convert to frequency
-    v = cc/(wav*10**-4)
     v_cen = cc/(w_cen*10**-4)
 
     ############################ Sample flux at each pixel #########################
 
+    '''
     # Check to see if folder exists before entering file write
-    if os.path.isdir(str('../../../curvefitting/')+str(sim_name)) == True:
+    if os.path.isdir(str('../../../../curvefitting/B=')+str(B)+str('/')+str(sim_name)) == True:
         print 'The folder', sim_name, 'already exists. Moving on to file write...'
     else:
         print 'The folder', sim_name, 'does not already exist. Will now create it...'
-        os.makedirs(str('../../../curvefitting/')+str(sim_name))
+        os.makedirs(str('../../../../curvefitting/')+str(B)+str('/')+str(sim_name))
+    '''
 
     # Check to see if file already exists
-    if os.path.isfile(str('../../../curvefitting/')+str(sim_name)+str('/psw_average_data.txt')) == True:
+    if os.path.isfile(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt')) == True:
         print 'Data storage file already exists; opening now\n'
-        save_data = open(str('../../../curvefitting/')+str(sim_name)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
+        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
         data_store = csv.writer(save_data, delimiter=' ')
 
     else:
         print 'Data storage file does not already exist; writing now\n'
-        save_data = open(str('../../../curvefitting/')+str(sim_name)+str('/')+str(filt)+str('_average_data.txt'), 'w+')
+        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'w+')
         data_store = csv.writer(save_data, delimiter=' ')
 
-    # Sum integer to track the loop
+    # Assign the flux calibration error based on the filter by checking whether the filter is PACS (first if) of SPIRE (else)
+    if filt > ['blue', 'green', 'red']:
+        sigma_percent = 0.15
+    else:
+        sigma_percent = 0.10
+
+    # Invoke a counter
     count = 0
 
-    # Instantiate lists to store values
-    flux, flux_trans, flux_trans_index = [], [], []
+    # Loop through the pixels in the image
+    for i in range(0,len(img_data[0])):
+        for j in range(0,len(img_data[:,0])):
 
-    # Loop through the array to find the middle pixel and log its flux
-    for x in range(0,imag.nx):
-        for y in range(0,imag.ny):
-            for l in range(0,imag.nwav):
+            # Add to the counter
+            count =+ 1
 
-                # Assign values to the pixel numbers to track position in loop
-                xpix = x
-                ypix = y
-                zpix = l
-
-                raw_flux = imag.image[x][y][l]
-                raw_flux_trans = image_trans_raw[x][y][l]
-
-                flux.append(raw_flux)
-                flux_trans.append(raw_flux_trans)
-
-            # Determine the flux 'seen' by SPIRE
-            weighted_flux_mean = np.sum(flux_trans)/np.sum(trans)
-            weighted_flux_std = np.std(flux_trans)
-
-            # Invoke a counter
-            count += 1
-
-            # Append th determined information to the file
-            data_store.writerow([count, xpix, ypix, zpix, v_cen, weighted_flux_mean, weighted_flux_std])
-
-            # Reset the lists to 0
-            flux, flux_trans, flux_trans_index = [], [], []
-
-    if sum == imag.nx*imag.ny*imag.nwav:
-        print 'The loop has been executed over all of the elements.\n'
+            # Pull out the pixel value (img_data[i,j]) and write to a row
+            data_store.writerow([count, v_cen, img_data[i,j], sigma_percent*img_data[i,j]])
 
     # Close the file
     save_data.close()
-'''
