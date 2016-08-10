@@ -4,6 +4,13 @@ radmc-3d/*
 Report/Interim/*
 Code/simulations/curvefitting/sphdata/imgdump*
 Code/simulations/curvefitting/sphdata/imgdump_old*
+Code/simulations/curvefitting/cloud/imgdump*
+Code/simulations/curvefitting/cloud/imgdump_old*
+Code/simulations/workingsims*
+Code/simulations/workingsims_psf*
+Code/simulations/data*
+Code/simulations/data_psf*
+Code/simulations/filament*
 
 *.inp
 *.out

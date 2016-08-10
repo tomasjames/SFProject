@@ -56,13 +56,18 @@ def mapMaker(data_type,B):
 
     if data_type == 'radmc':
         # Read in both data types
-        inp_data = np.loadtxt('../../../curvefitting/cloud/')+str(beta_str)+str('/datafeed.txt')
-        chi_data = np.loadtxt(('../../../curvefitting/cloud/')+str(beta_str)+str('/chi_fine.txt'),skiprows=1)
+        inp_data = np.loadtxt(('../../../curvefitting/cloud/')+str(beta_str)+str('/datafeed.txt'))
+        chi_data = np.loadtxt(('../../../curvefitting/cloud/')+str(beta_str)+str('/chi_results.txt'),skiprows=1)
 
     elif data_type == 'arepo':
         # Read in both data types
-        inp_data = np.loadtxt('../../../curvefitting/sphdata/')+str(beta_str)+str('datafeed.txt')
-        chi_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('chi_fine.txt'),skiprows=1)
+        inp_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('/datafeed.txt'))
+        chi_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('/chi_results.txt'),skiprows=1)
+
+    elif data_type == 'snaps':
+        # Read in both data types
+        inp_data = np.loadtxt(('../../../curvefitting/herschel_snaps/')+str(beta_str)+str('/datafeed.txt'))
+        chi_data = np.loadtxt(('../../../curvefitting/herschel_snaps/')+str(beta_str)+str('/chi_results.txt'),skiprows=1)
 
     # Split data types into plottable quantities
     inp_N = inp_data[:,1]
@@ -139,6 +144,7 @@ def mapMaker(data_type,B):
     savefig('map_N_chi.png', dpi=300)
     close()
 
+    '''
     # Plot error map
     figure()
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
@@ -160,6 +166,7 @@ def mapMaker(data_type,B):
 
     savefig('map_N_chi_error.png', dpi=300)
     close()
+    '''
 
     # Plot the data along with a PDF
     figure()
@@ -189,6 +196,7 @@ def mapMaker(data_type,B):
     savefig('map_T_chi.png', dpi=300)
     close()
 
+    '''
     # Plot error map
     figure()
     subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
@@ -211,6 +219,7 @@ def mapMaker(data_type,B):
 
     savefig('map_T_chi_error.png', dpi=300)
     close()
+    '''
 
     # Plot the data along with a PDF
     figure()
@@ -262,11 +271,25 @@ def mapMaker(data_type,B):
 
     ##################### Determine line of sight T variations #######################
 
-    dust_density = np.loadtxt('../../workingsims/blue/background_15K/dust_density.inp', skiprows=3)
-    dust_temperature = np.loadtxt('../../workingsims/blue/background_15K/dust_temperature.dat', skiprows=3)
+    if data_type == 'radmc':
+        dust_density = np.loadtxt(('../../../workingsims_psf/')+str(beta_str)+str('/blue/background_15K/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(beta_str)+str('/blue/background_15K/dust_temperature.dat'), skiprows=3)
 
-    imag = radmc3dPy.image.readImage('../../workingsims/blue/background_15K/image.out')
-    xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
+        imag = fits.open(('../../../workingsims_psf/{}/blue/background_15K/blue_common_convolved.fits').format(beta_str))
+
+    elif data_type == 'arepo':
+        dust_density = np.loadtxt(('../../../data_psf/')+str(beta_str)+str('/blue/dust_project/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../data_psf/')+str(beta_str)+str('/blue/dust_project/dust_temperature.dat'), skiprows=3)
+
+        imag = fits.open(('../../../data_psf/{}/blue/dust_project/blue_common_convolved.fits').format(beta_str))
+
+    elif data_type == 'snaps':
+        dust_density = np.loadtxt(('../../../herschel_snaps_psf/')+str(beta_str)+str('/blue/x1_comp_region1/dust_density.inp'), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../herschel_snaps_psf/')+str(beta_str)+str('/blue/x1_comp_region1/dust_temperature.dat'), skiprows=3)
+
+        imag = fits.open(('../../../herschel_snaps_psf/{}/blue/x1_comp_region1/blue_common_convolved.fits').format(beta_str))
+
+    xpix, ypix, zpix = np.arange(0,nx), np.arange(0,ny), np.arange(0,(len(dust_density)/(nx*ny)))
 
     sigma_T_inp = []
 
@@ -377,6 +400,7 @@ def mapMaker(data_type,B):
     savefig('T_ratio_chi.png', dpi=300)
     close()
 
+    '''
     ############### Plot better comparisons for the RADMC-3D images #################
 
     # Read in all data
@@ -413,6 +437,7 @@ def mapMaker(data_type,B):
         title(str(names[s])+str(': $\lambda=$')+str(eff[s])+str('$\mu m$'))
         savefig(str(names[s])+str('.png'))
         close()
+    '''
 
 ############################# Define function to create dendrograms ###################
 

@@ -121,7 +121,7 @@ def beams_pp(filename):
 
     return b
 
-def beams_req(d, b, img_width, npix):
+def beams_req(d, img_width, npix):
 
     '''
     Determines the number of beams for any given filter.
@@ -140,10 +140,14 @@ def beams_req(d, b, img_width, npix):
     npix: the number of pixels in the image
     '''
 
-    # Determine the pixel width
-    pix_width = ((img_width*au)/pc)/npix
+    FWHM = 5.2
 
-    # Determine the angular size of the pixel
-    theta = (206256)*(pix_width/(d*b))
+    imag_width = img_width*au
+    pix_width = imag_width/(npix) # Determine the pixel width in cm
 
-    return theta
+    theta_rad = np.arctan(pix_width/(d*pc))
+    theta_pix = theta_rad*(360/(2*np.pi))*3600 # Convert to degrees and then to arcseconds
+
+    b = FWHM/(theta_pix)
+
+    return b

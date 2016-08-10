@@ -57,11 +57,14 @@ print '#######################################################################'
 #kappa_0 = input('What value of kappa_0 should be used? B=2.0 has kappa_0=4\n')
 print '######################################################################\n'
 
-data_type = 'sim'
+data_type = 'sph'
+#kappa_0 = 0.042
+#lambda_0 = 300e-4 # Reference wavelength should be in cm
 kappa_0 = 4.
+lambda_0 = 250e-4
 
 # Different values of dust emissivity index
-beta = [1.8, 2.0, 2.2]
+B = input('What value of B are you using? Select from: B=1.8, B=2.0, B=2.2\n')
 
 if data_type == 'sim':
 
@@ -84,7 +87,7 @@ if data_type == 'sim':
             print(str('Now running the simulation for ')+str(suffix)+str('\n'))
 
             # Run the simulation itself
-            sim_data = simulation(mode=mode ,filt=str(suffix), npix=npix, sizeau=sizeau, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, B=B, amr=amr, dust=dust, sim_name='cloud')
+            sim_data = simulation(mode=mode ,filt=str(suffix), npix=npix, sizeau=sizeau, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, lambda_0=lambda_0, B=B, amr=amr, dust=dust, sim_name='cloud')
 
             # Print to tell simulation is being run
             print(str('Now determining the SED for')+str(suffix)+str('\n'))
@@ -95,7 +98,7 @@ if data_type == 'sim':
             std_val = np.std(sim_data)
 
             # Determine the SED
-            sedGeneration(filt=str(suffix), sim_name='cloud', kappa_0=kappa_0, B=B, withPSF=True)
+            sedGeneration(filt=str(suffix), sim_name='cloud', kappa_0=kappa_0, lambda_0=lambda_0, B=B, withPSF=True)
 
             # Change the directory back to the folder containing this file
             os.chdir('../../../../../')
@@ -119,7 +122,7 @@ if data_type == 'sim':
         # Another print statement
         print(str('Executing the datafeed run.\n'))
 
-        dataDerive(data_type='radmc', kappa_0=kappa_0, B=B)
+        dataDerive(data_type='radmc', kappa_0=kappa_0, lambda_0=lambda_0, B=B)
 
         # Another print statement
         print(str('Executing the coarse Chi-squared run. This may take some time\n'))
@@ -129,7 +132,7 @@ if data_type == 'sim':
         T = np.linspace(6,16,50)
 
         # Execute the chi-squared routine
-        chiTest(data_type='radmc', output_name='chi_coarse.txt', N=N, T=T, kappa_0=kappa_0, B=B)
+        chiTest(data_type='radmc', output_name='chi_coarse.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
 
         # Another print statement
         print(str('Executing the fine Chi-squared run. This may take some time\n'))
@@ -138,11 +141,11 @@ if data_type == 'sim':
         N_data = np.log10(np.loadtxt('chi_coarse.txt',skiprows=1)[:,1])
         T_data = np.loadtxt('chi_coarse.txt',skiprows=1)[:,2]
 
-        N = np.linspace(min(N_data),max(N_data),400)
-        T = np.linspace(min(T_data),max(T_data),400)
+        N = np.linspace(min(N_data),max(N_data),100)
+        T = np.linspace(min(T_data),max(T_data),100)
 
         # Execute the chi-squared routine
-        chiTest(data_type='radmc', output_name='chi_fine.txt', N=N, T=T, kappa_0=kappa_0, B=B)
+        chiTest(data_type='radmc', output_name='chi_fine.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
 
         # Change the directory back to the folder containing this file
         os.chdir('../../../../../')
@@ -172,82 +175,6 @@ if data_type == 'sim':
         print 'can be found in simulations/imgprocess/cloud/.'
         print '######################################################################\n'
 
-elif data_type == 'filament':
-
-    # Run through the files
-    for suffix in band:
-
-        # Print the intentions of the script to keep track of code's location
-        print(str('Changing the directory to:')+str(' simulations/filament/')+str(suffix)+str('/core/\n'))
-
-        # Change the directory to the directory housing the band data
-        os.chdir('simulations/filament/'+str(suffix)+str('/core/'))
-
-        # Another print statement
-        print(str('Executing:')+str(' sim_')+str(suffix)+str('.py\n'))
-
-        # Execute the simulation
-        execfile(str('sim_')+str(suffix)+str('.py'))
-
-        # Another print statement
-        print(str('Executing:')+str(suffix)+str('_sedv3.py\n'))
-
-        # Run the SED generation script
-        execfile(str(suffix)+str('_sedv3')+str('.py'))
-
-        # Change the directory back to the folder containing this file
-        os.chdir('../../../../')
-
-        # Code will now go back to the top of the loop and execute over the next band
-
-    ############################# Run the Chi-squared #############################
-
-    print '#######################################################################'
-    print 'All simulations have now been run and their SEDs computed. The code '
-    print 'will now move on to the Chi-squared analysis.'
-    print '######################################################################\n'
-
-    # Print the intentions of the script to keep track of code's location
-    print(str('Changing the directory to:')+str(' simulations/curvefitting/filament/\n'))
-
-    # Once all bands have been executed over, need to run the Chi-Squared routine
-    # Change directory to the directory that houses the Chi-Squared routine
-    os.chdir('simulations/curvefitting/filament/')
-
-    # Another print statement
-    print(str('Executing:')+str('chiv6.py\n'))
-
-    # Execute the chi-squared routine
-    execfile(str('chiv6.py'))
-
-    # Change the directory back to the folder containing this file
-    os.chdir('../../../')
-
-    ################### Run the mapping and dendrogram suites ######################
-
-    # Print the intentions of the script to keep track of code's location
-    print(str('Changing the directory to:')+str(' simulations/imgprocess/filament/\n'))
-
-    # Go to the image processing folder
-    os.chdir('simulations/imgprocess/filament/')
-
-    # Another print statement
-    print(str('Executing:')+str(' map.py'))
-
-    # Execute the script
-    execfile(str('map.py'))
-
-    # Another print statement
-    print(str('Executing:')+str(' dendrogram.py'))
-
-    # Execute the script
-    execfile(str('dendrogram.py'))
-
-    print '#######################################################################'
-    print 'handler.py has now finished running all necessary files. The results '
-    print 'can be found in simulations/imgprocess/filament/.'
-    print '######################################################################\n'
-
 elif data_type == 'sph':
 
     # Loop through all values of B
@@ -258,7 +185,7 @@ elif data_type == 'sph':
 
         # Run through the files
         for suffix in filt:
-
+            '''
             # Print the intentions of the script to keep track of code's location
             print(str('Changing the directory to:')+str(' simulations/data_psf/')+str(B_val)+str('/')+str(suffix)+str('/dust_project/\n'))
 
@@ -269,13 +196,13 @@ elif data_type == 'sph':
             print(str('Now running the simulation for ')+str(B_val)+str('/')+str(suffix)+str('\n'))
 
             # Run the simulation itself
-            sim_data = simulation(mode='r', filt=str(suffix), npix=200, sizeau=133692, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, B=B, amr=False, dust=False, sim_name='sphdata')
-
+            sim_data = simulation(mode='r', filt=str(suffix), npix=200, sizeau=133692, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, lambda_0=lambda_0, B=B, amr=False, dust=False, sim_name='sphdata')
+            '''
             # Print to tell simulation is being run
             print(str('Now determining the SED for')+str(B_val)+str('/')+str(suffix)+str('\n'))
 
             # Determine the SED
-            sedGeneration(filt=str(suffix), sim_name='sphdata', kappa_0=kappa_0, B=B, withPSF=True)
+            sedGeneration(filt=str(suffix), sim_name='sphdata', kappa_0=kappa_0, lambda_0=lambda_0, B=B, withPSF=True)
 
             # Change the directory back to the folder containing this file
             os.chdir('../../../../../')
@@ -292,10 +219,12 @@ elif data_type == 'sph':
         # Print the intentions of the script to keep track of code's location
         print(str('Changing the directory to:')+str(' simulations/curvefitting/sphdata/')+str(B_val)+str('/\n'))
 
+	    os.chdir(('simulations/curvefitting/sphdata/')+str(B_val)+str('/'))
+
         # Another print statement
         print(str('Executing the datafeed run.\n'))
 
-        dataDerive(data_type='arepo', kappa_0=kappa_0, B=B)
+        dataDerive(data_type='arepo', kappa_0=kappa_0, lambda_0=lambda_0, B=B)
 
         # Another print statement
         print(str('Executing the coarse Chi-squared run. This may take some time\n'))
@@ -305,8 +234,8 @@ elif data_type == 'sph':
         T = np.linspace(6,16,50)
 
         # Execute the chi-squared routine
-        chiTest(data_type='arepo', output_name='chi_coarse.txt', N=N, T=T, kappa_0=kappa_0, B=B)
-
+        chiTest(data_type='arepo', output_name='chi_coarse.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
+        '''
         # Another print statement
         print(str('Executing the fine Chi-squared run. This may take some time\n'))
 
@@ -314,12 +243,12 @@ elif data_type == 'sph':
         N_data = np.log10(np.loadtxt('chi_coarse.txt',skiprows=1)[:,1])
         T_data = np.loadtxt('chi_coarse.txt',skiprows=1)[:,2]
 
-        N = np.linspace(min(N_data),max(N_data),400)
-        T = np.linspace(min(T_data),max(T_data),400)
+        N = np.linspace(min(N_data),max(N_data),100)
+        T = np.linspace(min(T_data),max(T_data),100)
 
         # Execute the chi-squared routine
-        chiTest(data_type='arepo', output_name='chi_fine.txt', N=N, T=T, kappa_0=kappa_0, B=B)
-
+        chiTest(data_type='arepo', output_name='chi_fine.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
+        '''
         # Change the directory back to the folder containing this file
         os.chdir('../../../../../')
 
@@ -329,7 +258,7 @@ elif data_type == 'sph':
         print(str('Changing the directory to:')+str(' simulations/imgprocess/sphdata_psf')+str(B_val)+str('\n'))
 
         # Go to the image processing folder
-        os.chdir('simulations/imgprocess/sphdata_psf/')+str(B_val))
+        os.chdir(('simulations/imgprocess/sphdata_psf/')+str(B_val))
 
         # Another print statement
         print(str('Executing mapping script\n'))

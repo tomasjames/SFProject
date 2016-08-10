@@ -1,0 +1,68 @@
+%%-----------------------------------------------------------------
+% Tomas James
+% 4th Year Project: How good is dust emission as a tracer of star forming regions in molecular clouds?
+% Cardiff University
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+% Start Document Preamble
+%-----------------------------------------------------------------
+
+% Define the document class
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{authblk}
+
+% Define the BibTeX bibliography
+\usepackage[style=authoryear, firstinits=true, maxcitenames=3, uniquelist=false, backend=biber]{biblatex}
+\renewcommand*{\revsdnamepunct}{}
+\renewbibmacro{in:}{} % Remove 'in' from bibliography
+\DeclareNameAlias{sortname}{last-first} % Change ordering of name
+\addbibresource{../refs/refs.bib}% Syntax for version >= 1.2
+
+% Define authors
+\author{T. A. James, P. C. Clark, K. Marsh and A. P. Whitworth}
+\affil{School of Physics and Astronomy, Cardiff University, CF24 3AA, UK}
+\renewcommand\Affilfont{\itshape\small} % This changes the affiliation font to small
+
+\date{} % This removes the date command
+
+% Define the paper title
+\title{The shortfalls of dust emission as a tracer of column density and temperature in molecular clouds}
+
+%-----------------------------------------------------------------
+% Begin Document
+%-----------------------------------------------------------------
+
+% Begin the document here
+\begin{document}
+
+% Drop the title
+\maketitle
+
+%-----------------------------------------------------------------
+% Begin Abstract
+%-----------------------------------------------------------------
+\begin{abstract}
+  We show that the currently used $\chi^{2}$ based routine for deriving dust column density $N$ and dust temperature $T$ is shit.
+\end{abstract}
+
+%-----------------------------------------------------------------
+% Introduction
+%-----------------------------------------------------------------
+
+\section{Introduction}
+Dust in the ISM emits as a modified blackbody \parencite{Hilebrand1983}.
+
+%-----------------------------------------------------------------
+% Bibliography
+%-----------------------------------------------------------------
+
+\printbibliography
+
+%\nocite{*}
+%\printbibliography
+
+% End the document here
+\end{document}

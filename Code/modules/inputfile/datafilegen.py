@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 # Import interpolation modules
 from scipy.interpolate import interp1d
 
-def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperature, nlam, opaclaw, kappa_0, B, amr_gen=True, dust_gen=True, points=100.):
+def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperature, nlam, opaclaw, kappa_0, lambda_0, B, amr_gen=True, dust_gen=True, points=100.):
 
     '''
     Determines all necessary input files required to run a basic isothermal sphere simulation (either a thermal Monte-Carlo simulation or ray-trace) using RADMC-3D.
@@ -349,7 +349,7 @@ def datafilegen(m, cloud, outside, width, l, cloud_temperature, outside_temperat
 
     if opaclaw == 'H':
         # Evaluate opacities
-        opacity = kappa_0*(w_ref/w)**B
+        opacity = kappa_0*(lambda_0/w)**B
         #opacity = kappa_0*(v/v_ref)**B
 
     # Concantenate arrays to create 2D array of all data in format ready to be

@@ -1,0 +1,2 @@
+Index "Column Density" Temperature "Minimised Chi-Squared" "One-Sigma N" "One-Sigma T" "Two-Sigma N" "Two-Sigma T" "Three-Sigma N" "Three-Sigma T"
+0 1.9306977288832455e+19 14.36734693877551 1.1935333068925189 0.0 0.20408163265306101 0.0 0.40816326530612201 1.2932003009065804e+19 1.4285714285714306

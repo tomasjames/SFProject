@@ -10,9 +10,6 @@ import radmc3dPy
 # Import OS manipulation tools
 import os
 
-# Import time tools
-import time
-
 # Import units
 from radmc3dPy.natconst import *
 
@@ -30,10 +27,6 @@ from matplotlib.pyplot import *
 # Import astropy
 from astropy.io import fits
 
-# Import scipy
-import scipy.interpolate
-import scipy.ndimage
-
 # Import glob for file scraping
 import glob
 
@@ -41,9 +34,9 @@ import random
 
 ############################ Define Chi squared test ############################
 
-
 # Chi squared
 def chi(O,E,sigma):
+
     '''
     Returns simply the minimised chi squared value for a given dataset.
 
@@ -53,18 +46,6 @@ def chi(O,E,sigma):
     '''
 
     return sum((((O-E)/sigma)**2))
-
-'''
-def chi(O,E):
-
-    Returns simply the minimised chi squared value for a given dataset.
-
-    O is the flux from the actual data.
-    Sigma is the square root of the variance of O
-    E is the data that is expected
-
-    return sum((((O-E)**2)/E))
-'''
 
 ######################### Define a modified blackbody ############################
 
@@ -81,7 +62,7 @@ def mbb(N,dust_mass,opac,v,T):
     b = (hh*v)/(kk*T)
     return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/(10**(-23))
 
-def dataDerive(data_type, kappa_0, B):
+def dataDerive(data_type, kappa_0, lambda_0, B):
 
     '''
     Function to take input quantities for RADMC-3D and derive from them 'true' values of the dust column density and dust temperature
@@ -94,7 +75,7 @@ def dataDerive(data_type, kappa_0, B):
 
     #################### Determine the expected column density #####################
 
-    B_val = str('B=')+str(B)
+    B_val = 'B={}'.format(B)
 
     print 'Entering the column density determination script\n'
 
@@ -103,21 +84,33 @@ def dataDerive(data_type, kappa_0, B):
 
     if data_type == 'radmc':
         # Read in the dust density information
-        dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_temperature.dat'), skiprows=3)
-        imag = radmc3dPy.image.readImage(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/image.out'))
+        #dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
+        #dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_temperature.dat'), skiprows=3)
+        #imag = radmc3dPy.image.readImage(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/image.out'))
+        #imag = fits.open(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/')+str(filter)+str('_common_convolved.fits'))
+        dust_density = np.loadtxt(('../../../workingsims_psf/{}/psw/background_15K/dust_density.inp').format(B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../workingsims_psf/{}/psw/background_15K/dust_temperature.dat').format(B_val), skiprows=3)
+        imag = fits.open(('../../../workingsims_psf/{}/psw/background_15K/psw_common_convolved.fits').format(B_val))
 
     elif data_type == 'arepo':
-        dust_density = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_density.inp'), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_temperature.dat'), skiprows=3)
-        imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('psw/dust_project/image.out'))
+        #dust_density = np.loadtxt(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/dust_density.inp'), skiprows=3)
+        #dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/dust_temperature.dat'), skiprows=3)
+        #imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/image.out'))
+        #imag = fits.open(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/')+str(filter)+str('_common_convolved.fits'))
+        dust_density = np.loadtxt(('../../../data_psf/{}/psw/dust_project/dust_density.inp').format(B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../data_psf/{}/psw/dust_project/dust_temperature.dat').format(B_val), skiprows=3)
+        imag = fits.open(('../../../data_psf/{}/psw/dust_project/psw_common_convolved.fits').format(B_val))
 
     # Create file to store the values
     datafeed_store = open('datafeed.txt', 'w')
     df = csv.writer(datafeed_store, delimiter=' ')
 
+    # Determine data dimensions
+    nx = len(imag[0].data[0])
+    ny = len(imag[0].data[:,0])
+
     # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-    xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
+    xpix, ypix, zpix = np.arange(0,nx), np.arange(0,ny), np.arange(0,(len(dust_density)/(nx*ny)))
 
     # Create list to store values of dust density summed along every x,y coordinate
     dust_density_line, T_line, col_full, T_full = [], [], [], []
@@ -132,7 +125,7 @@ def dataDerive(data_type, kappa_0, B):
 
     # Instantiate a counter and a number of lists to store values (and for diagnostics)
     count = 0
-    store_density, store_loc, store_temp = [], [], []
+    #store_density, store_temp = [], []
 
     # Loop over the 2D image square cube
     for i in range(0,len(xpix)*len(ypix)):
@@ -144,8 +137,7 @@ def dataDerive(data_type, kappa_0, B):
         loc = np.arange(i,len(zpix)*(len(xpix)*len(ypix)),len(xpix)*len(ypix))
 
         # Sums these values (i.e. sums along the line of sight) and stores the locations
-        store_density.append(sum(dust_density[loc]))
-        store_loc.append(loc)
+        #store_density.append(sum(dust_density[loc]))
 
         # The dust density is dust_density along the line of sight and so therefore the dust mass in one pixel along the line of sight is dust_density_line*volume
         #dust_mass_pixel = (sum(dust_density[loc]))*(imag.sizepix_x*imag.sizepix_y)*(len(dust_density[loc])*imag.sizepix_y)
@@ -155,7 +147,7 @@ def dataDerive(data_type, kappa_0, B):
         col_T = np.sum((dust_temperature[loc]*dust_density[loc]))/(np.sum(dust_density[loc]))
 
         # Repeat similar procedure for the temperature
-        store_temp.append(col_T)
+        #store_temp.append(col_T)
 
         # Determine the number of dust grains in the pixel
         #N_d = (dust_mass_pixel/(dust_mass*len(dust_density[loc])))
@@ -163,7 +155,7 @@ def dataDerive(data_type, kappa_0, B):
 
         # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
         #col = N_d/((D**2)*(sigma_pix))
-        col = np.sum((dust_density[loc]*imag.sizepix_y)/(muh2*mp))
+        col = np.sum((dust_density[loc]*imag[0].header['PIXWIDTH'])/(muh2*mp))
         #col = ((dust_mass_cell/(muh2*mp*imag.sizepix_x*imag.sizepix_y)))
 
         # Assign all of the writable items to a variable for easier write
@@ -183,7 +175,7 @@ def dataDerive(data_type, kappa_0, B):
 
 ########################## Define wrapper to apply to data ########################
 
-def chiTest(data_type, output_name, N, T, kappa_0, B):
+def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
 
     '''
     A function to run the Chi-squared minimisation analysis over the SEDs generated.
@@ -212,8 +204,9 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
     ################### Read the average data determined earlier ###################
 
     # Instantiate the B val
-    B_val = str('B=')+str(B)
+    B_val = 'B={}'.format(B)
 
+    '''
     # Initialise a list to store the read in data
     data, filenames = [], []
 
@@ -229,27 +222,19 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
             # Read in using loadtxt and then append the data to a list for use later
             contents = np.loadtxt(file, delimiter=" ")
 
-            # Append the name of the file to the position (count+len(data)) followed by
-            # the file contents
-            data.insert(count+len(data), file)
+            # Append the file contents
             data.append(contents)
-            filenames.append(file)
-
+    '''
+    
     # Assign to variables and put fluxes into an array (data plotted later)
     # +1 term avoids the filename that is placed in the array for identification
-    blue = data[data.index(filenames[0])+1]
-    green = data[data.index(filenames[1])+1]
-    plw = data[data.index(filenames[2])+1]
-    pmw = data[data.index(filenames[3])+1]
-    psw = data[data.index(filenames[4])+1]
-    red = data[data.index(filenames[5])+1]
+    blue = np.loadtxt('blue_average_data.txt', delimiter=" ")
+    green = np.loadtxt('green_average_data.txt', delimiter=" ")
+    plw = np.loadtxt('plw_average_data.txt', delimiter=" ")
+    pmw = np.loadtxt('pmw_average_data.txt', delimiter=" ")
+    psw = np.loadtxt('psw_average_data.txt', delimiter=" ")
+    red = np.loadtxt('red_average_data.txt', delimiter=" ")
 
-    '''
-    # Extract meaningful data from input files
-    v_data = np.array([psw[:,4],pmw[:,4],plw[:,4],blue[:,4],green[:,4],red[:,4]])
-    flux = np.array([psw[:,5],pmw[:,5],plw[:,5],blue[:,5],green[:,5],red[:,5]])
-    flux_error = np.array([psw[:,6],pmw[:,6],plw[:,6],blue[:,6],green[:,6],red[:,6]])
-    '''
     # Extract meaningful data from input files
     v_data = np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]])
     flux = np.array([psw[:,2],pmw[:,2],plw[:,2],blue[:,2],green[:,2],red[:,2]])
@@ -261,7 +246,8 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
     ######################### Determine (again) the opacity ########################
 
     # Query for reference wavelength
-    w_ref = 250e-4
+    #w_ref = 250e-4
+    w_ref = lambda_0
     v_ref = cc/w_ref
     print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
 
@@ -293,22 +279,19 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
 
     ############################# Read in necessary values ##########################
 
-    # Dust to gas ratio
+    # Define the dust to gas ratio
     d2g = 0.01
 
+    # Read in an example image for data dimensions
     if data_type == 'radmc':
-        # Read in the dust density information
-        dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_temperature.dat'), skiprows=3)
-        imag = radmc3dPy.image.readImage(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/image.out'))
+        imag = fits.open(('../../../workingsims_psf/{}/psw/background_15K/psw_common_convolved.fits').format(B_val))
 
     elif data_type == 'arepo':
-        dust_density = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_density.inp'), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('psw/dust_project/dust_temperature.dat'), skiprows=3)
-        imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('psw/dust_project/image.out'))
+        imag = fits.open(('../../../data_psf/{}/psw/dust_project/psw_common_convolved.fits').format(B_val))
 
-    # Because of the format of the dust_density file, create a list of the indices that correspond to the pixel values. The file is based on a xpix**3 providing xpix is the number of pixels in all 3 dimensions
-    xpix, ypix, zpix = np.arange(0,imag.nx), np.arange(0,imag.ny), np.arange(0,(len(dust_density)/(imag.nx*imag.ny)))
+    # Determine data dimensions
+    nx = len(imag[0].data[0])
+    ny = len(imag[0].data[:,0])
 
     # Ask for distance to source
     #d = input('At what distance is the source? This answer should be in parsecs.\n')
@@ -332,7 +315,8 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
     cs_towrite = ['Index', 'Column Density', 'Temperature', 'Minimised Chi-Squared', 'One-Sigma N', 'One-Sigma T', 'Two-Sigma N', 'Two-Sigma T', 'Three-Sigma N', 'Three-Sigma T']
     cs.writerow(cs_towrite)
 
-    for h in range(0,imag.nx*imag.ny):
+    # Loop through all pixels in the image
+    for h in range(0,nx*ny):
 
         # Loop through each column density and determine modified black body curve
         mod,chivals,N_index,T_index = [],[],[],[]
@@ -350,7 +334,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
                 T_index.append(T[j])
 
                 # Define lists to store band fluxes
-                to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
+                #to_fit_psw_list, to_fit_pmw_list, to_fit_plw_list, to_fit_blue_list, to_fit_green_list, to_fit_red_list = [], [], [], [], [], []
 
                 # Find the flux at the index determined earlier
                 to_fit_psw = blackbody[psw_index[0]]
@@ -361,48 +345,25 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
                 to_fit_red = blackbody[red_index[0]]
 
                 # Put the fitting fluxes into an array
-                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
+                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw, to_fit_red, to_fit_green, to_fit_blue])
                 #to_fit = np.array([to_fit_psw,to_fit_pmw,to_fit_plw,to_fit_blue])
-                to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
+                #to_fit = np.array([to_fit_plw, to_fit_pmw, to_fit_psw])
 
                 # Takes the 6 data points for each pixel and puts them on a list to allow easier assignment
-                points = np.array([flux[2][h],flux[1][h],flux[0][h]])
-                points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
-                #points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
-                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
+                #points = np.array([flux[2][h],flux[1][h],flux[0][h]])
+                #points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h]])
+                points = np.array([flux[2][h],flux[1][h],flux[0][h],flux[5][h],flux[4][h],flux[3][h]])
+                points_error = np.array([flux_error[2][h],flux_error[1][h],flux_error[0][h],flux_error[5][h],flux_error[4][h],flux_error[3][h]])
 
                 # Append the chi squared value
                 chisquared = chi(to_fit,points,sigma=points_error)
                 #chisquared = chi(to_fit,points)
 
+                # This accounts for any infinite values of the Chi-squared coefficient
                 if chisquared == np.inf:
                     chivals.append(np.nan)
                 else:
                     chivals.append(chisquared)
-                #chivals.append(chi(to_fit,ps,sigma=[psw[2],pmw[2],plw[2],blue[2]]))
-
-                #print str('Found the chi-squared landscape. Moving to the next values...\n')
-
-        if h == imag.nx*imag.ny/10:
-            print '\r[=>         ] 10%'
-        elif h == 2*(imag.nx*imag.ny)/10:
-            print '\r[==>        ] 20%'
-        elif h == 3*(imag.nx*imag.ny)/10:
-            print '\r[===>       ] 30%'
-        elif h == 4*(imag.nx*imag.ny)/10:
-            print '\r[====>      ] 40%'
-        elif h == 5*(imag.nx*imag.ny)/10:
-            print '\r[=====>     ] 50%'
-        elif h == 6*(imag.nx*imag.ny)/10:
-            print '\r[======>    ] 60%'
-        elif h == 7*(imag.nx*imag.ny)/10:
-            print '\r[=======>   ] 70%'
-        elif h == 8*(imag.nx*imag.ny)/10:
-            print '\r[========>  ] 80%'
-        elif h == 9*(imag.nx*imag.ny)/10:
-            print '\r[=========> ] 90%'
-        elif h == (imag.nx*imag.ny)-1:
-            print '\r[==========>] 100%'
 
         # Determine the chi squared minimum
         chi_min_index = chivals.index(min(chivals))
@@ -461,15 +422,16 @@ def chiTest(data_type, output_name, N, T, kappa_0, B):
         if h == 0:
         # Plot the data
             figure(1)
-            plot(psw[0][1],psw[0][2],'co',label='SPIRE: PSW')
-            plot(pmw[0][1],pmw[0][2],'yo',label='SPIRE: PMW')
-            plot(plw[0][1],plw[0][2],'mo',label='SPIRE: PLW')
-            plot(blue[0][1],blue[0][2],'bx',label='PACS: Blue')
-            plot(green[0][1],green[0][2],'gx',label='PACS: Green')
-            plot(red[0][1],red[0][2],'rx',label='PACS: Red')
-            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0]/2)+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0]/2)+str('$\/K$'))
+            errorbar(psw[0][1],psw[0][2],yerr=psw[0][-1],fmt='co',label='SPIRE: PSW')
+            errorbar(pmw[0][1],pmw[0][2],yerr=pmw[0][-1],fmt='yo',label='SPIRE: PMW')
+            errorbar(plw[0][1],plw[0][2],yerr=plw[0][-1],fmt='mo',label='SPIRE: PLW')
+            errorbar(blue[0][1],blue[0][2],yerr=blue[0][-1],fmt='bx',label='PACS: Blue')
+            errorbar(green[0][1],green[0][2],yerr=green[0][-1],fmt='gx',label='PACS: Green')
+            errorbar(red[0][1],red[0][2],yerr=red[0][-1],fmt='rx',label='PACS: Red')
+            plot(v,chi_min_blackbody,label=str('$\chi^2$')+str(' Minimum:\n $N$=')+str(N_index[chi_min_index])+str('+/-')+str(N_error[0])+str('$cm^{-2}$ \n')+str(' $T$=')+str(np.float(T_index[chi_min_index]))+str('+/-')+str(T_error[0])+str('$\/K$'))
             xlabel(r'$\nu \/(Hz)$')
-            ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+            #ylabel(r'Intensity $(erg/cm^{2}/s/Hz/ster)$')
+            ylabel(r'Intensity $[MJy/ster]$')
             xscale("log", nonposx='clip')
             yscale("log", nonposx='clip')
             grid(True,which='both')

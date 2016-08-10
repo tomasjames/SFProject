@@ -47,7 +47,7 @@ from convolve.convolution import *
 import photutils
 
 ########################## Function to run initial sim ##########################
-def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, kappa_0, B, amr, dust, sim_name):
+def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density, cloud_temp, outside_temp, kappa_0, lambda_0, B, amr, dust):
 
     '''
     Begins the RADMC-3D simulation based on the keyword arguments supplied.
@@ -100,7 +100,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     data_choice = mode
     if data_choice == 'd':
         # Call the data file generation generation script to write the necessary files to the working directory
-        datafilegen(m=mass, cloud=cloud_density, outside=outside_density, width=sizeau, l=npix, cloud_temperature=cloud_temp, outside_temperature=outside_temp, nlam=10000, opaclaw='H', kappa_0=kappa_0, B=B, amr_gen=amr, dust_gen=dust, points=100)
+        datafilegen(m=mass, cloud=cloud_density, outside=outside_density, width=sizeau, l=npix, cloud_temperature=cloud_temp, outside_temperature=outside_temp, nlam=10000, opaclaw='H', kappa_0=kappa_0, lambda_0=lambda_0, B=B, amr_gen=amr, dust_gen=dust, points=100)
 
     ################################## Run raytrace ################################
 
@@ -197,7 +197,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     image_trans_raw_1d = np.loadtxt('image_trans.out',skiprows=6)/(10**(-23))
 
     # Reshape the array to be 2-dimensional
-    image_trans_raw = np.reshape(image_trans_raw_1d, (np.sqrt(len(image_trans_raw_1d)), np.sqrt(len(image_trans_raw_1d))))
+    image_trans_raw = np.reshape(image_trans_raw_1d, (int(np.sqrt(len(image_trans_raw_1d))), int(np.sqrt(len(image_trans_raw_1d)))))
 
     # Begin defining information for the header
     # Define distance to the source
@@ -211,7 +211,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     # Use small angle approximation to determine the angle subtended by the pixel
     theta_rad = np.arctan(pix_width/d) # In radians
-    theta = theta_rad*(360/2*np.pi)*3600 # Convert to degrees and then to arcseconds
+    theta = theta_rad*(360/(2*np.pi))*3600 # Convert to degrees and then to arcseconds
 
     # Check to see whether file has already been written
     # If so, delete the file (Python cannot overwrite a binary file)
@@ -488,8 +488,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         hdu.writeto(fname)
 
     # Write relevant information to the FITS header
-    fits.setval(fname, 'CDELT1', value=(-1)*new_psf_theta/3600) # Degrees per pixel (CDELT1 has to be negative)
-    fits.setval(fname, 'CDELT2', value=new_psf_theta/3600)
+    fits.setval(fname, 'CDELT1', value=(-1)*np.float64(new_psf_theta)/3600) # Degrees per pixel (CDELT1 has to be negative)
+    fits.setval(fname, 'CDELT2', value=np.float64(new_psf_theta)/3600)
     fits.setval(fname, 'CRPIX1', value=len(conv[0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRPIX2', value=len(conv[:,0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRVAL1', value=159.4507) # Coordinate of that pixel
@@ -756,7 +756,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     '''
 
 ########################## Function to generate the SED ##########################
-def sedGeneration(filt, sim_name, kappa_0, B, withPSF=True):
+def sedGeneration(filt, sim_name, kappa_0, lambda_0, B, withPSF=True):
 
     '''
     Generates one point of an SED on a pixel by pixel basis for the RADMC-3D output returned in the function sim().
@@ -781,6 +781,7 @@ def sedGeneration(filt, sim_name, kappa_0, B, withPSF=True):
         Options:
             'cloud'
             'sphdata'
+            'herschel_snaps'
 
     limit: the pixel value required in which to mask the data. This should be the lowest pixel value of the source encountered.
         Options:
@@ -802,10 +803,12 @@ def sedGeneration(filt, sim_name, kappa_0, B, withPSF=True):
 
     if withPSF == True:
         # Read in the convolved and transmission weighted image
-        img = fits.open(str(filt)+str('_common_convolved.fits'))
+        img = fits.open(('{}_common_convolved.fits').format(filt))
     else:
         # Read in the convolved and transmission weighted image
-        img = fits.open(str(filt)+str('.fits'))
+        img = fits.open(('{}.fits').format(filt))
+
+
     img_data = img[0].data
     img_header = img[0].header
 
