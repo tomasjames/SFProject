@@ -39,7 +39,7 @@ print '######################################################################\n'
 mode = 'd'
 npix = 128
 sizeau = 15000
-d = 300.
+d = 250.
 mass = 1.
 cloud_density = 1e5
 outside_density = 1e2
@@ -50,6 +50,7 @@ dust = True
 
 # Define filters to run over
 filt = np.array(['blue', 'green', 'plw', 'pmw', 'psw', 'red'])
+#filt = np.array(['psw','red'])
 
 print '#######################################################################'
 #data_type = input('Are you analysing ideal simulation (\'sim\') data, filament simulation (\'filament\') or SPH/Arepo (\'sph\') data?\n')
@@ -57,11 +58,11 @@ print '#######################################################################'
 #kappa_0 = input('What value of kappa_0 should be used? B=2.0 has kappa_0=4\n')
 print '######################################################################\n'
 
-data_type = 'sph'
+data_type = input('Are you analysing ideal simulation (\'sim\') data, Herschel (RS supplied) simulation (\'snaps\') or SPH/Arepo (\'sph\') data?\n')
 #kappa_0 = 0.042
 #lambda_0 = 300e-4 # Reference wavelength should be in cm
 kappa_0 = 4.
-lambda_0 = 250e-4
+lambda_0 = 250
 
 # Different values of dust emissivity index
 B = input('What value of B are you using? Select from: B=1.8, B=2.0, B=2.2\n')
@@ -225,17 +226,17 @@ elif data_type == 'sph':
         # Another print statement
         print(str('Executing the datafeed run.\n'))
 
-        dataDerive(data_type='arepo', kappa_0=kappa_0, lambda_0=lambda_0, B=B)
+        dataDerive(data_type='arepo', kappa_0=kappa_0, lambda_0=lambda_0, B=B, d=d)
 
         # Another print statement
         print(str('Executing the coarse Chi-squared run. This may take some time\n'))
 
         # Determine quantities to loop through for N and T
-        N = np.linspace(17,24,50)
-        T = np.linspace(6,16,50)
+        N = np.linspace(17,23,200)
+        T = np.linspace(6,16,200)
 
         # Execute the chi-squared routine
-        chiTest(data_type='arepo', output_name='chi_results.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
+        chiTest(data_type='arepo', output_name='chi_results.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B, d=d)
         '''
         # Another print statement
         print(str('Executing the fine Chi-squared run. This may take some time\n'))
@@ -260,7 +261,7 @@ elif data_type == 'sph':
 
         # Go to the image processing folder
         os.chdir(('simulations/imgprocess/sphdata_psf/')+str(B_val)+str('/'))
-	'''
+
         # Another print statement
         print(str('Executing mapping script\n'))
 
@@ -272,7 +273,7 @@ elif data_type == 'sph':
 
         # Execute the script
         dendrogram()
-	'''
+
         print '#######################################################################'
         print 'handler.py has now finished running all necessary files. The results '
         print 'can be found in simulations/imgprocess/sphdata/.'
@@ -280,7 +281,10 @@ elif data_type == 'sph':
 
 elif data_type == 'snaps':
 
-    region = 'x1_comp_region1'
+    region = 'x1_nat_region1'
+    fold_sim = input('What folder is the simulation in?\n')
+    fold_curvefit = input('What folder is the curvefitting information in?\n')
+    fold_img = input('What folder should the images be stored?\n')
 
     # Loop through all values of B
     for B in beta:
@@ -292,25 +296,26 @@ elif data_type == 'snaps':
         for suffix in filt:
 
             # Print the intentions of the script to keep track of code's location
-            print(str('Changing the directory to:')+str(' simulations/herschel_snaps_psf/')+str(B_val)+str('/')+str(suffix)+str('/')+str(region)+str('/\n'))
+            #print(str('Changing the directory to:')+str(' simulations/herschel_snaps_psf/')+str(region)+str('/')+str(B_val)+str('/')+str(suffix)+str('/')+str('/\n'))
+            print(str('Changing the directory to: {}/{}/{}/{}').format(fold_sim,region,B_val,suffix))
 
             # Change the directory to the directory housing the band data
-            os.chdir('simulations/herschel_snaps_psf/')+str(B_val)+str('/')+str(suffix)+str('/')+str(region)+str('/\n'))
+            os.chdir(('{}/{}/{}/{}').format(fold_sim,region,B_val,suffix))
 
             # Print to tell simulation is being run
-            print(str('Now running the simulation for ')+str(B_val)+str('/')+str(suffix)+str('\n'))
+            print(str('Now running the simulation for {}/{}\n').format(B_val, suffix))
 
             # Run the simulation itself
-            sim_data = simulation(mode='r', filt=str(suffix), npix=256, sizeau=668449.1978609626, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, lambda_0=lambda_0, B=B, amr=False, dust=False)
+            sim_data = simulation(mode='d', filt=str(suffix), npix=256, sizeau=668450, d=d, mass=mass, cloud_density=cloud_density, outside_density=outside_density, cloud_temp=cloud_temp, outside_temp=outside_temp, kappa_0=kappa_0, lambda_0=lambda_0, B=B, amr=False, dust=False)
 
             # Print to tell simulation is being run
-            print(str('Now determining the SED for')+str(B_val)+str('/')+str(suffix)+str('\n'))
+            print(str('Now determining the SED for {}/{}\n').format(B_val, suffix))
 
             # Determine the SED
-            sedGeneration(filt=str(suffix), sim_name='herschel_snaps', kappa_0=kappa_0, lambda_0=lambda_0, B=B, withPSF=True)
+            sedGeneration(filt=str(suffix), sim_name=region, kappa_0=kappa_0, lambda_0=lambda_0, B=B, withPSF=True)
 
             # Change the directory back to the folder containing this file
-            os.chdir('../../../../../')
+            os.chdir('/export/home/c1158976/Code/')
 
             # Code will now go back to the top of the loop and execute over the next band
 
@@ -322,25 +327,25 @@ elif data_type == 'snaps':
         print '######################################################################\n'
 
         # Print the intentions of the script to keep track of code's location
-        print(str('Changing the directory to:')+str(' simulations/curvefitting/herschel_snaps/')+str(B_val)+str('/\n'))
+        print(str('Changing the directory to:{}/{}/{}').format(fold_curvefit, region, B_val))
 
-	    os.chdir(('simulations/curvefitting/herschel_snaps/')+str(B_val)+str('/'))
+	os.chdir(('{}/{}/{}').format(fold_curvefit, region, B_val))
 
         # Another print statement
         print(str('Executing the datafeed run.\n'))
 
-        dataDerive(data_type='herschel_snaps', kappa_0=kappa_0, lambda_0=lambda_0, B=B)
+        dataDerive(data_type='herschel_snaps', region=region, kappa_0=kappa_0, lambda_0=lambda_0, B=B, d=d, npix=256, sizeau=668450)
 
         # Another print statement
         print(str('Executing the coarse Chi-squared run. This may take some time\n'))
 
         # Determine quantities to loop through for N and T
-        N = np.linspace(17,24,50)
-        T = np.linspace(6,16,50)
+        N = np.linspace(12,22,100)
+        T = np.linspace(6,20,100)
 
         # Execute the chi-squared routine
-        chiTest(data_type='herschel_snaps', output_name='chi_results.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
-        '''
+        chiTest(data_type='herschel_snaps', region=region, output_name='chi_results.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B, d=d)
+	'''
         # Another print statement
         print(str('Executing the fine Chi-squared run. This may take some time\n'))
 
@@ -355,27 +360,27 @@ elif data_type == 'snaps':
         chiTest(data_type='arepo', output_name='chi_fine.txt', N=N, T=T, kappa_0=kappa_0, lambda_0=lambda_0, B=B)
         '''
         # Change the directory back to the folder containing this file
-        os.chdir('../../../../')
+        os.chdir('/export/home/c1158976/Code/')
 
         ################### Run the mapping and dendrogram suites ######################
 
         # Print the intentions of the script to keep track of code's location
-        print(str('Changing the directory to:')+str(' simulations/imgprocess/herschel_snaps_psf')+str(B_val)+str('\n'))
+        print(str('Changing the directory to:{}/{}/{}').format(fold_img, region, B_val))
 
         # Go to the image processing folder
-        os.chdir(('simulations/imgprocess/herschel_snaps_psf/')+str(B_val)+str('/'))
+        os.chdir(('{}/{}/{}').format(fold_img, region, B_val))
 
         # Another print statement
         print(str('Executing mapping script\n'))
 
         # Execute the script
-        mapMaker(data_type='herschel_snaps',B=B)
+        mapMaker(data_type='herschel_snaps',region=region,B=B)
 
         # Another print statement
         print(str('Executing dendrogram script\n'))
 
         # Execute the script
-        dendrogram()
+        #dendrogram()
 
         print '#######################################################################'
         print 'handler.py has now finished running all necessary files. The results '

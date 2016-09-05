@@ -62,7 +62,7 @@ def mbb(N,dust_mass,opac,v,T):
     b = (hh*v)/(kk*T)
     return (N*muh2*mp*opac*(a*(1./(np.exp(b)-1))))/(10**(-23))
 
-def dataDerive(data_type, kappa_0, lambda_0, B):
+def dataDerive(data_type, region, kappa_0, lambda_0, B, d, npix, sizeau):
 
     '''
     Function to take input quantities for RADMC-3D and derive from them 'true' values of the dust column density and dust temperature
@@ -84,6 +84,27 @@ def dataDerive(data_type, kappa_0, lambda_0, B):
     # Dust to gas ratio
     d2g = 0.01
 
+    if data_type == 'herschel_snaps':
+
+        # Define the first folder
+        first_folder = 'herschel_snaps_psf'
+        second_folder = region
+
+        dust_density = np.loadtxt(('/export/home/c1158976/Code/simulations/{}/{}/{}/psw/dust_density.inp').format(first_folder,second_folder,B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('/export/home/c1158976/Code/simulations/{}/{}/{}/psw/dust_temperature.dat').format(first_folder,second_folder,B_val), skiprows=3)
+        imag = fits.open(('/export/home/c1158976/Code/simulations/{}/{}/{}/psw/psw_common_convolved.fits').format(first_folder,second_folder,B_val))
+
+    elif data_type == 'radmc':
+        dust_density = np.loadtxt(('../../../workingsims_psf/{}/psw/background_15K/dust_density.inp').format(B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../workingsims_psf/{}/psw/background_15K/dust_temperature.dat').format(B_val), skiprows=3)
+        imag = fits.open(('../../../workingsims_psf/{}/psw/background_15K/psw_common_convolved.fits').format(B_val))
+
+    elif data_type == 'arepo':
+        dust_density = np.loadtxt(('../../../data_psf/{}/psw/dust_project/dust_density.inp').format(B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../data_psf/{}/psw/dust_project/dust_temperature.dat').format(B_val), skiprows=3)
+        imag = fits.open(('../../../data_psf/{}/psw/dust_project/psw_common_convolved.fits').format(B_val))
+
+    '''
     if data_type == 'radmc':
         # Read in the dust density information
         #dust_density = np.loadtxt(('../../../workingsims_psf/')+str(B_val)+str('/psw/background_15K/dust_density.inp'), skiprows=3)
@@ -108,9 +129,10 @@ def dataDerive(data_type, kappa_0, lambda_0, B):
         #dust_temperature = np.loadtxt(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/dust_temperature.dat'), skiprows=3)
         #imag = radmc3dPy.image.readImage(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/image.out'))
         #imag = fits.open(('../../../data_psf/')+str(B_val)+str('/psw/dust_project/')+str(filter)+str('_common_convolved.fits'))
-        dust_density = np.loadtxt(('../../../herschel_snaps_psf/{}/psw/x1_comp_region1/dust_density.inp').format(B_val), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../herschel_snaps_psf/{}/psw/x1_comp_region1/dust_temperature.dat').format(B_val), skiprows=3)
-        imag = fits.open(('../../../herschel_snaps_psf/{}/psw/x1_comp_region1/psw_common_convolved.fits').format(B_val))
+        dust_density = np.loadtxt(('../../../../herschel_snaps_psf/x1_comp_region1/{}/psw/dust_density.inp').format(B_val), skiprows=3)
+        dust_temperature = np.loadtxt(('../../../../herschel_snaps_psf/x1_comp_region1/{}/psw/dust_temperature.dat').format(B_val), skiprows=3)
+        imag = fits.open(('../../../../herschel_snaps_psf/x1_comp_region1/{}/psw/psw_common_convolved.fits').format(B_val))
+    '''
 
     # Create file to store the values
     datafeed_store = open('datafeed.txt', 'w')
@@ -128,7 +150,6 @@ def dataDerive(data_type, kappa_0, lambda_0, B):
 
     # Ask for distance to source
     #d = input('At what distance is the source? This answer should be in parsecs.\n')
-    d = 300
     D = np.float64(d)*pc # Convert to cm
 
     # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
@@ -166,7 +187,8 @@ def dataDerive(data_type, kappa_0, lambda_0, B):
 
         # From Ward-Thompson and Whitworth, column density is the number of dust grains per unit area
         #col = N_d/((D**2)*(sigma_pix))
-        col = np.sum((dust_density[loc]*imag[0].header['PIXWIDTH'])/(muh2*mp))
+        pixwidth = (sizeau*au)/npix
+        col = np.sum((dust_density[loc]*pixwidth)/(muh2*mp))
         #col = ((dust_mass_cell/(muh2*mp*imag.sizepix_x*imag.sizepix_y)))
 
         # Assign all of the writable items to a variable for easier write
@@ -186,7 +208,7 @@ def dataDerive(data_type, kappa_0, lambda_0, B):
 
 ########################## Define wrapper to apply to data ########################
 
-def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
+def chiTest(data_type, region, output_name, N, T, kappa_0, lambda_0, B, d):
 
     '''
     A function to run the Chi-squared minimisation analysis over the SEDs generated.
@@ -253,6 +275,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
 
     # Pull out the discrete frequencies used (band[:,1] pulls out all of the frequency data)
     v = np.unique(np.array([psw[:,1],pmw[:,1],plw[:,1],blue[:,1],green[:,1],red[:,1]]))
+    #v = np.unique(np.array([psw[:,1],pmw[:,1],plw[:,1]]))
 
     # Read the initial radmc3dPy output to get image dimensions and info
     #imag = radmc3dPy.image.readImage('../../data/blue/dust_project/image.out')
@@ -261,7 +284,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
 
     # Query for reference wavelength
     #w_ref = 250e-4
-    w_ref = lambda_0
+    w_ref = lambda_0*(1e-4)
     v_ref = cc/w_ref
     print 'The reference wavelength is taken to be', w_ref, 'cm which equates to a frequency of', v_ref, 'Hz.\n'
 
@@ -299,15 +322,19 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
     # Define the dust to gas ratio
     d2g = 0.01
 
-    # Read in an example image for data dimensions
-    if data_type == 'radmc':
-        imag = fits.open(('../../../workingsims_psf/{}/psw/background_15K/psw_common_convolved.fits').format(B_val))
+    if data_type == 'herschel_snaps':
+
+        # Define the first folder
+        first_folder = 'herschel_snaps_psf'
+        second_folder = region
+
+        imag = fits.open(('/export/home/c1158976/Code/simulations/{}/{}/B=2.0/psw/psw_common_convolved.fits').format(first_folder,second_folder))
+
+    elif data_type == 'radmc':
+        imag = fits.open(('../../../workingsims_psf/B=2.0/psw/background_15K/psw_common_convolved.fits'))
 
     elif data_type == 'arepo':
-        imag = fits.open(('../../../data_psf/{}/psw/dust_project/psw_common_convolved.fits').format(B_val))
-
-    elif data_type == 'herschel_snaps':
-        imag = fits.open(('../../../herschel_snaps_psf/{}/psw/x1_comp_region1/psw_common_convolved.fits').format(B_val))
+        imag = fits.open(('../../../data_psf/B=2.0/psw/dust_project/psw_common_convolved.fits'))
 
     # Determine data dimensions
     nx = len(imag[0].data[0])
@@ -315,7 +342,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
 
     # Ask for distance to source
     #d = input('At what distance is the source? This answer should be in parsecs.\n')
-    d = 300
+    #d = 300
     D = np.float64(d)*pc # Convert to cm
 
     # The mass of 1 dust grain is simply 1./100th the mass of Hydrogen
@@ -363,8 +390,8 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
                 T_index.append(T[j])
 
                 # Append the chi squared value
+                #chisquared = chi(points,blackbody,sigma=points_error)
                 chisquared = chi(points,blackbody,sigma=points_error)
-                #chisquared = chi(to_fit,points)
 
                 # This accounts for any infinite values of the Chi-squared coefficient
                 if chisquared == np.inf:
@@ -391,7 +418,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
         delta_3 = 11.8 #(three_sigma)
 
         # Find the locations of the points within the one sigma bound
-        one_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val]-delta_1) & (chivals_mesh <= chivals_mesh[val]+delta_1)))
+        one_sigma = zip(*np.where((chivals_mesh >= chivals_mesh[val]-delta_1/2) & (chivals_mesh <= chivals_mesh[val]+delta_1/2)))
 
         T_temp, N_temp = [], []
         T_error, N_error = [], []
@@ -408,9 +435,22 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
         chi_min_index_all.append(chi_min_index)
         chi_min_blackbody_all.append(chi_min_blackbody)
 
+        '''
+        print '============== N ================'
+        print 'Coarse N:', N_index[chi_min_index]
+        print 'One sigma N:', min(N_temp), ' to ', max(N_temp)
+
+        print '============== T ================'
+        print 'Coarse T:', T_index[chi_min_index]
+        print 'One sigma T:', min(T_temp), ' to ', max(T_temp)
+        '''
+
         # From here, repeat the Chi-squared analyses over the one sigma range by first defining the new range to look over
-        N_refined = np.linspace(N_index[chi_min_index]-N_error[0],N_index[chi_min_index]+N_error[0],100)
-        T_refined = np.linspace(T_index[chi_min_index]-T_error[0],T_index[chi_min_index]+T_error[0],100)
+        #N_refined = np.linspace(N_index[chi_min_index]-(max(N_temp) -min(N_temp)),N_index[chi_min_index]+(max(N_temp) - min(N_temp)),100)
+        #T_refined = np.linspace(T_index[chi_min_index]-(max(T_temp) - min(T_temp)),T_index[chi_min_index]+(max(T_temp) - min(T_temp)),100)
+
+        N_refined = np.linspace(min(N_temp),max(N_temp),100)
+        T_refined = np.linspace(min(T_temp),max(T_temp),100)
 
         # Loop through each column density and determine modified black body curve
         mod_refined,chivals_refined,N_index_refined,T_index_refined = [],[],[],[]
@@ -428,8 +468,8 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
                 T_index_refined.append(T_refined[j])
 
                 # Append the chi squared value (using the same points and points_error determined earlier)
+                #chisquared_refined = chi(points,blackbody_refined,sigma=points_error)
                 chisquared_refined = chi(points,blackbody_refined,sigma=points_error)
-                #chisquared = chi(to_fit,points)
 
                 # This accounts for any infinite values of the Chi-squared coefficient
                 if chisquared_refined == np.inf:
@@ -480,13 +520,6 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
         cs.writerow(cs_towrite)
         #print 'Writing row to datafile...\n'
 
-        '''
-        # Determine location to save images
-        if 'coarse' in str(output_name):
-            save_path = 'imgdump/coarse/'
-        else:
-            save_path = 'imgdump/fine/'
-
         if h == 0:
         # Plot the data
             figure(1)
@@ -505,7 +538,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
             grid(True,which='both')
             legend(loc='best',prop={'size':8})
             title(str('The $\chi^{2}$ Minimised Best Fit SED for PACS and SPIRE Bands\n at the ')+str(h)+str('th Pixel\n'))
-            savefig(str(save_path)+str('averages_coarse_')+str(h)+str('.png'),dpi=300)
+            savefig(str('averages_coarse_')+str(h)+str('.png'),dpi=300)
             close()
 
         # Also plot probability contour
@@ -518,7 +551,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
             ylabel(r'$T\/(K)$')
             title(r'$\chi^{2} Contours$')
             legend(loc='best',prop={'size':8})
-            savefig(str(save_path)+str('contours_')+str(h)+str('.png'),dpi=300)
+            savefig(str('contours_')+str(h)+str('.png'),dpi=300)
             close()
 
         # And the chi-squared landscape
@@ -535,7 +568,7 @@ def chiTest(data_type, output_name, N, T, kappa_0, lambda_0, B):
             xlabel(r'$N\/(cm^{-2})$')
             ylabel(r'$\chi^{2}$')
 
-            savefig(str(save_path)+str('landscape_')+str(h)+str('.png'),dpi=300)
+            savefig(str('landscape_')+str(h)+str('.png'),dpi=300)
             close()
-        '''
+
     chi_store.close()

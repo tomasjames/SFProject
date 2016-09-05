@@ -44,7 +44,7 @@ import random
 
 ######################### Define function to create maps of N and T #################
 
-def mapMaker(data_type,B):
+def mapMaker(data_type,region,B,nbins):
 
     '''
     '''
@@ -64,10 +64,15 @@ def mapMaker(data_type,B):
         inp_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('/datafeed.txt'))
         chi_data = np.loadtxt(('../../../curvefitting/sphdata/')+str(beta_str)+str('/chi_results.txt'),skiprows=1)
 
-    elif data_type == 'snaps':
+    elif data_type == 'herschel_snaps':
+
+        # Define the first folder
+        first_folder = 'herschel_snaps'
+        second_folder = region
+
         # Read in both data types
-        inp_data = np.loadtxt(('../../../curvefitting/herschel_snaps/')+str(beta_str)+str('/datafeed.txt'))
-        chi_data = np.loadtxt(('../../../curvefitting/herschel_snaps/')+str(beta_str)+str('/chi_results.txt'),skiprows=1)
+        inp_data = np.loadtxt(('/export/home/c1158976/Code/simulations/curvefitting/herschel_snaps/{}/{}/datafeed.txt').format(region,beta_str))
+        chi_data = np.loadtxt(('/export/home/c1158976/Code/simulations/curvefitting/herschel_snaps/{}/{}/chi_results.txt').format(region,beta_str),skiprows=1)
 
     # Split data types into plottable quantities
     inp_N = inp_data[:,1]
@@ -116,24 +121,33 @@ def mapMaker(data_type,B):
     ################################# Plot image data ################################
 
     # Determine number of bins
-    bins=np.linspace(np.log10(np.amin(chi_N)), np.log10(np.amax(chi_N)), len(np.unique(chi_N))+1)
+    bins=np.linspace(np.log10(np.amin(chi_N)), np.log10(np.amax(chi_N)), nbins)
     h,b,p = hist(np.log10(chi_N),bins=bins,histtype='step')
     close()
 
+    # Determine a 'start' and 'end' point as histogram does not plot continuous curve to 0
+    start_y = [min(np.log10(h)), np.log10(h[0])]
+    start_x = [[b[:-1][0]], [b[:-1][0]]]
+
+    end_y = [min(np.log10(h)), np.log10(h[-1])]
+    end_x = [[b[:-1][-1]], [b[:-1][-1]]]
+
     # Plot the data along with a PDF
     figure()
-    subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+    subplot2grid((7,6), (0,0), colspan=6,rowspan=5)
     imshow(np.log10(N_chi_inp),origin='lower',vmin=min_N,vmax=max_N)
     colorbar(label='$log_{10}(N)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the $\chi^{2}$ Recovered $N$\n')
 
-    subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+    subplot2grid((7,6), (6,0), colspan=6,rowspan=1)
     #hist(np.log10(chi_N),bins=np.linspace(np.log10(np.amin(chi_N)), np.log10(np.amax(chi_N)), len(np.unique(chi_N))+1),histtype='step',log=True)
     #h, b = np.histogram(np.log10(N_chi_inp), bins=np.linspace(np.log10(np.amin(N_chi_inp)), np.log10(np.amax(N_chi_inp)), len(np.unique(N_chi_inp))), density=False)
-    bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
-    #plot(b[:-1],np.log10(h),ls='steps')
+    #bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
+    plot(b[:-1],np.log10(h),ls='steps',linewidth=1.0,color='black')
+    plot(start_x,start_y,linewidth=1.0,color='black')
+    plot(end_x,end_y,linewidth=1.0,color='black')
     #xlim(np.log10(min(chi_N)),np.log10(max(inp_N)))
     xlim(min_N,max_N)
     title('PDF of $\chi^{2}$ Recovered $N$')
@@ -141,7 +155,7 @@ def mapMaker(data_type,B):
     ylabel('$log_{10}{(n_{pix})}\/(per\/bin)$',fontsize=10)
     tick_params(axis='both',labelsize=8)
 
-    savefig('map_N_chi.png', dpi=300)
+    savefig('map_N_chi.png', bbox_inches='tight', dpi=300)
     close()
 
     '''
@@ -169,24 +183,25 @@ def mapMaker(data_type,B):
     '''
 
     # Plot the data along with a PDF
+    # Determine number of bins
+    bins=np.linspace(np.amin(chi_T), np.amax(chi_T), nbins)
+    h,b,p = hist(chi_T,bins=bins,histtype='step')
+    close()
+
     figure()
-    subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+    subplot2grid((7,6), (0,0), colspan=5,rowspan=5)
     imshow(T_chi_inp,origin='lower',vmin=min_T,vmax=max_T)
     colorbar(label='$T\/(K)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the $\chi^{2}$ Recovered $T$\n')
 
-    # Determine number of bins
-    bins=np.linspace(np.log10(np.amin(chi_T)), np.log10(np.amax(chi_T)), len(np.unique(chi_T))+1)
-    h,b,p = hist(np.log10(chi_T),bins=bins,histtype='step')
-    close()
-
-    subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+    subplot2grid((7,6), (6,0), colspan=6,rowspan=1)
     #hist(T_chi_inp,bins=5,normed=True)
     #h, b = np.histogram(T_chi_inp, bins=np.linspace((np.amin(T_chi_inp)), (np.amax(T_chi_inp)), len(np.unique(T_chi_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(T_chi_inp))
-    bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
+    #bar(b[:-1],np.log10(h),width=bins[1]-bins[0],fill=False)
+    plot(b[:-1],h,ls='steps',linewidth=1.0,color='black')
     xlim(min_T,max_T)
     title('PDF of $\chi^{2}$ Recovered $T$')
     xlabel('$T\/(K)$',fontsize=10)
@@ -222,20 +237,25 @@ def mapMaker(data_type,B):
     '''
 
     # Plot the data along with a PDF
+    bins=np.linspace(np.log10(np.amin(inp_N)), np.log10(np.amax(inp_N)), nbins)
+    h,b,p = hist(np.log10(inp_N),bins=bins,histtype='step')
+    close()
+
     figure()
     N_data_inp[N_data_inp == 0] = np.nan
-    subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+    subplot2grid((7,6), (0,0), colspan=5,rowspan=5)
     imshow(np.log10(N_data_inp),origin='lower',vmin=min_N,vmax=max_N)
     colorbar(label='$log_{10}(N)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the Data Input $N$\n')
 
-    subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+    subplot2grid((7,6), (6,0), colspan=6,rowspan=1)
     #hist(np.log10(N_data_inp),bins=5,normed=True)
-    h, b = np.histogram(np.log10(N_data_inp), bins=np.linspace(np.log10(np.amin(N_data_inp)), np.log10(np.amax(N_data_inp)), len(np.unique(N_data_inp))), density=False)
+    #h, b = np.histogram(np.log10(N_data_inp), bins=np.linspace(np.log10(np.amin(N_data_inp)), np.log10(np.amax(N_data_inp)), len(np.unique(N_data_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(N_data_inp))
-    bar(b[:-1],np.log10(h),width=0.02)
+    #bar(b[:-1],np.log10(h),width=0.02)
+    plot(b[:-1],np.log10(h),ls='steps',linewidth=1.0,color='black')
     xlim(np.log10(min(chi_N)),np.log10(max(inp_N)))
     title('PDF of Data Input $N$')
     xlabel('$log_{10}(N)$',fontsize=10)
@@ -246,21 +266,26 @@ def mapMaker(data_type,B):
     close()
 
     # Plot the data along with a PDF
+    bins=np.linspace(np.amin(inp_T), np.amax(inp_T), nbins)
+    h,b,p = hist(inp_T,bins=bins,histtype='step')
+    close()
+
     figure()
     T_data_inp[T_data_inp == 0] = np.nan
-    subplot2grid((6,7), (0,0), colspan=4,rowspan=4)
+    subplot2grid((7,6), (0,0), colspan=5,rowspan=5)
     imshow(T_data_inp,origin='lower',vmin=min_T,vmax=max_T)
     colorbar(label='$T\/(K)$')
     xlabel('X (pixels)')
     ylabel('Y (pixels)')
     title('A Map of the Data Input $T$\n')
 
-    subplot2grid((6,7), (5,0), colspan=4,rowspan=2)
+    subplot2grid((7,6), (6,0), colspan=6,rowspan=1)
     #hist(T_data_inp,bins=5,normed=True)
-    h, b = np.histogram(T_data_inp, bins=np.linspace((np.amin(T_data_inp)), (np.amax(T_data_inp)), len(np.unique(T_data_inp))), density=False)
+    #h, b = np.histogram(T_data_inp, bins=np.linspace((np.amin(T_data_inp)), (np.amax(T_data_inp)), len(np.unique(T_data_inp))), density=False)
     #bar(b[:-1],h,width=(max(h)-min(h))/len(T_data_inp))
-    bar(b[:-1],h,width=0.1)
-    xlim(min(inp_T),max(inp_T))
+    #bar(b[:-1],h,width=0.1)
+    plot(b[:-1],h,ls='steps',linewidth=1.0,color='black')
+    xlim(min_T,max_T)
     title('PDF of Data Input $T$')
     xlabel('$T\/(K)$',fontsize=10)
     ylabel('$log_{10}{(n_{pix})}\/(per\/bin)$',fontsize=10)
@@ -274,20 +299,21 @@ def mapMaker(data_type,B):
     if data_type == 'radmc':
         dust_density = np.loadtxt(('../../../workingsims_psf/')+str(beta_str)+str('/blue/background_15K/dust_density.inp'), skiprows=3)
         dust_temperature = np.loadtxt(('../../../workingsims_psf/')+str(beta_str)+str('/blue/background_15K/dust_temperature.dat'), skiprows=3)
-
         imag = fits.open(('../../../workingsims_psf/{}/blue/background_15K/blue_common_convolved.fits').format(beta_str))
 
     elif data_type == 'arepo':
         dust_density = np.loadtxt(('../../../data_psf/')+str(beta_str)+str('/blue/dust_project/dust_density.inp'), skiprows=3)
         dust_temperature = np.loadtxt(('../../../data_psf/')+str(beta_str)+str('/blue/dust_project/dust_temperature.dat'), skiprows=3)
-
         imag = fits.open(('../../../data_psf/{}/blue/dust_project/blue_common_convolved.fits').format(beta_str))
 
-    elif data_type == 'snaps':
-        dust_density = np.loadtxt(('../../../herschel_snaps_psf/')+str(beta_str)+str('/blue/x1_comp_region1/dust_density.inp'), skiprows=3)
-        dust_temperature = np.loadtxt(('../../../herschel_snaps_psf/')+str(beta_str)+str('/blue/x1_comp_region1/dust_temperature.dat'), skiprows=3)
+    elif data_type == 'herschel_snaps':
+        dust_density = np.loadtxt(('/export/home/c1158976/Code/simulations/herschel_snaps_psf/{}/{}/blue/dust_density.inp').format(region, beta_str), skiprows=3)
+        dust_temperature = np.loadtxt(('/export/home/c1158976/Code/simulations/herschel_snaps_psf/{}/{}/blue/dust_temperature.dat').format(region, beta_str), skiprows=3)
+        imag = fits.open(('/export/home/c1158976/Code/simulations/herschel_snaps_psf/{}/{}/blue/blue_common_convolved.fits').format(region,beta_str))
 
-        imag = fits.open(('../../../herschel_snaps_psf/{}/blue/x1_comp_region1/blue_common_convolved.fits').format(beta_str))
+    # Determine data dimensions
+    nx = len(imag[0].data[0])
+    ny = len(imag[0].data[:,0])
 
     xpix, ypix, zpix = np.arange(0,nx), np.arange(0,ny), np.arange(0,(len(dust_density)/(nx*ny)))
 
@@ -372,7 +398,7 @@ def mapMaker(data_type,B):
     xlabel(r'$T_{input}\/(K)$')
     ylabel(r'$\sigma^{2}_{T_{N}}$')
     title('A Graph Comparing the Line of Sight \n Temperature Variations to the Input Temperature')
-    tight_layout()
+
     savefig('sigma_T_inp.png', dpi=300)
     close()
 

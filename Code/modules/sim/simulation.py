@@ -106,8 +106,10 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     # Interface with operating system to run the Monte-Carlo sim (and allowing the
     # code to use wavelength_micron.inp)
-    print(str('Now invoking the command: radmc3d image loadlambda npix ')+str(npix)+str(' sizeau ')+str(sizeau))
+    print(str('radmc3d image loadlambda npix ')+str(npix)+str(' sizeau ')+str(sizeau))
+    #print(str('radmc3d image npix ')+str(npix)+str(' loadlambda inclline linelist writepop nostar doppcatch sizeau ')+str(sizeau))
     os.system(str('radmc3d image loadlambda npix ')+str(npix)+str(' sizeau ')+str(sizeau))
+    #os.system(str('radmc3d image npix ')+str(npix)+str(' loadlambda inclline linelist writepop nostar doppcatch sizeau ')+str(sizeau))
 
     ########################### Account for transmission ###########################
 
@@ -230,11 +232,22 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         hdu.writeto(fname)
 
     # Write relevant information to the FITS header
+    fits.setval(fname, 'CDELT1', value=(-1)*np.float64(theta)/3600) # Degrees per pixel (CDELT1 has to be negative)
+    fits.setval(fname, 'CDELT2', value=np.float64(theta)/3600)
+    fits.setval(fname, 'CRPIX1', value=len(image_trans_raw[0])/2) # Pulls out reference pixel
+    fits.setval(fname, 'CRPIX2', value=len(image_trans_raw[:,0])/2) # Pulls out reference pixel
+    fits.setval(fname, 'CRVAL1', value=159.4507) # Coordinate of that pixel
+    fits.setval(fname, 'CRVAL2', value=-19.8196)
+    fits.setval(fname, 'CTYPE1', value='GLON-CAR') # Changes the coordinate system to Galactic Longitude
+    fits.setval(fname, 'CTYPE2', value='GLAT-CAR') # Changes the coordinate system to Galactic Latitude
+
+    '''
     fits.setval(fname, 'DISTANCE', value=d)
     fits.setval(fname, 'IMGWIDTH', value=imag_width)
     fits.setval(fname, 'PIXWIDTH', value=pix_width)
     fits.setval(fname, 'PIXSIZE', value=theta)
     fits.setval(fname, 'EFF', value=cenwav)
+    '''
 
     # Close the file
     #hdu.close()
@@ -247,10 +260,12 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     hdu = sim_result[0].header
 
     # Pull out the total image width
-    image_width = hdu['IMGWIDTH'] # In cm
+    #image_width = hdu['IMGWIDTH'] # In cm
+    image_width = imag_width
 
     # Pull out the pixel width
-    data_theta = hdu['PIXSIZE'] # Pixel size in "/pixel
+    #data_theta = hdu['PIXSIZE'] # Pixel size in "/pixel
+    data_theta = theta
 
     # Determine the size of one pixel
     data_size = (250*data_theta)/206256 # Extent of one pixel
@@ -262,22 +277,22 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     # which is the correct one
     if filt == 'psw':
 	    #psf_raw = fits.open('../../../../datafiles/psf/ken/psf_0250.fits')
-        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_psw_V0_2.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/theoretical_spire_beam_model_psw_V0_2.fits')
 
     elif filt == 'pmw':
-        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_pmw_V0_2.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/theoretical_spire_beam_model_pmw_V0_2.fits')
 
     elif filt == 'plw':
-        psf_raw = fits.open('../../../../../datafiles/psf/theoretical_spire_beam_model_plw_V0_2.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/theoretical_spire_beam_model_plw_V0_2.fits')
 
     elif filt == 'red':
-        psf_raw = fits.open('../../../../../datafiles/psf/PSF_red_slope-1_small.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/PSF_red_slope-1_small.fits')
 
     elif filt == 'blue':
-        psf_raw = fits.open('../../../../../datafiles/psf/PSF_blue_slope-1_small.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/PSF_blue_slope-1_small.fits')
 
     elif filt == 'green':
-        psf_raw = fits.open('../../../../../datafiles/psf/PSF_green_slope-1_small.fits')
+        psf_raw = fits.open('/export/home/c1158976/Code/datafiles/psf/PSF_green_slope-1_small.fits')
 
     # Extract the data
     psf = psf_raw[0].data[0]
@@ -323,7 +338,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
     #matshow(data,origin='lower')
     imshow(data,interpolation='nearest',origin='lower')
-    title(str('RADMC-3D Intensity Data for SPIRE ')+str(hdu['EFF'])+str('$ \mu m$'))
+    title(str('RADMC-3D Intensity Data for SPIRE ')+str(cenwav)+str('$ \mu m$'))
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]')
     colorbar(label=r'$I$ [MJy/ster]')
     savefig('data.pdf',dpi=300)
@@ -350,7 +365,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     if size_factor == 1:
         print 'The pixel sizes match!\n'
         psf_rebin = psf
-
+        '''
     elif size_factor < 1:
         print 'The pixel sizes do not match, and the PSF has larger pixel size. Necessary to increase the size of the RADMC-3D image.'
         print 'Note: this is not strictly accurate; rebinning designed to decrease dimensions rather than increase!\n'
@@ -375,17 +390,17 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
         # Renormalise the PSF back to unity (or close to it)
         psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
-
+        '''
     elif size_factor > 1:
 
         # Use the above rebin function to change the dimensions of the PSF to
-        psf_rebin_unnorm = congrid(psf, (dimen,dimen), centre=True)
+        psf_rebin_unnorm = congrid(psf, (dimen,dimen), method='nearest', centre=True, minusone=True)
 
         # Renormalise the PSF back to unity (or close to it)
         psf_rebin = psf_rebin_unnorm*(np.sum(psf)/np.sum(psf_rebin_unnorm))
 
     # Determine the new pixel angular size
-    new_psf_theta = psf_theta*size_factor
+    new_psf_theta = psf_theta*(len(psf[0])/len(psf_rebin[0]))
 
     # Check to see whether file has already been written
     # If so, delete the file (Python cannot overwrite a binary file)
@@ -404,9 +419,9 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         head.writeto(fname)
 
     # Assign info to header
-    fits.setval(fname, 'DISTANCE', value=hdu['DISTANCE'])
+    fits.setval(fname, 'DISTANCE', value=d)
     fits.setval(fname, 'PIXSIZE', value=new_psf_theta)
-    fits.setval(fname, 'EFF', value=hdu['EFF'])
+    fits.setval(fname, 'EFF', value=cenwav)
 
     # Plot the resulting data to assess accuracy of rebin
     #subplot2grid((10,8), (0,0), colspan=6,rowspan=6)
@@ -435,8 +450,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     print 'Currently convolving...'
 
     # Use the convolution to convolve the rebinned data with the PSF
-    conv = convolve(data, psf_rebin, boundary='extend', normalize_kernel=True)
-    #conv = convolve_fft(data, psf_rebin, boundary='extend')
+    #conv = convolve(data, psf_rebin, boundary='extend', normalize_kernel=False)
+    conv = convolve_fft(data, psf_rebin, boundary='wrap')
 
     print 'Convolution complete!\nSaving the image...\n'
 
@@ -445,7 +460,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     imshow(conv,interpolation=None,origin='lower')
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]',use_gridspec=False)
     colorbar(label=r'$I$ [MJy/ster]')
-    title(str('Convolved Data for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
+    title(str('Convolved Data for SPIRE ')+str(cenwav)+str(r'$ \mu m$'))
     savefig('convolved.pdf',dpi=300)
     close()
 
@@ -459,15 +474,15 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     fname = str(filt)+str('_convolved.fits')
     head = fits.PrimaryHDU(conv)
     head.writeto(fname)
-
+    '''
     # Write some header information
     # Write relevant information to the FITS header
     fits.setval(fname, 'DISTANCE', value=hdu['DISTANCE'])
     fits.setval(fname, 'IMGWIDTH', value=hdu['IMGWIDTH'])
     fits.setval(fname, 'PIXWIDTH', value=hdu['PIXWIDTH'])
     fits.setval(fname, 'PIXSIZE', value=data_theta)
-    fits.setval(fname, 'EFF', value=hdu['EFF'])
-
+    fits.setval(fname, 'EFF', value=cenwav)
+    '''
     print 'The convolution has been performed and the convolved image saved to the working directory.\n'
 
     # Write another FITS file (one that adheres to the FITS standard) for use with PPMAP
@@ -488,8 +503,8 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         hdu.writeto(fname)
 
     # Write relevant information to the FITS header
-    fits.setval(fname, 'CDELT1', value=(-1)*np.float64(new_psf_theta)/3600) # Degrees per pixel (CDELT1 has to be negative)
-    fits.setval(fname, 'CDELT2', value=np.float64(new_psf_theta)/3600)
+    fits.setval(fname, 'CDELT1', value=(-1)*np.float64(data_theta)/3600) # Degrees per pixel (CDELT1 has to be negative)
+    fits.setval(fname, 'CDELT2', value=np.float64(data_theta)/3600)
     fits.setval(fname, 'CRPIX1', value=len(conv[0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRPIX2', value=len(conv[:,0])/2) # Pulls out reference pixel
     fits.setval(fname, 'CRVAL1', value=159.4507) # Coordinate of that pixel
@@ -519,15 +534,15 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
 
         # Read in the kernel
         if filt == 'psw':
-            kern = fits.open('../../../../../datafiles/psf/comconv/spire250_to_spire500.fits')
+            kern = fits.open('/export/home/c1158976/Code/datafiles/psf/comconv/spire250_to_spire500.fits')
         elif filt == 'pmw':
-            kern = fits.open('../../../../../datafiles/psf/comconv/spire350_to_spire500.fits')
+            kern = fits.open('/export/home/c1158976/Code/datafiles/psf/comconv/spire350_to_spire500.fits')
         elif filt == 'blue':
-            kern = fits.open('../../../../../datafiles/psf/comconv/pacs70_to_spire500.fits')
+            kern = fits.open('/export/home/c1158976/Code/datafiles/psf/comconv/pacs70_to_spire500.fits')
         elif filt == 'green':
-            kern = fits.open('../../../../../datafiles/psf/comconv/pacs100_to_spire500.fits')
+            kern = fits.open('/export/home/c1158976/Code/datafiles/psf/comconv/pacs100_to_spire500.fits')
         elif filt == 'red':
-            kern = fits.open('../../../../../datafiles/psf/comconv/pacs160_to_spire500.fits')
+            kern = fits.open('/export/home/c1158976/Code/datafiles/psf/comconv/pacs160_to_spire500.fits')
 
         # Extract data and header
         kern_vals = kern[0].data
@@ -552,7 +567,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
         convolved_hdu = fits.open(str(filt)+str('_convolved.fits'))[0].header
 
         # Extract pixel size
-        data_theta = convolved_hdu['PIXSIZE']
+        #data_theta = convolved_hdu['PIXSIZE']
 
         # Determine the size factor
         size_factor = data_theta/kern_theta
@@ -643,7 +658,7 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     imshow(common_conv,interpolation=None,origin='lower')
     #colorbar(label=r'$I_{\nu}$ [erg/s/cm/cm/Hz/ster]',use_gridspec=False)
     colorbar(label=r'$I$ [MJy/ster]')
-    title(str(r'Convolved Data to SPIRE 500$\mu m$ for SPIRE ')+str(hdu['EFF'])+str(r'$ \mu m$'))
+    title(str(r'Convolved Data to SPIRE 500$\mu m$ for SPIRE ')+str(cenwav)+str(r'$ \mu m$'))
     savefig('common_convolved.pdf',dpi=300)
     close()
 
@@ -659,13 +674,15 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     head = fits.PrimaryHDU(common_conv)
     head.writeto(fname)
 
+    '''
     # Write some header information
     # Write relevant information to the FITS header
-    fits.setval(fname, 'DISTANCE', value=hdu['DISTANCE'])
+    fits.setval(fname, 'DISTANCE', value=d)
     fits.setval(fname, 'IMGWIDTH', value=hdu['IMGWIDTH'])
     fits.setval(fname, 'PIXWIDTH', value=hdu['PIXWIDTH'])
     fits.setval(fname, 'PIXSIZE', value=data_theta)
-    fits.setval(fname, 'EFF', value=hdu['EFF'])
+    fits.setval(fname, 'EFF', value=cenwav)
+    '''
 
     print 'The convolved image saved to the working directory.\n'
 
@@ -682,78 +699,6 @@ def simulation(mode, filt, npix, sizeau, d, mass, cloud_density, outside_density
     print 'The power in the convolved image is ', convolved_power
 
     return common_conv
-
-    '''
-    ################################################################################
-    ################################# Generate the SED #############################
-    ################################################################################
-
-    ################################## Open the image ##############################
-
-    # Read in the convolved and transmission weighted image
-    img = fits.open(str(filt)+str('_common_convolved.fits'))
-    img_data = img[0].data
-    img_header = img[0].header
-
-    ######################### Determine frequency of the image #####################
-
-    # Determine parameters
-    wav = imag.wav
-
-    # Loop through possible filters to find effective wavelength
-    if filt == 'psw':
-        w_cen = 247.124514
-    elif filt == 'pmw':
-        w_cen = 346.71804
-    elif filt == 'plw':
-        w_cen = 496.10677
-    elif filt == 'blue':
-        w_cen = 68.92474
-    elif filt == 'green':
-        w_cen = 97.90361
-    elif filt == 'red':
-        w_cen = 153.94392
-
-    # Convert to frequency
-    v = cc/(wav*10**-4)
-    v_cen = cc/(w_cen*10**-4)
-
-    ############################ Sample flux at each pixel #########################
-
-    # Check to see if folder exists before entering file write
-    if os.path.isdir(str('../../../curvefitting/')+str(sim_name)) == True:
-        print 'The folder', sim_name, 'already exists. Moving on to file write...'
-    else:
-        print 'The folder', sim_name, 'does not already exist. Will now create it...'
-        os.makedirs(str('../../../curvefitting/')+str(sim_name))
-
-    # Check to see if file already exists
-    if os.path.isfile(str('../../../curvefitting/')+str(sim_name)+str(filt)+str('_average_data.txt')) == True:
-        print 'Data storage file already exists; opening now\n'
-        save_data = open(str('../../../curvefitting/')+str(sim_name)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
-        data_store = csv.writer(save_data, delimiter=' ')
-
-    else:
-        print 'Data storage file does not already exist; writing now\n'
-        save_data = open(str('../../../curvefitting/')+str(sim_name)+str('/')+str(filt)+str('_average_data.txt'), 'w+')
-        data_store = csv.writer(save_data, delimiter=' ')
-
-    # Invoke a counter
-    count = 0
-
-    # Loop through the pixels in the image
-    for i in range(0,len(img_data[0])):
-        for j in range(0,len(img_data[:,0])):
-
-            # Add to the counter
-            count =+ 1
-
-            # Pull out the pixel value (img_data[i,j]) and write to a row
-            data_store.writerow([count, v_cen, img_data[i,j]])
-
-    # Close the file
-    save_data.close()
-    '''
 
 ########################## Function to generate the SED ##########################
 def sedGeneration(filt, sim_name, kappa_0, lambda_0, B, withPSF=True):
@@ -840,17 +785,35 @@ def sedGeneration(filt, sim_name, kappa_0, lambda_0, B, withPSF=True):
     else:
         print 'The folder', sim_name, 'does not already exist. Will now create it...'
         os.makedirs(str('../../../../curvefitting/')+str(B)+str('/')+str(sim_name))
+
+    # Open the file
+    save_data = open(('{}/{}/{}_average_data.txt').format(fold_curvefit, sim_name, filt), 'a+')
+
+    # Save the file
+    data_store = csv.writer(save_data, delimiter=' ')
+
+    if sim_name == 'cloud':
+        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
+
+    elif sim_name == 'sphdata':
+        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
+
+    elif sim_name == 'x1_comp_region1':
+        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/x1_comp_region1/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
     '''
 
+    # Define a string containing the path to the curvefitting directory
+    fold_curvefit = str(('/export/home/c1158976/Code/simulations/curvefitting/herschel_snaps/{}/B={}').format(sim_name, B))
+
     # Check to see if file already exists
-    if os.path.isfile(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt')) == True:
+    if os.path.isfile(('{}/{}_average_data.txt').format(fold_curvefit, filt)) == True:
         print 'Data storage file already exists; opening now\n'
-        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'a+')
+        save_data = open(('{}/{}_average_data.txt').format(fold_curvefit, filt), 'a+')
         data_store = csv.writer(save_data, delimiter=' ')
 
     else:
         print 'Data storage file does not already exist; writing now\n'
-        save_data = open(str('../../../../curvefitting/')+str(sim_name)+str('/B=')+str(B)+str('/')+str(filt)+str('_average_data.txt'), 'w+')
+        save_data = open(('{}/{}_average_data.txt').format(fold_curvefit, filt), 'w+')
         data_store = csv.writer(save_data, delimiter=' ')
 
     # Assign the flux calibration error based on the filter by checking whether the filter is PACS (first if) of SPIRE (else)
