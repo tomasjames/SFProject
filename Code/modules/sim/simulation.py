@@ -749,7 +749,7 @@ def sedGeneration(filt, sim_name, kappa_0, lambda_0, B, withPSF=True):
     if withPSF == True:
         # Read in the convolved and transmission weighted image
         img = fits.open(('{}_common_convolved.fits').format(filt))
-    else:
+    elif withPSF == False:
         # Read in the convolved and transmission weighted image
         img = fits.open(('{}.fits').format(filt))
 
