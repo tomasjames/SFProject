@@ -2,16 +2,9 @@ Reading/*
 Admin/*
 radmc-3d/*
 Report/Interim/*
-Code/simulations/curvefitting/sphdata/imgdump*
-Code/simulations/curvefitting/sphdata/imgdump_old*
-Code/simulations/curvefitting/cloud/imgdump*
-Code/simulations/curvefitting/cloud/imgdump_old*
-Code/simulations/workingsims*
-Code/simulations/workingsims_psf*
-Code/simulations/data*
-Code/simulations/data_psf*
-Code/simulations/filament*
+Code/simulations/*
 
+MPhysProjectAssessmentPack_TomasJames.pdf
 *.inp
 *.out
 *.ini
@@ -23,3 +16,5 @@ Code/simulations/filament*
 *.vtk
 *.docx
 *.key
+*.png
+*.txt
